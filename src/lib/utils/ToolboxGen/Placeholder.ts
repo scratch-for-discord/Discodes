@@ -1,4 +1,10 @@
 import type { PlaceholderType } from "$lib/enums/BlockTypes"
+interface PlaceholderValues {
+    argValue: Record<string, unknown>
+    argName:string
+    kind: string
+    type: string
+}
 
 export default class Placeholder<ArgType> {
 
@@ -6,6 +12,8 @@ export default class Placeholder<ArgType> {
     private readonly _argName: string
     private readonly _kind: string
     private readonly _type: string
+
+    
 
     constructor(type: PlaceholderType, argName: string, blockName: string, argValue: Record<string, ArgType>) {
         this._argValue = argValue
@@ -15,7 +23,8 @@ export default class Placeholder<ArgType> {
         this._kind = type
     }
 
-    get values(): Record<string, unknown> {
+    get values(): PlaceholderValues {
+        
         return {
             argValue: this._argValue,
             argName: this._argName,

@@ -16,7 +16,8 @@ const blocks: BlockDefinition[] = [
             new ValueInput("fish", BlockType.Any)
         ],
         placeholders: [
-            new Placeholder(PlaceholderType.Block,"testInput", "text", {"TEXT": "Hello World"})
+            new Placeholder(PlaceholderType.Block,"testInput", "text", {"TEXT": "Hello World"}),
+            new Placeholder(PlaceholderType.Block, "fish", "math_number", {"NUM": 45})
         ],
         warnings: [
             new Warning(WarningType.Parent, "vite"),
@@ -33,7 +34,7 @@ const blocks: BlockDefinition[] = [
 ]
 
 const category: CategoryDefinition = {
-    name: "Parent is Hello",
+    name: "One block here",
     colour: "#ff0000"
 }
 

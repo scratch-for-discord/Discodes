@@ -1,3 +1,5 @@
+import type { BlockDefinition } from "$lib/interfaces/BlockDefinition"
+
 export default class Toolbox {
 
     public async generate(): Promise<unknown[]> {
@@ -20,17 +22,17 @@ export default class Toolbox {
 
         for (const path in files) {
             const filesInDir = this.filterPaths(path, directories)
-
             const mainParent = path.split("/").filter((val) => val !== "..")[1]
 
-
             if (!structure[mainParent]) {
-                structure[mainParent] = {}
-                structure[mainParent]["contents"] = []
-                structure[mainParent]['kind'] = "category"
-                structure[mainParent]['name'] = mainParent
-                structure[mainParent]['colour'] = "#2facf5"
+                structure[mainParent] = {
+                    contents: [],
+                    kind: "category",
+                    name: mainParent,
+                    colour: "#2facf5"
+                };
             }
+
             const secondaryDomiants = path.split("/")
             secondaryDomiants.splice(0, 4)
             secondaryDomiants.pop()
@@ -52,24 +54,46 @@ export default class Toolbox {
 
                 //! FIX THE TYPE OR ELSE ITS GONNA BREAK LMFAO (Memory leak also?)
 
-                const definitions = await import(/* @vite-ignore */`${topPath}/${directory}`) as typeof import("../../blocks/test dir 2/index")
+                const definitions = await import(/* @vite-ignore */`${topPath}/${directory}`)
                 const blockContents = []
 
-                for (const blockDef of definitions.default.blocks) {
+                for (const blockDef of definitions.default.blocks as BlockDefinition[]) {
+
+                    const inputs: Record<string, unknown> = {}
+
+                    if (blockDef.placeholders) {
+                        for (const placeholder of blockDef.placeholders) {
+                            const data = placeholder.values
+                            const key = Object.keys(data.argValue)[0]
+                            const value = data.argValue[key]
+
+                            inputs[data.argName] = {
+                                "block": {
+                                    "type": data.type,
+                                    "fields": {}
+                                }
+                            }
+                            inputs[data.argName]["block"]["fields"][key] = value
+                        } 
+                    }
+
                     blockContents.push({
                         "kind": "block",
-                        "type": blockDef.id
+                        "type": blockDef.id,
+                        "inputs": inputs
                     })
+                    
+                    
                 }
                 
-                    contents.push(
-                        {
-                            "kind": "category",
-                            name: definitions.default.category.name,
-                            contents: blockContents,
-                            colour: definitions.default.category.colour,
-                        }
-                    )
+                contents.push(
+                    {
+                        "kind": "category",
+                        name: definitions.default.category.name,
+                        contents: blockContents,
+                        colour: definitions.default.category.colour,
+                    }
+                )
                 }
             return
             }

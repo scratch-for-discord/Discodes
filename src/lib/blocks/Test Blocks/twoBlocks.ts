@@ -41,7 +41,7 @@ const blocks: Array<BlockDefinition> = [
 ]
 
 const category: CategoryDefinition = {
-    name: "Parent is Alex",
+    name: "Two Blocks here",
     colour: "#ff5555"
 }
 

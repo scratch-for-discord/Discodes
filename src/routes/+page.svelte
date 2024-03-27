@@ -19,6 +19,7 @@
             kind: "categoryToolbox",
             contents: contents as ToolboxItemInfo[]
         }
+        console.log(toolboxJson)
     })  
 
 </script>
