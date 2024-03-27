@@ -1,78 +1,101 @@
-import type { BlockDefinition } from "$lib/interfaces/BlockDefinition"
-import type { CategoryDefinition } from "$lib/interfaces/CategoryDefinition"
-import {getToolboxDefinitions} from "$lib/utils/helpers/getDefs"
-
-//? Uhm... idk either.
-export interface CategoryDefinitonObject {
-    definition: CategoryDefinition,
-    blockDefs: BlockDefinition[]
-    parents: string[]
-}
-
-export interface ExportedCategoryDefinitonObject {
-    definition: CategoryDefinition,
-    blockDefs: BlockDefinition[]
-    parents: string
-}
-
 export default class Toolbox {
-    private _definitions: CategoryDefinitonObject[]
 
-    constructor() {
-        this._definitions = []
+    public async generate(): Promise<unknown[]> {
+        const structure = await this.fetchFiles()
+        const contents = []
+
+        for (const category in structure) {
+            contents.push(structure[category])
+        }
+        return contents
     }
 
-    public async generate(): Promise<void> {
-        // Gather all the necessary definitions in the block files to create the toolboxes
-        await this.init()
-        // console.log(this._definitions)
-        // Start creating the toolbox JSON
+    private async fetchFiles() {
+        const files = import.meta.glob("../../blocks/**/**/*.ts")
+        const directories: string[] = Object.keys(files).map((key) => key)
 
-        const toolbox: unknown[] = []
+        // too lazy to type rn WILL TYPE LATER
+        const structure: { [key: string]: any } = {}
 
-        for (const key in this._definitions) {
-            const currentDefs = this._definitions[key]
 
-            //? I'm gonna call this the Matryoshka algorithme now lol
-            let virtualToolbox: unknown[] = []
+        for (const path in files) {
+            const filesInDir = this.filterPaths(path, directories)
 
-            //? Parent is the last element of the parents array AKA the parent of this category :)
-            for (const parent of currentDefs.parents.toReversed()) {
-                virtualToolbox = [{
-                    "kind": "category",
-                    "name": currentDefs.definition.name,
-                    "colour": currentDefs.definition.colour,
-                    "id": parent,
-                    "contents": virtualToolbox
-                }]
+            const mainParent = path.split("/").filter((val) => val !== "..")[1]
+
+
+            if (!structure[mainParent]) {
+                structure[mainParent] = {}
+                structure[mainParent]["contents"] = []
+                structure[mainParent]['kind'] = "category"
+                structure[mainParent]['name'] = mainParent
+                structure[mainParent]['colour'] = "#2facf5"
             }
-            toolbox[key] = virtualToolbox[0]
+            const secondaryDomiants = path.split("/")
+            secondaryDomiants.splice(0, 4)
+            secondaryDomiants.pop()
+    
+            this.setStruct(secondaryDomiants, structure[mainParent]["contents"], filesInDir, path)
         }
-        console.log(toolbox)
-
+        return structure
     }
 
-    private async init(): Promise<void> {
-        const defs = await getToolboxDefinitions()
-        
-        this._definitions = this.sortParents(defs) as CategoryDefinitonObject[]
-    }
+    private async setStruct(path: string[], contents: unknown[], filesInDir: string[], topPath: string) {
 
-    private sortParents(array: ExportedCategoryDefinitonObject[]): unknown[] {
-        // Sort the parents: the less parents a category has, the earlier it is in the list
-        const sortedParents: unknown[] = []
 
-        // Split each member of the parents to be able to compare them by their length
-        for (const key in array) {
-            sortedParents[key] = {definition: array[key].definition, parents: array[key].parents.split("/"), blockDefs: array[key].blockDefs}
-        }
+        if (path.length === 0) {
+            for (const directory of filesInDir) {
 
-        // Compare each length and sort from smallest to biggest by array size
-        //! Mark this in documentation: a block file MUST have a parent folder! (or code won't work <-- blockly won't either)
-        sortedParents.sort((a: unknown, b: unknown) => {
-            return (b as CategoryDefinitonObject).parents.length - (a as CategoryDefinitonObject).parents.length
+                const topPath2 = topPath.split("/")
+                topPath2.pop()
+                topPath = topPath2.join("/")
+
+                //! FIX THE TYPE OR ELSE ITS GONNA BREAK LMFAO (Memory leak also?)
+
+                const definitions = await import(/* @vite-ignore */`${topPath}/${directory}`) as typeof import("../../blocks/test dir 2/index")
+                const blockContents = []
+
+                for (const blockDef of definitions.default.blocks) {
+                    blockContents.push({
+                        "kind": "block",
+                        "type": blockDef.id
+                    })
+                }
+                
+                    contents.push(
+                        {
+                            "kind": "category",
+                            name: definitions.default.category.name,
+                            contents: blockContents,
+                            colour: definitions.default.category.colour,
+                        }
+                    )
+                }
+            return
+            }
+
+        const element = path.splice(0, 1)[0]
+
+        contents.push({
+            "kind": "category",
+            name: element,
+            contents: [],
+            colour: "#2facf5",
         })
 
-        return sortedParents
+        await this.setStruct(path, (contents[contents.length - 1] as unknown[])["contents"], filesInDir, topPath)
+    }
+
+    private filterPaths(path: string, paths: string[]): string[] {
+        const resultFiles: string[] = [];
+        const directory = path.endsWith('/') ? path.slice(0, -1) : path; // Remove trailing slash if present
+    
+        for (const filePath of paths) {
+            if (filePath.startsWith(directory)) {
+                const fileName = filePath.split('/').pop() as string;
+                resultFiles.push(fileName);
+            }
+        }
+        return resultFiles;
     }
 }

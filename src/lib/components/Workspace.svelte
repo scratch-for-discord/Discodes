@@ -6,20 +6,21 @@
     import pkg from 'blockly/javascript';
     const { javascriptGenerator } = pkg;
     import type { Abstract } from "blockly/core/events/events_abstract";
-    import { OPTIONS } from "$lib/constants/workspace";
+    import { OPTIONS, DARKTHEME } from "$lib/constants/workspace";
 	import loadBlocks from "$lib/utils/helpers/loadBlocks";
 
     export let workspace: Blockly.WorkspaceSvg;
     export let options: typeof OPTIONS;
+    export let toolbox: Blockly.utils.toolbox.ToolboxDefinition
 
     Blockly.setLocale({
-            ...En
-        })
+        ...En
+    })
 
     onMount(async () => {
         await loadBlocks()
-        workspace = Blockly.inject("blocklyDiv", options);
-
+        workspace = Blockly.inject("blocklyDiv", {...options, toolbox: toolbox});
+        
         const supportedEvents = new Set([
             Blockly.Events.BLOCK_CHANGE,
             Blockly.Events.BLOCK_CREATE,

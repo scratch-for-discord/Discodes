@@ -7,7 +7,7 @@ export default class Placeholder<ArgType> {
     private readonly _kind: string
     private readonly _type: string
 
-    constructor(argName: string, type: PlaceholderType, blockName: string, argValue: Record<string, ArgType>) {
+    constructor(type: PlaceholderType, argName: string, blockName: string, argValue: Record<string, ArgType>) {
         this._argValue = argValue
         this._argName = argName
         //? type: "Block" is clearer than kind:"block", it creates this confusing code but type = blockName and kind = type 

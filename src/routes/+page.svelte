@@ -4,15 +4,23 @@
 
     import { OPTIONS } from "$lib/constants/workspace";
 	import Workspace from "$lib/components/Workspace.svelte";
-	import Toolbox from "$lib/utils/ToolboxGen/Toolbox";
+	import Warnings from "$lib/components/Warnings.svelte";
 	import { onMount } from "svelte";
+	import Toolbox from "$lib/utils/ToolboxGen/Toolbox";
+	import type { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 
     let workspace: Blockly.WorkspaceSvg;
-
+    let toolboxJson: Blockly.utils.toolbox.ToolboxDefinition
+    
     onMount(async () => {
-        let t = new Toolbox()
-        await t.generate()
-    })
-</script>
+        const toolbox = new Toolbox()
+        const contents = await toolbox.generate()
+        toolboxJson = {
+            kind: "categoryToolbox",
+            contents: contents as ToolboxItemInfo[]
+        }
+    })  
 
-<Workspace bind:workspace={workspace} options={OPTIONS}/>
+</script>
+<Warnings bind:workspace={workspace}/>
+<Workspace bind:workspace={workspace} options={OPTIONS} bind:toolbox={toolboxJson}/>

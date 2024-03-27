@@ -1,16 +1,19 @@
 // Blockly
 import Blockly from "blockly/core"
-import pkg from 'blockly/javascript';
 import '@blockly/field-grid-dropdown';
-
+import pkg from 'blockly/javascript';
 const { javascriptGenerator } = pkg;
 
 // Types
 import type { Argument, BlockDefinition } from "$lib/interfaces/BlockDefinition"
-import { BlockShape, BlockType } from "$lib/enums/BlockTypes";
+import { BlockShape, BlockType, WarningType } from "$lib/enums/BlockTypes";
+import type { Abstract } from "blockly/core/events/events_abstract";
 
-// Helpers
-// import salt from "$lib/utils/helpers/salt"
+
+
+// Warnings
+import { addWarning, removeWarning } from "../Warnings/WarningsList";
+import { EventsToTriggerWarnings } from "$lib/constants/warnings";
 
 export default class Block {
     private readonly _blockDefinition: BlockDefinition
@@ -23,6 +26,7 @@ export default class Block {
         const code = this._blockDefinition.code
         const shape = this._blockDefinition.shape
         const output = this._blockDefinition.output
+        const warnings = this._blockDefinition.warnings
 
         const blockDef = {
             type: this._blockDefinition.id,
@@ -51,9 +55,11 @@ export default class Block {
         }
         blockDef.message0 = generatedText.join(" ")
 
+        if (Blockly.Blocks[`${blockDef.type}`] !== undefined) throw Error(`Block "${blockDef.type}" is defined twice!`)
+
         // Add The block to the blocks list
         Blockly.Blocks[`${blockDef.type}`] = {
-            init: function () {
+            init: function (this: Blockly.Block) {
                 this.jsonInit(blockDef)
                 
                 // Here we define the block's shape
@@ -79,6 +85,48 @@ export default class Block {
                         this.setOutput(true, output);
                     }
                 }
+
+                // Warnings Code
+                this.setOnChange(function (this: Blockly.Block, changeEvent: Abstract) {
+                    if ((EventsToTriggerWarnings.has(changeEvent.type) || changeEvent.type == "change") && !this.isInFlyout) {
+                        if (!warnings) return
+
+                        const topParent = this.getRootBlock()
+                        let resultMessage: string = ""
+
+                        for (const warning of warnings) {
+                            const { warningType, message, fieldName } = warning.data
+                            switch (warningType) {
+                                case WarningType.Parent:
+                                    if (topParent.type != fieldName) {
+                                        resultMessage += message + "\n"
+                                        addWarning(this.id, fieldName, message)
+                                        break;
+                                    }
+                                    removeWarning(this.id, fieldName)
+                                    break;
+
+                                case WarningType.Input: 
+                                    if (this.getInput(fieldName)?.connection?.targetConnection === null) {
+                                        resultMessage += message + "\n"
+                                        addWarning(this.id, fieldName, message)
+                                        break;
+                                    }
+                                    removeWarning(this.id, fieldName)
+                                    break;
+                                case WarningType.Deprec:
+                                    resultMessage += message + "\n"
+                                    addWarning(this.id, "deprecated", message)
+                                    break;
+                                case WarningType.Permanent:
+                                    resultMessage += message + "\n"
+                                    addWarning(this.id, "permanent", message)
+
+                            }
+                            this.setWarningText(resultMessage)
+                        }
+                    }
+                })
             },
         }
 

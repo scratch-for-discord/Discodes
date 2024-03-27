@@ -1,7 +1,12 @@
 import { describe, it, expect } from 'vitest';
+import { LOG_CODE, LOG_WARNINGS } from '$lib/constants/debug';
 
-describe('sum test', () => {
-	it('adds 1 + 2 to equal 3', () => {
-		expect(1 + 2).toBe(3);
+describe('All debug variables are false', () => {
+	it('Code doesnt log', () => {
+		expect(LOG_CODE).toBe(false);
 	});
+
+	it("Warnings doesn't log", () => {
+		expect(LOG_WARNINGS).toBe(false)
+	})
 });
