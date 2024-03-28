@@ -44,16 +44,8 @@ export default class Block {
         })
 
         // Converts the raw text into a blockly valid "message0" with this format: "text %1 other text %2"
-        //! Has a major flow, the {args} MUST be separated by a space :|
-        const generatedText: string[] = this._blockDefinition.text.split(" ")
         let counter: number = 1
-        for (let i = 0; i < generatedText.length; i++) {
-            if (generatedText[i].includes("{")) {
-                generatedText[i] = `%${counter}`
-                counter ++
-            }
-        }
-        blockDef.message0 = generatedText.join(" ")
+        blockDef.message0 = this._blockDefinition.text.replace(/\{.*?\}/g, () => `%${counter++}`);
 
         if (Blockly.Blocks[`${blockDef.type}`] !== undefined) throw Error(`Block "${blockDef.type}" is defined twice!`)
 
@@ -114,13 +106,16 @@ export default class Block {
                                     }
                                     removeWarning(this.id, fieldName)
                                     break;
+
                                 case WarningType.Deprec:
                                     resultMessage += message + "\n"
                                     addWarning(this.id, "deprecated", message)
                                     break;
+
                                 case WarningType.Permanent:
                                     resultMessage += message + "\n"
                                     addWarning(this.id, "permanent", message)
+                                    break;
 
                             }
                             this.setWarningText(resultMessage)
@@ -149,8 +144,8 @@ export default class Block {
                         args[argName] = block.getFieldValue(argName)
                         break;
                 }
-                return code(args)
             }
+            return code(args)
         }
     }
 }

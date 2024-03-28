@@ -1,15 +1,20 @@
 import type { BlockDefinition } from "$lib/interfaces/BlockDefinition"
+import type { ToolboxDefinition, ToolboxItemInfo } from "blockly/core/utils/toolbox"
 
 export default class Toolbox {
 
-    public async generate(): Promise<unknown[]> {
+    public async generate(): Promise<ToolboxDefinition> {
         const structure = await this.fetchFiles()
         const contents = []
 
         for (const category in structure) {
             contents.push(structure[category])
         }
-        return contents
+
+        return {
+            kind: "categoryToolbox",
+            contents: contents as ToolboxItemInfo[]
+        }
     }
 
     private async fetchFiles() {

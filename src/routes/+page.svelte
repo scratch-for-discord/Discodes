@@ -11,15 +11,11 @@
 
     let workspace: Blockly.WorkspaceSvg;
     let toolboxJson: Blockly.utils.toolbox.ToolboxDefinition
+
     
     onMount(async () => {
         const toolbox = new Toolbox()
-        const contents = await toolbox.generate()
-        toolboxJson = {
-            kind: "categoryToolbox",
-            contents: contents as ToolboxItemInfo[]
-        }
-        console.log(toolboxJson)
+        toolboxJson = await toolbox.generate()
     })  
 
 </script>

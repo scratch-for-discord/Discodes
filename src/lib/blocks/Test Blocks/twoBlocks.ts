@@ -25,7 +25,7 @@ const blocks: Array<BlockDefinition> = [
     },
     {
         id: "vite",
-        text: "I love\n {chichen}\n but why?",
+        text: "I love\n {chichen} but why?",
         shape: BlockShape.Event,
         args: [
             new StatementInput("chicken"),
