@@ -9,13 +9,14 @@ import type { Argument, BlockDefinition } from "$lib/interfaces/BlockDefinition"
 import { BlockShape, BlockType, WarningType } from "$lib/enums/BlockTypes";
 import type { Abstract } from "blockly/core/events/events_abstract";
 
-
-
 // Warnings
-import { addWarning, removeWarning } from "../Warnings/WarningsList";
+import { addWarning, removeWarning, warnings as warningsObj } from "../Warnings/WarningsList";
 import { EventsToTriggerWarnings } from "$lib/constants/warnings";
 
-export default class Block {
+// Helpers
+import { dev } from "$app/environment";
+
+export default class Block { 
     private readonly _blockDefinition: BlockDefinition
 
     constructor(definition: BlockDefinition) {
@@ -47,7 +48,7 @@ export default class Block {
         let counter: number = 1
         blockDef.message0 = this._blockDefinition.text.replace(/\{.*?\}/g, () => `%${counter++}`);
 
-        if (Blockly.Blocks[`${blockDef.type}`] !== undefined) throw Error(`Block "${blockDef.type}" is defined twice!`)
+        if (Blockly.Blocks[`${blockDef.type}`] !== undefined && !dev) throw Error(`Block "${blockDef.type}" is defined twice.`)
 
         // Add The block to the blocks list
         Blockly.Blocks[`${blockDef.type}`] = {
@@ -118,6 +119,7 @@ export default class Block {
                                     break;
 
                             }
+                            if (warningsObj[this.id] && Object.keys(warningsObj[this.id]).length === 0) delete warningsObj[this.id]
                             this.setWarningText(resultMessage)
                         }
                     }

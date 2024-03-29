@@ -17,5 +17,5 @@ export interface BlockDefinition {
     colour: string
     tooltip: string
     helpUrl: string
-    code: (arg: Record<string, unknown>) => unknown
+    code: (args: Record<string, unknown>) => unknown
 }
