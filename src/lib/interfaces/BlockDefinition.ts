@@ -5,8 +5,9 @@ import type Placeholder from "$lib/utils/ToolboxGen/Placeholder"
 
 export type Argument = BaseInput
 
-export interface BlockDefinition {
+export type BlockDefinition = {
     id: string // This is the "type" of the block
+    label?: false // To see if the definition is a label or not
     text: string // This is "message0"
     output?: BlockType
     shape: BlockShape // The block shape
@@ -18,4 +19,7 @@ export interface BlockDefinition {
     tooltip: string
     helpUrl: string
     code: (args: Record<string, unknown>) => unknown
+} | {
+    label: true
+    text: string
 }

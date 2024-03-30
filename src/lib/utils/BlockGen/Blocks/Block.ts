@@ -24,6 +24,8 @@ export default class Block {
     }
 
     generate(): void {
+        if (this._blockDefinition.label) return
+        
         const code = this._blockDefinition.code
         const shape = this._blockDefinition.shape
         const output = this._blockDefinition.output

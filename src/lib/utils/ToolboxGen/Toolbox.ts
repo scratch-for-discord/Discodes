@@ -82,7 +82,7 @@ export default class Toolbox {
                         } 
                     }
 
-                    blockContents.push({
+                    blockContents.push(blockDef.label ? {"kind": "label", "text": blockDef.text} : {
                         "kind": "block",
                         "type": blockDef.id,
                         "inputs": inputs

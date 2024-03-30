@@ -28,7 +28,7 @@ The main reason to rebuild those is to add warnings to them.
 - [ ] Random number
 - [ ] `string` to `number`
 #### Text
-- [ ] string
+- [x] string
 - [ ] create text with ... vars (needs mutator)
 - [ ] replace / to uppercase, lowercase etc..
 - [ ] if string is empty

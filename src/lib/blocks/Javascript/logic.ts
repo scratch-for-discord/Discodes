@@ -110,7 +110,7 @@ const blocks: BlockDefinition[] = [
 ]
 
 const category: CategoryDefinition = {
-    name: "logic",
+    name: "Logic",
     colour: rgbToHex(91,128,165)
 }
 

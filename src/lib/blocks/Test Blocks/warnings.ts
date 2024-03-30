@@ -26,6 +26,10 @@ const blocks: BlockDefinition[] = [
         },
     },
     {
+        label: true,
+        text: "Hello I am a label"
+    },
+    {
         id: "parent_for_warning_test",
         text: "This is the parent block\n {input}",
         args: [
