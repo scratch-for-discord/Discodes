@@ -5,6 +5,8 @@ import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
 import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
+import StatementInput from "$lib/utils/BlockGen/Inputs/StatementInput";
+
 import { Order } from "blockly/javascript";
 
 const blocks: BlockDefinition[] = [
@@ -13,7 +15,7 @@ const blocks: BlockDefinition[] = [
         text: "{a} {is equal to} {b}",
         args: [
             new ValueInput("A", BlockType.Any),
-            new Dropdown("CONDITION", DropdownType.Auto, {"=": "EQ", "≠": "NEQ", "<":"LT", "≤": "LEQ", ">": "GT", "≥": "GEQ"}),
+            new Dropdown("CONDITION", DropdownType.Auto, {"=": "==", "≠": "!=", "<":"<>", "≤": "<=", ">": ">", "≥": ">=", "==": "==="}),
             new ValueInput("B", BlockType.Any),
         ],
         warnings: [
@@ -27,31 +29,7 @@ const blocks: BlockDefinition[] = [
         tooltip: "Checks if the first input and the second input validate the condition.",
         helpUrl: "https://www.w3schools.com/js/js_comparisons.asp",
         code: (args) => {
-            let operator: string
-            switch (args.CONDITION) {
-                case "EQ":
-                    operator = "=="
-                    break
-                case "NEQ":
-                    operator = "!="
-                    break
-                case "LT":
-                    operator = "<"
-                    break;
-                case "LEQ":
-                    operator = "<="
-                    break;
-                case "GT":
-                    operator = ">"
-                    break;
-                case "GEQ":
-                    operator = ">="
-                    break;
-                default:
-                    operator = "=="
-                    break
-            }
-            return [`${args.A} ${operator} ${args.B}`, Order.NONE]
+            return [`${args.A} ${args.CONDITION} ${args.B}`, Order.NONE]
         }
     },
     {
@@ -59,7 +37,7 @@ const blocks: BlockDefinition[] = [
         text: "{a} {and} {b}",
         args: [
             new ValueInput("A", BlockType.Boolean),
-            new Dropdown("CONDITION", DropdownType.Auto, {"and": "AND", "or": "OR"}),
+            new Dropdown("CONDITION", DropdownType.Auto, {"and": "&&", "or": "||"}),
             new ValueInput("B", BlockType.Boolean),
         ],
         warnings: [
@@ -73,19 +51,7 @@ const blocks: BlockDefinition[] = [
         tooltip: "Checks if the first input and the second input validate the condition.",
         helpUrl: "",
         code: (args) => {
-            let operator: string;
-            switch (args.CONDITION) {
-                case "AND":
-                    operator = "&&"
-                    break;
-                case "OR":
-                    operator = "||"
-                    break;
-                default:
-                    operator = "&&"
-                    break;
-            }
-            return [`${args.A} ${operator} ${args.B}`, Order.NONE]
+            return [`${args.A} ${args.CONDITION} ${args.B}`, Order.NONE]
         },
     },
     {
@@ -106,7 +72,98 @@ const blocks: BlockDefinition[] = [
         code: (args) => {
             return [`!${args.operand}`, Order.NONE]
         }
-    }
+    },
+    {
+        id: "values",
+        text: "{INPUT}",
+        args: [
+            new Dropdown("INPUT", DropdownType.Auto, {"true": "true", "false": "false", "null": "null", "undefined": "undefined"})
+        ],
+        shape: BlockShape.Floating,
+        output: BlockType.Any,
+        inline: true,
+        colour: rgbToHex(91,128,165),
+        tooltip: "",
+        helpUrl: "",
+        code: (args) => {
+            return [`${args.INPUT}`, Order.NONE]
+        }
+    },
+    {
+        id: "ternary",
+        text: "test {condition} on true {onTrue} on false {onFalse}",
+        args: [
+            new ValueInput("condition", BlockType.Boolean),
+            new ValueInput("onTrue", BlockType.Any),
+            new ValueInput("onFalse", BlockType.Any),
+        ],
+        warnings: [
+            new Warning(WarningType.Input, "condition"),
+            new Warning(WarningType.Input, "onTrue"),
+            new Warning(WarningType.Input, "onFalse")
+        ],
+        shape: BlockShape.Floating,
+        output: BlockType.Any,
+        inline: false,
+        colour: rgbToHex(91,128,165),
+        tooltip: "",
+        helpUrl: "",
+        code: (args) => {
+            return [`${args.condition} ? ${args.onTrue} : ${args.onFalse}`, Order.NONE]
+        }
+    },
+    {
+        id: "typeof",
+        text: "typeof {operand}",
+        args: [
+            new ValueInput("operand", BlockType.Any)
+        ],
+        warnings: [
+            new Warning(WarningType.Input, "operand")
+        ],
+        shape: BlockShape.Floating,
+        output: BlockType.String,
+        inline: true,
+        colour: rgbToHex(91,128,165),
+        tooltip: "",
+        helpUrl: "",
+        code: (args) => {
+            return [`typeof ${args.operand}`, Order.NONE]
+        }
+    },
+    {
+        id: "typeof_is",
+        text: "typeof {operand} is {type}",
+        args: [
+            new ValueInput("operand", BlockType.Any),
+            new Dropdown("type", DropdownType.Auto, {"string": "string", "number": "number", "boolean": "boolean", "array": "array", "object": "object", "function": "function", "null": "null", "undefined": "undefined"})
+        ],
+        warnings: [
+            new Warning(WarningType.Input, "operand"),
+            new Warning(WarningType.Input, "type")
+        ],
+        shape: BlockShape.Bottom,
+        output: BlockType.Boolean,
+        inline: true,
+        colour: rgbToHex(91,128,165),
+        tooltip: "",
+        helpUrl: "",
+        code: (args) => {
+            return [`typeof ${args.operand} === "${args.type}"`, Order.NONE]
+        }
+    },
+    {
+        id: "stop_script",
+        text: "stop script",
+        shape: BlockShape.Bottom,
+        inline: true,
+        colour: rgbToHex(165,91,153),
+        tooltip: "",
+        helpUrl: "",
+        code: (args) => {
+            return "return;"
+        }
+    },
 ]
 
 const category: CategoryDefinition = {
