@@ -8,20 +8,11 @@ const toolbox = {
             "kind": "category",
             "name": "test blocks",
             "colour": "#ff0000",
-            "id": "sam",
             "contents": [
                 {
                     "kind": "block",
-                    "type": "test"
-                },
-                {
-                    "kind": "block",
-                    "type":"insane"
-                },
-                {
-                    "kind": "block",
-                    "type":"vite"
-                },
+                    "type": "mutator_test_1",
+                }
             ]
         },
         {

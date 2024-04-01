@@ -7,23 +7,16 @@
     const { javascriptGenerator } = pkg;
     import type { Abstract } from "blockly/core/events/events_abstract";
     import { OPTIONS } from "$lib/constants/workspace";
-    import { LOG_CODE, LOG_WARNINGS } from "$lib/constants/debug"
-	import loadBlocks from "$lib/utils/helpers/loadBlocks";
-	import { warnings } from "$lib/utils/BlockGen/Warnings/WarningsList";
 
-    export let workspace: Blockly.WorkspaceSvg;
-    export let options: typeof OPTIONS;
-    export let toolbox: Blockly.utils.toolbox.ToolboxDefinition
+    let workspace: Blockly.WorkspaceSvg;
 
     Blockly.setLocale({
         ...En
     })
 
     onMount(async () => {
-        await loadBlocks()
-        workspace = Blockly.inject("blocklyDiv", {...options, toolbox: toolbox});
-
-        // Only console log the code and warnings when debug mode is enabled.
+        workspace = Blockly.inject("blocklyDiv", {...OPTIONS});
+        
         const supportedEvents = new Set([
             Blockly.Events.BLOCK_CHANGE,
             Blockly.Events.BLOCK_CREATE,
@@ -34,13 +27,9 @@
         function updateCode(event: Abstract) {
             if (workspace.isDragging()) return; // Don't update while changes are happening.
             if (!supportedEvents.has(event.type)) return;
-            if (LOG_CODE) {
+
             const code = javascriptGenerator.workspaceToCode(workspace);
-            console.log("Generated code: \n", code);
-            }
-            if (LOG_WARNINGS) {
-                console.log("Warnings", warnings)
-            }
+            console.log(code);
         }
         workspace.addChangeListener(updateCode);
     })

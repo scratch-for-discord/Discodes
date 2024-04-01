@@ -1,7 +1,9 @@
 import type { BlockShape, BlockType } from "$lib/enums/BlockTypes"
 import type BaseInput from "$lib/utils/BlockGen/Inputs/BaseInput"
+import type Mutator from "$lib/utils/BlockGen/Mutators/Mutator"
 import type Warning from "$lib/utils/BlockGen/Warnings/Warning"
 import type Placeholder from "$lib/utils/ToolboxGen/Placeholder"
+import type { Order } from "blockly/javascript"
 
 export type Argument = BaseInput
 
@@ -18,8 +20,18 @@ export type BlockDefinition = {
     colour: string
     tooltip: string
     helpUrl: string
-    code: (args: Record<string, unknown>) => unknown
+    code: (args: Record<string, unknown>) => string | [string, Order]
+    mutator?: Mutator
 } | {
     label: true
     text: string
+}
+
+export type MutatorBlock = {
+    // Name of the block that appears in the block list in the UI
+    block: string
+    // What inputs it adds to the block
+    adds: Argument[]
+    // Can it only be added once in the UI
+    once: boolean
 }

@@ -15,8 +15,7 @@
     }
 
     async function gotoBlock(id: string): Promise<void> {
-        const block: Blockly.Block | null = getBlock(id)
-        if (block) {
+        if (getBlock(id)) {
             workspace.centerOnBlock(id);
             workspace.highlightBlock(id, true);
             await new Promise(res => setTimeout(res, 2000));
@@ -71,7 +70,6 @@
                     {/each}
                 </div>
             </div>
-
         {/each}
         <div class="modal-action">
             <form method="dialog">

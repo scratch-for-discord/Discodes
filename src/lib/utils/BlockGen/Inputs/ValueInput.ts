@@ -41,7 +41,7 @@ export default class ValueInput extends BaseInput {
 
         const filtered = argFilter(this._type)
         // We return without the "check" if we have no types :)
-        if (filtered.length == 0) return result
+        if (filtered.length === 0) return result
 
         result.check = [...filtered]
         return result

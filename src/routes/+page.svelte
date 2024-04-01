@@ -12,6 +12,12 @@
     let workspace: Blockly.WorkspaceSvg;
     let toolboxJson: Blockly.utils.toolbox.ToolboxDefinition
 
+    const saveWorkspace = () => {
+        localStorage.setItem("w", JSON.stringify(Blockly.serialization.workspaces.save(workspace)))
+    }
+    const loadWorkspace = () => {
+        Blockly.serialization.workspaces.load(JSON.parse(localStorage.getItem("w") || ""), workspace)
+    }
     
     onMount(async () => {
         const toolbox = new Toolbox()
@@ -19,5 +25,8 @@
     })  
 
 </script>
+
+<button class="btn" on:click={saveWorkspace}>SAVE</button>
+<button class="btn" on:click={loadWorkspace}>LOAD</button>
 <Warnings bind:workspace={workspace}/>
 <Workspace bind:workspace={workspace} options={OPTIONS} bind:toolbox={toolboxJson}/>

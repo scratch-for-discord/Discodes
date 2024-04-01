@@ -18,7 +18,7 @@ const blocks: BlockDefinition[] = [
         tooltip: "Allows you to make a text input.",
         helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
         code: (args) => {
-            return [args.TEXT, Order.NONE]
+            return [`"${args.TEXT}"`, Order.NONE]
         }
     }
 ]

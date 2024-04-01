@@ -15,6 +15,7 @@ import { EventsToTriggerWarnings } from "$lib/constants/warnings";
 
 // Helpers
 import { dev } from "$app/environment";
+import salt from "$lib/utils/helpers/salt";
 
 export default class Block { 
     private readonly _blockDefinition: BlockDefinition
@@ -30,6 +31,7 @@ export default class Block {
         const shape = this._blockDefinition.shape
         const output = this._blockDefinition.output
         const warnings = this._blockDefinition.warnings
+        const mutatorName: string = this._blockDefinition.mutator ? this._blockDefinition.id + salt(5) : ""
 
         const blockDef = {
             type: this._blockDefinition.id,
@@ -37,8 +39,13 @@ export default class Block {
             tooltip: this._blockDefinition.tooltip,
             helpUrl: this._blockDefinition.helpUrl,
             inputsInline: this._blockDefinition.inline,
-            args0: [] as Array<Record<string, unknown>>,
+            args0: [] as Record<string, unknown>[],
             message0: "",
+            mutator: mutatorName == "" ? undefined : mutatorName
+        }
+
+        if (this._blockDefinition.mutator) {
+            this._blockDefinition.mutator.registerMutator(mutatorName)
         }
 
         // Converts the classes into usable objects for the block definition
@@ -50,10 +57,10 @@ export default class Block {
         let counter: number = 1
         blockDef.message0 = this._blockDefinition.text.replace(/\{.*?\}/g, () => `%${counter++}`);
 
-        if (Blockly.Blocks[`${blockDef.type}`] !== undefined && !dev) throw Error(`Block "${blockDef.type}" is defined twice.`)
+        if (Blockly.Blocks[blockDef.type] !== undefined && !dev) throw Error(`Block "${blockDef.type}" is defined twice.`)
 
         // Add The block to the blocks list
-        Blockly.Blocks[`${blockDef.type}`] = {
+        Blockly.Blocks[blockDef.type] = {
             init: function (this: Blockly.Block) {
                 this.jsonInit(blockDef)
                 
@@ -119,18 +126,17 @@ export default class Block {
                                     resultMessage += message + "\n"
                                     addWarning(this.id, "permanent", message)
                                     break;
-
                             }
-                            if (warningsObj[this.id] && Object.keys(warningsObj[this.id]).length === 0) delete warningsObj[this.id]
-                            this.setWarningText(resultMessage)
                         }
+                        if (warningsObj[this.id] && Object.keys(warningsObj[this.id]).length === 0) delete warningsObj[this.id]
+                        this.setWarningText(resultMessage)
                     }
                 })
             },
         }
 
         // Generating the export code
-        javascriptGenerator.forBlock[`${blockDef.type}`] = function (block: Blockly.Block) {
+        javascriptGenerator.forBlock[blockDef.type] = function (block: Blockly.Block) {
             const args: Record<string, unknown> = {} //? Object we will pass as argument for the custom code to run properly
 
             for (const arg in blockDef.args0) {
