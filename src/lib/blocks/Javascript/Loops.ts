@@ -12,10 +12,10 @@ import { Order } from "blockly/javascript";
 const blocks: BlockDefinition[] = [
     {
         id: "repeat_x_times",
-        text: "Repeat {value} times \n {input}",
+        text: "Repeat {VALUE} times \n {INPUT}",
         args: [
-            new ValueInput("value", BlockType.Number),
-            new StatementInput("input")
+            new ValueInput("VALUE", BlockType.Number),
+            new StatementInput("INPUT")
         ],
         shape: BlockShape.Action,
         inline: true,
@@ -23,19 +23,19 @@ const blocks: BlockDefinition[] = [
         tooltip: "Repeat x times",
         helpUrl: "",
         code: (args) => {
-            return `for (let i = 0; i < ${args.value}; i++) {\n${args.input}\n}`
+            return `for (let i = 0; i < ${args.VALUE}; i++) {\n${args.INPUT}\n}`
         },
     },
     {
         id: "repeat_while",
-        text: "Repeat {while} {condition}\n {input}",
+        text: "Repeat {WHILE} {CONDITION}\n {INPUT}",
         args: [
-            new Dropdown("while", DropdownType.Auto, {
+            new Dropdown("WHILE", DropdownType.Auto, {
                 "while": "while",
                 "until": "until"
             }),
-            new ValueInput("condition", BlockType.Boolean),
-            new StatementInput("input")
+            new ValueInput("CONDITION", BlockType.Boolean),
+            new StatementInput("INPUT")
         ],
         shape: BlockShape.Action,
         inline: true,
@@ -43,18 +43,18 @@ const blocks: BlockDefinition[] = [
         tooltip: "Repeat while",
         helpUrl: "",
         code: (args) => {
-            return `${args.while} (${args.condition}){\n${args.input}\n}`
+            return `while (${args.WHILE === "while" ? "" : "!"}( ${args.CONDITION} )) {\n${args.INPUT}\n}`
         },
     },
     {
         id: "for_loop",
-        text: "For {variable} from {start} to {end} step {step}\n {input}",
+        text: "For {VARIABLE} from {START} to {END} step {STEP}\n {INPUT}",
         args: [
-            new ValueInput("variable", BlockType.String),
-            new ValueInput("start", BlockType.Number),
-            new ValueInput("end", BlockType.Number),
-            new ValueInput("step", BlockType.Number),
-            new StatementInput("input")
+            new ValueInput("VARIABLE", BlockType.String),
+            new ValueInput("START", BlockType.Number),
+            new ValueInput("END", BlockType.Number),
+            new ValueInput("STEP", BlockType.Number),
+            new StatementInput("INPUT")
         ],
         shape: BlockShape.Action,
         inline: true,
@@ -62,16 +62,16 @@ const blocks: BlockDefinition[] = [
         tooltip: "For loop",
         helpUrl: "",
         code: (args) => {
-            return `for (let ${args.variable} = ${args.start}; ${args.variable} < ${args.end}; ${args.variable} += ${args.step}) {\n${args.input}\n}`
+            return `for (let ${args.VARIABLE} = ${args.START}; ${args.VARIABLE} < ${args.END}; ${args.VARIABLE} += ${args.STEP}) {\n${args.INPUT}\n}`
         },
     },
     {
         id: "array_iteration",
-        text: "For each {item} in {array}\n {input}",
+        text: "For each {ITEM} in {ARRAY}\n {INPUT}",
         args: [
-            new ValueInput("item", BlockType.Any),
-            new ValueInput("array", BlockType.Array),
-            new StatementInput("input")
+            new ValueInput("ITEM", BlockType.Any),
+            new ValueInput("ARRAY", BlockType.Array),
+            new StatementInput("INPUT")
         ],
         shape: BlockShape.Action,
         inline: true,
@@ -79,14 +79,14 @@ const blocks: BlockDefinition[] = [
         tooltip: "Array iteration",
         helpUrl: "",
         code: (args) => {
-            return `for (let ${args.item} of ${args.array}) {\n${args.input}\n}`
+            return `for (let ${args.ITEM} of ${args.ARRAY}) {\n${args.INPUT}\n}`
         },
     },
     {
         id: "break",
-        text: "{action} of loop",
+        text: "{ACTION} of loop",
         args: [
-            new Dropdown("action", DropdownType.Auto, {
+            new Dropdown("ACTION", DropdownType.Auto, {
                 "break": "break",
                 "continue": "continue"
             }),
@@ -97,7 +97,7 @@ const blocks: BlockDefinition[] = [
         tooltip: "Break",
         helpUrl: "",
         code: (args) => {
-            return `${args.action};`
+            return `${args.ACTION};`
         },
     }
 ]

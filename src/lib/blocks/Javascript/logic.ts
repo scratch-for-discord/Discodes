@@ -12,7 +12,7 @@ import { Order } from "blockly/javascript";
 const blocks: BlockDefinition[] = [
     {   
         id: "is_equal",
-        text: "{a} {is equal to} {b}",
+        text: "{A} {CONDITION} {B}",
         args: [
             new ValueInput("A", BlockType.Any),
             new Dropdown("CONDITION", DropdownType.Auto, {"=": "==", "≠": "!=", "<":"<>", "≤": "<=", ">": ">", "≥": ">=", "==": "==="}),
@@ -34,7 +34,7 @@ const blocks: BlockDefinition[] = [
     },
     {
         id: "and_or",
-        text: "{a} {and} {b}",
+        text: "{A} {CONDITION} {B}",
         args: [
             new ValueInput("A", BlockType.Boolean),
             new Dropdown("CONDITION", DropdownType.Auto, {"and": "&&", "or": "||"}),
@@ -56,12 +56,12 @@ const blocks: BlockDefinition[] = [
     },
     {
         id: "not",
-        text: "not {operand}",
+        text: "not {OPERAND}",
         args: [
-            new ValueInput("operand", BlockType.Boolean)
+            new ValueInput("OPERAND", BlockType.Boolean)
         ],
         warnings: [
-            new Warning(WarningType.Input, "operand")
+            new Warning(WarningType.Input, "OPERAND")
         ],
         shape: BlockShape.Floating,
         output: BlockType.Boolean,
@@ -70,7 +70,7 @@ const blocks: BlockDefinition[] = [
         tooltip: "Returns the opposite of the input",
         helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT",
         code: (args) => {
-            return [`!${args.operand}`, Order.NONE]
+            return [`!${args.OPERAND}`, Order.NONE]
         }
     },
     {
@@ -91,16 +91,16 @@ const blocks: BlockDefinition[] = [
     },
     {
         id: "ternary",
-        text: "test {condition} on true {onTrue} on false {onFalse}",
+        text: "test {CONDITION} on true {ONTRUE} on false {ONFALSE}",
         args: [
-            new ValueInput("condition", BlockType.Boolean),
-            new ValueInput("onTrue", BlockType.Any),
-            new ValueInput("onFalse", BlockType.Any),
+            new ValueInput("CONDITION", BlockType.Boolean),
+            new ValueInput("ONTRUE", BlockType.Any),
+            new ValueInput("ONFALSE", BlockType.Any),
         ],
         warnings: [
-            new Warning(WarningType.Input, "condition"),
-            new Warning(WarningType.Input, "onTrue"),
-            new Warning(WarningType.Input, "onFalse")
+            new Warning(WarningType.Input, "CONDITION"),
+            new Warning(WarningType.Input, "ONTRUE"),
+            new Warning(WarningType.Input, "ONFALSE")
         ],
         shape: BlockShape.Floating,
         output: BlockType.Any,
@@ -109,17 +109,17 @@ const blocks: BlockDefinition[] = [
         tooltip: "",
         helpUrl: "",
         code: (args) => {
-            return [`${args.condition} ? ${args.onTrue} : ${args.onFalse}`, Order.NONE]
+            return [`${args.CONDITION} ? ${args.ONTRUE} : ${args.ONFALSE}`, Order.NONE]
         }
     },
     {
         id: "typeof",
-        text: "typeof {operand}",
+        text: "typeof {OPERAND}",
         args: [
-            new ValueInput("operand", BlockType.Any)
+            new ValueInput("OPERAND", BlockType.Any)
         ],
         warnings: [
-            new Warning(WarningType.Input, "operand")
+            new Warning(WarningType.Input, "OPERAND")
         ],
         shape: BlockShape.Floating,
         output: BlockType.String,
@@ -128,19 +128,19 @@ const blocks: BlockDefinition[] = [
         tooltip: "",
         helpUrl: "",
         code: (args) => {
-            return [`typeof ${args.operand}`, Order.NONE]
+            return [`typeof ${args.OPERAND}`, Order.NONE]
         }
     },
     {
         id: "typeof_is",
-        text: "typeof {operand} is {type}",
+        text: "typeof {OPERAND} is {TYPE}",
         args: [
-            new ValueInput("operand", BlockType.Any),
-            new Dropdown("type", DropdownType.Auto, {"string": "string", "number": "number", "boolean": "boolean", "array": "array", "object": "object", "function": "function", "null": "null", "undefined": "undefined"})
+            new ValueInput("OPERAND", BlockType.Any),
+            new Dropdown("TYPE", DropdownType.Auto, {"string": "string", "number": "number", "boolean": "boolean", "array": "array", "object": "object", "function": "function", "null": "null", "undefined": "undefined"})
         ],
         warnings: [
-            new Warning(WarningType.Input, "operand"),
-            new Warning(WarningType.Input, "type")
+            new Warning(WarningType.Input, "OPERAND"),
+            new Warning(WarningType.Input, "TYPE")
         ],
         shape: BlockShape.Bottom,
         output: BlockType.Boolean,
@@ -149,7 +149,7 @@ const blocks: BlockDefinition[] = [
         tooltip: "",
         helpUrl: "",
         code: (args) => {
-            return [`typeof ${args.operand} === "${args.type}"`, Order.NONE]
+            return [`typeof ${args.OPERAND} === "${args.TYPE}"`, Order.NONE]
         }
     },
     {
@@ -160,7 +160,7 @@ const blocks: BlockDefinition[] = [
         colour: rgbToHex(165,91,153),
         tooltip: "",
         helpUrl: "",
-        code: (args) => {
+        code: () => {
             return "return;"
         }
     },
