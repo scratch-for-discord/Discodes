@@ -15,7 +15,7 @@ const blocks: BlockDefinition[] = [
         text: "{A} {CONDITION} {B}",
         args: [
             new ValueInput("A", BlockType.Any),
-            new Dropdown("CONDITION", DropdownType.Auto, {"=": "==", "≠": "!=", "<":"<>", "≤": "<=", ">": ">", "≥": ">=", "==": "==="}),
+            new Dropdown("CONDITION", DropdownType.Auto, {"=": "==", "≠": "!=", "<":"<", "≤": "<=", ">": ">", "≥": ">=", "==": "==="}),
             new ValueInput("B", BlockType.Any),
         ],
         warnings: [
