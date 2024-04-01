@@ -1,8 +1,11 @@
 # Blocks that need to be remade for the beta release
 
 ### Blockly blocks / Javascript:
+
 The main reason to rebuild those is to add warnings to them.
+
 #### Logic blocks
+
 - [ ] If else (needs mutator first)
 - [x] is equal
 - [x] or / and
@@ -11,23 +14,29 @@ The main reason to rebuild those is to add warnings to them.
 - [x] ternary operator
 - [x] typeof
 - [ ] switch case (needs mutator)
+
 #### Loops
+
 - [x] Repeat x times
 - [x] repeat while
 - [x] for loop
 - [x] array iteration
 - [x] break
+
 #### Math
+
 - [ ] Number
 - [ ] Binary operators
-- [ ] Basic expressions 
+- [ ] Basic expressions
 - [ ] constants
 - [ ] checks
 - [ ] basic operation on numbers (round up, down...)
 - [ ] Operations on `Array<number>`
 - [ ] Random number
 - [ ] `string` to `number`
+
 #### Text
+
 - [x] string
 - [ ] create text with ... vars (needs mutator)
 - [ ] replace / to uppercase, lowercase etc..

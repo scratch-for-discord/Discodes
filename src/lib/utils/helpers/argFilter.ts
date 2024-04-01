@@ -8,8 +8,8 @@ import { BlockType } from "$lib/enums/BlockTypes";
  * @return {*}  {BlockType[]}
  */
 export default function argFilter(types: BlockType[]): BlockType[] {
-    const newArray= [...new Set(types)]
-    const result = newArray.filter((argType) =>  argType !== BlockType.Any )
+	const newArray = [...new Set(types)];
+	const result = newArray.filter((argType) => argType !== BlockType.Any);
 
-    return result
+	return result;
 }
