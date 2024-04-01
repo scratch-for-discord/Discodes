@@ -7,16 +7,16 @@ The main reason to rebuild those is to add warnings to them.
 - [x] is equal
 - [x] or / and
 - [x] not
-- [ ] true / false / null / undefined
-- [ ] ternary operator
-- [ ] typeof
+- [x] true / false / null / undefined
+- [x] ternary operator
+- [x] typeof
 - [ ] switch case (needs mutator)
 #### Loops
-- [ ] Repeat x times
-- [ ] repeat while
-- [ ] for loop
-- [ ] array iteration
-- [ ] break
+- [x] Repeat x times
+- [x] repeat while
+- [x] for loop
+- [x] array iteration
+- [x] break
 #### Math
 - [ ] Number
 - [ ] Binary operators
