@@ -1,4 +1,4 @@
-import type { BlockDefinition } from "$lib/interfaces/BlockDefinition"
+import type { BlockDefinition } from "$lib/types/BlockDefinition"
 import type { ToolboxDefinition, ToolboxItemInfo } from "blockly/core/utils/toolbox"
 
 export default class Toolbox {
@@ -63,7 +63,7 @@ export default class Toolbox {
                 const blockContents = []
 
                 for (const blockDef of definitions.default.blocks as BlockDefinition[]) {
-
+                    if (blockDef.label === false && blockDef.hidden === true) continue;
                     const inputs: Record<string, unknown> = {}
 
                     if (blockDef.placeholders) {

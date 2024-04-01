@@ -1,6 +1,6 @@
 import { BlockShape, BlockType, WarningType } from "$lib/enums/BlockTypes";
-import type { BlockDefinition } from "$lib/interfaces/BlockDefinition";
-import type { CategoryDefinition } from "$lib/interfaces/CategoryDefinition";
+import type { BlockDefinition } from "$lib/types/BlockDefinition";
+import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
 import StatementInput from "$lib/utils/BlockGen/Inputs/StatementInput";
 import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import AssemblerMutator from "$lib/utils/BlockGen/Mutators/AssemblerMutator";
@@ -23,6 +23,7 @@ const blocks: BlockDefinition[] = [
         code: () => {
             return "bob"
         },
+        hidden: true
     },
     {
         id: "test_item2",
@@ -35,6 +36,7 @@ const blocks: BlockDefinition[] = [
         code: () => {
             return "bob"
         },
+        hidden: true
     },
     {
         id: "not_mutator",

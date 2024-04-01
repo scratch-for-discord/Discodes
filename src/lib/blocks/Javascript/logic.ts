@@ -1,6 +1,6 @@
 import { BlockShape, BlockType, DropdownType, WarningType } from "$lib/enums/BlockTypes";
-import type { BlockDefinition } from "$lib/interfaces/BlockDefinition";
-import type { CategoryDefinition } from "$lib/interfaces/CategoryDefinition";
+import type { BlockDefinition } from "$lib/types/BlockDefinition";
+import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
 import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
 import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import Warning from "$lib/utils/BlockGen/Warnings/Warning";

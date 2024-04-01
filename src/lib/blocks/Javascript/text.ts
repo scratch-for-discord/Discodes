@@ -1,6 +1,6 @@
 import { BlockShape, BlockType } from "$lib/enums/BlockTypes";
-import type { BlockDefinition } from "$lib/interfaces/BlockDefinition";
-import type { CategoryDefinition } from "$lib/interfaces/CategoryDefinition";
+import type { BlockDefinition } from "$lib/types/BlockDefinition";
+import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
 import TextInput from "$lib/utils/BlockGen/Inputs/TextInput";
 import { Order } from "blockly/javascript";
 

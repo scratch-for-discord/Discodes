@@ -1,4 +1,4 @@
-import type { CategoryDefinition } from "$lib/interfaces/CategoryDefinition"
+import type { CategoryDefinition } from "$lib/types/CategoryDefinition"
 import type { BlockDefinition } from "blockly/core/blocks"
 
 export interface CategoryDefinitonArray {

@@ -5,7 +5,7 @@ import pkg from 'blockly/javascript';
 const { javascriptGenerator } = pkg;
 
 // Types
-import type { Argument, BlockDefinition } from "$lib/interfaces/BlockDefinition"
+import type { Argument, BlockDefinition } from "$lib/types/BlockDefinition"
 import { BlockShape, BlockType, WarningType } from "$lib/enums/BlockTypes";
 import type { Abstract } from "blockly/core/events/events_abstract";
 

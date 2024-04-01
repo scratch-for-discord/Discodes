@@ -1,4 +1,4 @@
-import type { BlockDefinition } from "$lib/interfaces/BlockDefinition"
+import type { BlockDefinition } from "$lib/types/BlockDefinition"
 import Block from "$lib/utils/BlockGen/Blocks/Block"
 
 export default async function loadBlocks(): Promise<void> {

@@ -1,4 +1,4 @@
-export interface CategoryDefinition {
+export type CategoryDefinition = {
     name: string
     colour: string
     hidden?: boolean

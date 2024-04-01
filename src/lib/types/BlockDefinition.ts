@@ -22,6 +22,7 @@ export type BlockDefinition = {
     helpUrl: string
     code: (args: Record<string, unknown>) => string | [string, Order]
     mutator?: Mutator
+    hidden?: boolean
 } | {
     label: true
     text: string

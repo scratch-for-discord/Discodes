@@ -1,4 +1,4 @@
-import type { MutatorBlock } from "$lib/interfaces/BlockDefinition";
+import type { MutatorBlock } from "$lib/types/BlockDefinition";
 import salt from "$lib/utils/helpers/salt";
 import pkg from "blockly/javascript";
 const { javascriptGenerator } = pkg
