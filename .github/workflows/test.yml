@@ -15,15 +15,15 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 20
-        run: npm lint
+      - run: npm lint
 
   test:
     name: Run test
     needs: lint
     runs-on: ubuntu-latest
-        steps:
+    steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
           node-version: 20
-        run: npm test
+      - run: npm test
