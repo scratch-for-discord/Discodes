@@ -16,7 +16,7 @@ export class NodeFileSystemManager {
         throw new Error("Method to be implemented!")
     }
 
-    complileFiles() {
+    compileFiles() {
         this.container.mount(this.files)
     }
 }
