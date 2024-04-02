@@ -10,6 +10,7 @@ export class NodeFileSystemManager {
     }
 
     setFile(name: string, content: string, toDirectory?: string) {
+        // dumb code that will fail
         void name;
         void content;
         void toDirectory;
