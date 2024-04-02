@@ -9,7 +9,7 @@ export class NodeFileSystemManager {
 	constructor(container: WebContainer) {
 		this.container = container;
 	}
-  
+
 	setFile(name: string, content: string, toDirectory?: string) {
 		// dumb code
 		void name;
