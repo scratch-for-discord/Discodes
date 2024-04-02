@@ -20,7 +20,9 @@ export default class Mutator {
 	registerMutator(name: string): void {
 		// Unregister the mutator if it's already registered. Without this blockly crashes.
 		if (Blockly.Extensions.isRegistered(name)) {
-			if(dev) console.warn("[ DEV WARNING ] Mutator already registered ... Attempting to unregister")
+			if (dev) {
+				console.warn("[ DEV WARNING ] Mutator already registered ... Attempting to unregister");
+			}
 			Blockly.Extensions.unregister(name);
 		}
 		Blockly.Extensions.registerMutator(name, this._mixin, undefined, this._blocks);

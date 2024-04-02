@@ -3,26 +3,26 @@ import { NodeFileSystemManager } from "./NodeFileSystem";
 
 // SINGLETON CLASS DO NOT MANUALLY BUILD
 class ContainerBuilder {
-    fileSystem!: NodeFileSystemManager
-    container!: WebContainer
-    isReady: boolean = false
+	fileSystem!: NodeFileSystemManager;
+	container!: WebContainer;
+	isReady: boolean = false;
 
-    constructor() {
-        (async () => {
-            this.container = await WebContainer.boot()
-            this.fileSystem = new NodeFileSystemManager(this.container)
+	constructor() {
+		(async() => {
+			this.container = await WebContainer.boot();
+			this.fileSystem = new NodeFileSystemManager(this.container);
 
-            this.isReady = true
-        })()
-    }
+			this.isReady = true;
+		})();
+	}
 }
 
-let containerBuilderInstance: ContainerBuilder
+let containerBuilderInstance: ContainerBuilder;
 
 export function getContainer() {
-    if(containerBuilderInstance) return containerBuilderInstance
+	if (containerBuilderInstance) return containerBuilderInstance;
 
-    containerBuilderInstance = new ContainerBuilder()
+	containerBuilderInstance = new ContainerBuilder();
 
-    return containerBuilderInstance
+	return containerBuilderInstance;
 }

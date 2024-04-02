@@ -14,7 +14,7 @@
 		...En
 	});
 
-	onMount(async () => {
+	onMount(async() => {
 		workspace = Blockly.inject("blocklyDiv", { ...OPTIONS });
 
 		const supportedEvents = new Set([
