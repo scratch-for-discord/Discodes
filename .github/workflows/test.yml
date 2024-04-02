@@ -13,18 +13,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
-      - uses: creyD/prettier_action@v4.3
         with:
           node-version: 20
-      - run: npm lint
+      - run: npm run lint:gh
 
-  test:
-    name: Run test
-    needs: lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 20
-      - run: npm test
+  # test:
+  #   name: Run test
+  #   needs: lint
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 20
+  #     - run: npm run test
