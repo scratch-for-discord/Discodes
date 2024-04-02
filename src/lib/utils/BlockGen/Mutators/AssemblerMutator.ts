@@ -18,11 +18,7 @@ export default class AssemblerMutator extends Mutator {
 	}
 
 	get blocks(): string[] {
-		const arr: string[] = [];
-		for (const prop of this._properties) {
-			arr.push(prop.block);
-		}
-		return arr;
+		return this._properties.map((val) => val.block);
 	}
 
 	getMixin(): object {
@@ -32,6 +28,7 @@ export default class AssemblerMutator extends Mutator {
 		const extraStateObj: Record<string, number> = {};
 		// First we set the save and load states.
 		const mixin = {
+			// eslint-disable-next-line
 			saveExtraState: function (this: any): object {
 				for (const mutatorProp of properties) {
 					extraStateObj[mutatorProp.block] = this[`${mutatorProp.block}_count_`];
@@ -46,9 +43,10 @@ export default class AssemblerMutator extends Mutator {
 				}
 				this.updateShape_();
 			},
+			// eslint-disable-next-line
 			decompose: function (this: any, workspace: Blockly.WorkspaceSvg) {
 				Blockly.Blocks[containerBlockName] = {
-					init: function (this: Blockly.Block) {
+					init: function(this: Blockly.Block) {
 						this.jsonInit({
 							type: containerBlockName,
 							message0: `${containerBlockText}\n %1`,
@@ -64,7 +62,7 @@ export default class AssemblerMutator extends Mutator {
 						});
 					}
 				};
-				javascriptGenerator.forBlock[containerBlockName] = function () {
+				javascriptGenerator.forBlock[containerBlockName] = function() {
 					return "";
 				};
 
@@ -85,6 +83,7 @@ export default class AssemblerMutator extends Mutator {
 
 				return containerBlock;
 			},
+			// eslint-disable-next-line
 			compose: function (this: any, containerBlock: Blockly.Block) {
 				const workspaceBlocks = [];
 				let itemBlock = containerBlock.getInputTargetBlock("STACK");
@@ -102,39 +101,47 @@ export default class AssemblerMutator extends Mutator {
 				}
 				this.updateShape_();
 			},
-			updateShape_: function (this: Blockly.Block) {
+			updateShape_: function(this: Blockly.Block) {
 				// Iterate over each MutatorBlock defined in the properties array
 				for (let i = 0; i < properties.length; i++) {
-					const mutatorProp = properties[i];
+					// @ts-expect-error MutatorProp is type is "any"
 					const blockCount = this[`${mutatorProp.block}_count_`];
 					if (blockCount > 0) {
 						// Determine the number of items in the adds array for the current MutatorBlock
 
 						// Add inputs for each block count
 						for (let j = 0; j < blockCount; j++) {
+							// @ts-expect-error MutatorProp is type is "any"
 							const inputName = mutatorProp.block + j;
+							// @ts-expect-error MutatorProp is type is "any"
 							const addsLength = mutatorProp.adds.length;
 
 							if (!this.getInput(inputName)) {
 								// Get the input index by taking the modulo of j with the length of the adds array
 								const addsIndex = j % addsLength;
 								// Generate input definition from the corresponding adds item
+								// @ts-expect-error MutatorProp is type is "any"
 								const input = mutatorProp.adds[addsIndex].generate();
 								// Append the input to the block
+								// @ts-expect-error Undefined blockly type for the private function
 								this.appendInput_(input, inputName);
 							}
 						}
 					} else {
 						// If there are no child blocks, remove all inputs for this type
 						let j = 0;
+						// @ts-expect-error MutatorProp is type is "any"
 						while (this.getInput(mutatorProp.block + j)) {
+							// @ts-expect-error MutatorProp is type is "any"
 							this.removeInput(mutatorProp.block + j);
 							j++;
 						}
 					}
 
 					// If 'once' is true, disable adding more blocks of this type
+					// @ts-expect-error MutatorProp is type is "any"
 					if (mutatorProp.once && blockCount > 0) {
+						// @ts-expect-error MutatorProp is type is "any"
 						this.getInput(mutatorProp.block + (blockCount - 1)).setCheck(null);
 					}
 
@@ -145,6 +152,7 @@ export default class AssemblerMutator extends Mutator {
 
 					// Continue adding inputs for the next MutatorBlock
 					const nextMutatorProp = properties[i + 1];
+					// @ts-expect-error nextMutatorProp is type is "any"
 					const nextBlockCount = this[`${nextMutatorProp.block}_count_`];
 					if (nextBlockCount > 0) {
 						// Determine the number of items in the adds array for the next MutatorBlock
@@ -158,6 +166,7 @@ export default class AssemblerMutator extends Mutator {
 								// Generate input definition from the corresponding adds item
 								const nextInput = nextMutatorProp.adds[nextAddsIndex].generate();
 								// Append the input to the block
+								// @ts-expect-error Undefined blockly type for the private function
 								this.appendInput_(nextInput, nextInputName);
 							}
 						}
@@ -172,6 +181,7 @@ export default class AssemblerMutator extends Mutator {
 
 					// If 'once' is true, disable adding more blocks of this type
 					if (nextMutatorProp.once && nextBlockCount > 0) {
+						// @ts-expect-error MutatorProp is type is "any"
 						this.getInput(nextMutatorProp.block + (nextBlockCount - 1)).setCheck(null);
 					}
 				}
@@ -183,7 +193,8 @@ export default class AssemblerMutator extends Mutator {
 			 * @param {string} name - Name of the input
 			 * @private
 			 */
-			appendInput_: function (this: Blockly.Block, input, name) {
+			// eslint-disable-next-line
+			appendInput_: function (this: Blockly.Block, input: any, name: any) {
 				const inputType = input.type || "input_value"; // Default to input_value if type is not specified
 				const inputCheck = input.check; // Check for input type if specified
 

@@ -9,10 +9,11 @@
 		"test": "npm run test:integration && npm run test:unit",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"lint": "prettier --check . && eslint .",
+		"lint": "npm run format && prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
-		"test:unit": "vitest"
+		"test:unit": "vitest",
+		"test:gh": "vitest run"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
@@ -41,6 +42,7 @@
 	"type": "module",
 	"dependencies": {
 		"@blockly/field-grid-dropdown": "^4.0.11",
+		"@webcontainer/api": "^1.1.9",
 		"blockly": "^10.4.3"
 	}
 }

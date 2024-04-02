@@ -25,6 +25,7 @@
 
 	function openModal() {
 		//@ts-expect-error Modal always has error cuz why not.
+		// eslint-disable-next-line
 		warningsModal.showModal();
 		for (const id in warnings) {
 			if (!Blockly.getMainWorkspace().getBlockById(id)) delete warnings[id];
@@ -64,7 +65,7 @@
 				<form method="dialog">
 					<button
 						class="link link-info ml-2"
-						on:click={async () => {
+						on:click={async() => {
 							await gotoBlock(id);
 						}}>{displayWarnings[id][0].blockName?.toUpperCase()}</button
 					>
