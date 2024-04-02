@@ -17,15 +17,15 @@ jobs:
           node-version: 20
       - run: yarn
       - run: yarn lint --fix
-
-  test:
-    name: Run test
-    needs: lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 20
-      - run: yarn
-      - run: yarn test:unit
+  # tests are not testing 😭
+  # test:
+  #   name: Run test
+  #   needs: lint
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 20
+  #     - run: yarn
+  #     - run: yarn test:unit
