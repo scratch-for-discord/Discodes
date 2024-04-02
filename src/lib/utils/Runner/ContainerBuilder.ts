@@ -8,7 +8,7 @@ class ContainerBuilder {
 	isReady: boolean = false;
 
 	constructor() {
-		(async () => {
+		(async() => {
 			this.container = await WebContainer.boot();
 			this.fileSystem = new NodeFileSystemManager(this.container);
 

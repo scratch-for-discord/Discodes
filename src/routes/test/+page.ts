@@ -3,7 +3,7 @@ import pkg from "blockly/javascript";
 const { javascriptGenerator } = pkg;
 
 Blockly.Blocks["mutator_test_container"] = {
-	init: function () {
+	init: function() {
 		this.jsonInit({
 			type: "mutator_test_container",
 			message0: "Container %1 %2",
@@ -24,7 +24,7 @@ Blockly.Blocks["mutator_test_container"] = {
 };
 
 Blockly.Blocks["mutator_test_item"] = {
-	init: function () {
+	init: function() {
 		this.jsonInit({
 			type: "mutator_test_item %1",
 			message0: "Item",
@@ -38,7 +38,7 @@ Blockly.Blocks["mutator_test_item"] = {
 };
 
 Blockly.Blocks["mutator_test_1"] = {
-	init: function () {
+	init: function() {
 		this.jsonInit({
 			type: "mutator_test_1",
 			message0: "This does stuff %1 %2",
@@ -61,11 +61,11 @@ Blockly.Blocks["mutator_test_1"] = {
 		});
 	}
 };
-javascriptGenerator.forBlock["mutator_test_1"] = function () {
+javascriptGenerator.forBlock["mutator_test_1"] = function() {
 	return "";
 };
 
-javascriptGenerator.forBlock["mutator_test_item"] = function () {
+javascriptGenerator.forBlock["mutator_test_item"] = function() {
 	return "list!";
 };
 
@@ -77,7 +77,7 @@ Blockly.Extensions.registerMutator(
 	"bob",
 	{
 		// Define saveExtraState to save the number of child blocks
-		saveExtraState: function () {
+		saveExtraState: function() {
 			return {
 				itemCount: this.itemCount_
 			};
@@ -90,7 +90,7 @@ Blockly.Extensions.registerMutator(
 			this.updateShape_();
 		},
 		// Define decompose to explode the block
-		decompose: function (workspace: Blockly.WorkspaceSvg) {
+		decompose: function(workspace: Blockly.WorkspaceSvg) {
 			const containerBlock = workspace.newBlock("mutator_test_container");
 			containerBlock.initSvg();
 			let connection = containerBlock.getInput("STACK")?.connection;
@@ -104,7 +104,7 @@ Blockly.Extensions.registerMutator(
 			return containerBlock;
 		},
 		// Define compose to rebuild the block
-		compose: function (containerBlock: Blockly.Block) {
+		compose: function(containerBlock: Blockly.Block) {
 			const workspaceBlocks = [];
 			let itemBlock = containerBlock.getInputTargetBlock("STACK");
 			while (itemBlock) {
@@ -116,7 +116,7 @@ Blockly.Extensions.registerMutator(
 			this.updateShape_();
 		},
 		// Define updateShape_ to update the shape of the block
-		updateShape_: function () {
+		updateShape_: function() {
 			if (this.itemCount_ === 0 || this.itemCount_ === undefined) {
 				if (!this.getInput("EMPTY")) {
 					this.appendDummyInput("EMPTY").appendField("Empty");

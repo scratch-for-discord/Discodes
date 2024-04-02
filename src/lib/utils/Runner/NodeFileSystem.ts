@@ -3,6 +3,7 @@ import type { WebContainer } from "@webcontainer/api";
 export class NodeFileSystemManager {
 	container: WebContainer;
 	// any type due to the dynamic nature of the file system
+	// eslint-disable-next-line
 	files: Record<string, any> = {};
 
 	constructor(container: WebContainer) {
