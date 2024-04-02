@@ -18,7 +18,7 @@ export default class AssemblerMutator extends Mutator {
 	}
 
 	get blocks(): string[] {
-		return this._properties.map((val) => val.block)
+		return this._properties.map((val) => val.block);
 	}
 
 	getMixin(): object {
