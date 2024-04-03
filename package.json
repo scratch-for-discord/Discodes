@@ -43,6 +43,7 @@
 	"dependencies": {
 		"@blockly/field-grid-dropdown": "^4.0.11",
 		"@webcontainer/api": "^1.1.9",
-		"blockly": "^10.4.3"
+		"blockly": "^10.4.3",
+		"dexie": "^4.0.1"
 	}
 }

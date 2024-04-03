@@ -24,11 +24,11 @@ export type BlockDefinition =
 			code: (args: Record<string, unknown>) => string | [string, Order];
 			mutator?: Mutator;
 			hidden?: boolean;
-	  }
+	}
 	| {
 			label: true;
 			text: string;
-	  };
+	};
 
 export type MutatorBlock = {
 	// Name of the block that appears in the block list in the UI
