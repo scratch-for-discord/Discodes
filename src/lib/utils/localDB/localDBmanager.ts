@@ -1,10 +1,52 @@
-export default class LocalDBManager {
+import { Dexie, type Table } from "dexie";
 
+export default class LocalDBManager extends Dexie {
+    plugins!: Table<DiscodesPluginDataStore, string>
+    users!: Table<User, string>
+
+    constructor() {
+        super("DiscodesDatabase")
+
+        this.version(1).stores({
+            plugins: "id",
+            users: "id"
+        })
+    }
+
+    async getPlugin(id: string) {
+        const val = await this.plugins.get(id)
+
+        if(!val) return undefined
+
+        const ownerId = val.owner
+        const owner = await this.users.get(ownerId)
+
+        if(!owner) return undefined
+
+        const obj: DiscodesPlugin = {
+            ...val,
+            owner
+        }
+
+        return obj
+    }
 }
 
 //TODO Make those interfaces!
 //? Some data are for the backend only, if you feel like it doesn't belong in the localDB don't add them! Thx <3
 type BlockConfig = unknown;
+
+type DiscodesPluginDataStore = {
+    id: string,
+    name: string
+    owner: string
+    description: string
+    downloads: number
+    likes: number
+    rating: number
+    version: number
+    blocks: BlockConfig[]
+}
 
 type DiscodesPlugin = {
     id: string,
@@ -25,7 +67,7 @@ type User = {
     followers: User[]
     createdAt: Date
     workspaces: DiscodesWorkspace[]
-    publishedPluins: DiscodesPlugin[]
+    publishedPlugins: DiscodesPlugin[]
     publishedExamples: DiscodesFile[]
 }
 
