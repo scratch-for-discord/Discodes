@@ -11,7 +11,6 @@ export default class Image extends BaseInput {
 	 * Adds an number input to the block.
 	 * The user will be able to enter a number without needing a variable.
 	 * @param {string} src
-	 * @param {number} defaultValue
 	 * @param {{"alt": string,"width": number,"height": number}} settings
 	 * @memberof NumberInput
 	 */

@@ -21,6 +21,7 @@ export default class Toolbox {
 		const directories: string[] = Object.keys(files).map((key) => key);
 
 		// too lazy to type rn WILL TYPE LATER
+		// eslint-disable-next-line
 		const structure: { [key: string]: any } = {};
 
 		for (const path in files) {

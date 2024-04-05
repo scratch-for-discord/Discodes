@@ -49,7 +49,7 @@ export default class Dropdown extends BaseInput {
 	 */
 	getDefinition(): DropdownJSON {
 		if (this._dropdownType === DropdownType.Auto) {
-			// Automatically swaps bewteen grid and list type depending on the length of the arguments.
+			// Automatically swaps between grid and list type depending on the length of the arguments.
 			this._dropdownType = this._options.length > 10 ? DropdownType.Grid : DropdownType.List;
 		}
 
