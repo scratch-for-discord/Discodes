@@ -30,9 +30,10 @@ export default class AssemblerMutator extends Mutator {
 		const containerBlockName = salt(10);
 		const containerBlockText = this._containerBlockText;
 		const extraStateObj: Record<string, number> = {};
+
 		// First we set the save and load states.
 		const mixin = {
-			saveExtraState: function (this: any): object {
+			saveExtraState: function(this: any): object {
 				for (const mutatorProp of properties) {
 					extraStateObj[mutatorProp.block] = this[`${mutatorProp.block}_count_`];
 				}
@@ -46,9 +47,9 @@ export default class AssemblerMutator extends Mutator {
 				}
 				this.updateShape_();
 			},
-			decompose: function (this: any, workspace: Blockly.WorkspaceSvg) {
+			decompose: function(this: any, workspace: Blockly.WorkspaceSvg) {
 				Blockly.Blocks[containerBlockName] = {
-					init: function (this: Blockly.Block) {
+					init: function(this: Blockly.Block) {
 						this.jsonInit({
 							type: containerBlockName,
 							message0: `${containerBlockText}\n %1`,
@@ -64,7 +65,7 @@ export default class AssemblerMutator extends Mutator {
 						});
 					}
 				};
-				javascriptGenerator.forBlock[containerBlockName] = function () {
+				javascriptGenerator.forBlock[containerBlockName] = function() {
 					return "";
 				};
 
@@ -85,7 +86,7 @@ export default class AssemblerMutator extends Mutator {
 
 				return containerBlock;
 			},
-			compose: function (this: any, containerBlock: Blockly.Block) {
+			compose: function(this: any, containerBlock: Blockly.Block) {
 				const workspaceBlocks = [];
 				let itemBlock = containerBlock.getInputTargetBlock("STACK");
 				// Iterate over each child block in the mutator workspace and add it to the array
