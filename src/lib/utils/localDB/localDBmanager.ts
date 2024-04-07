@@ -1,13 +1,15 @@
 import { Dexie, type Table } from "dexie";
 
-let dbManager: LocalDBManager
+export class UserDataGetter {
+    id: string
 
-export function getDB() {
-    if (!dbManager) {
-        dbManager = new LocalDBManager()
+    constructor(id: string) {
+        this.id = id
     }
 
-    return dbManager
+    async getData(): Promise<User> {
+        throw new Error("Method not implemented")
+    }
 }
 
 // SINGLETON CLASS! DO NOT BUILD
@@ -27,12 +29,14 @@ class LocalDBManager extends Dexie {
     }
 }
 
-let userStore: UserStorage
+let dbManager: LocalDBManager
 
-export function getUserStore() {
-    if (!userStore) userStore = new UserStorage()
+export function getDB() {
+    if (!dbManager) {
+        dbManager = new LocalDBManager()
+    }
 
-    return userStore
+    return dbManager
 }
 
 // SINGLETON CLASS! DO NOT BUILD
@@ -125,16 +129,12 @@ class UserStorage {
     }
 }
 
-export class UserDataGetter {
-    id: string
+let userStore: UserStorage
 
-    constructor(id: string) {
-        this.id = id
-    }
+export function getUserStore() {
+    if (!userStore) userStore = new UserStorage()
 
-    async getData(): Promise<User> {
-        throw new Error("Method not implemented")
-    }
+    return userStore
 }
 
 //TODO Make those interfaces!
