@@ -4,6 +4,20 @@ import pkg from "blockly/javascript";
 const { javascriptGenerator } = pkg;
 import Mutator from "./Mutator";
 import Blockly, {BlockSvg, Connection} from "blockly/core";
+function orderListChanged(order1: string[], order2: string[]): boolean {
+    if(!(Array.isArray(order1) && Array.isArray(order2))) return false;
+    if(order1.length !== order2.length) return true;
+    for (let i = 0; i < order1.length; i++) {
+        if(order1[i] !== order2[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+interface ClauseBlock extends Blockly.Block {
+    //input_type: Connection
+    connections_: {[key: string]: Connection}
+}
 
 export default class AssemblerMutatorV2 extends Mutator {
     private readonly _properties: MutatorBlock[];
@@ -28,7 +42,9 @@ export default class AssemblerMutatorV2 extends Mutator {
         return arr;
     }
 
+
     getMixin(): object {
+        this.order = [];
         const properties = this._properties;
         const propertieMap = Object.create(null)
         const containerBlockName = salt(10);
@@ -39,6 +55,26 @@ export default class AssemblerMutatorV2 extends Mutator {
         for(const prop of properties) {
             propertieMap[prop.block] = prop;
         }
+        Blockly.Blocks[containerBlockName] = {
+            init: function(this: Blockly.Block) {
+                this.jsonInit({
+                    type: containerBlockName,
+                    message0: `${containerBlockText}\n %1`,
+                    args0: [
+                        {
+                            type: "input_statement",
+                            name: "STACK"
+                        }
+                    ],
+                    colour: 230,
+                    tooltip: "Put blocks inside of the container block to modify the original block",
+                    helpUrl: ""
+                });
+            }
+        };
+        javascriptGenerator.forBlock[containerBlockName] = function() {
+            return "";
+        };
         const mixin = {
                 elseifCount_: 0,
                 elseCount_: 0,
@@ -51,30 +87,14 @@ export default class AssemblerMutatorV2 extends Mutator {
             //! Disable eslint cuz the state variable is of type any until they fully migrate to typescript
             // eslint-disable-next-line
             loadExtraState: function (this: any, state: any): void {
-                    this.order = state["order"];
+                    // const oldOrder = this.order;
+                    this.order = state["order"] ?? [];
+                /*if(orderListChanged(oldOrder, this.order)) */
                 this.updateShape_();
+
             },
             decompose: function(this: any, workspace: Blockly.WorkspaceSvg) {
-                Blockly.Blocks[containerBlockName] = {
-                    init: function(this: Blockly.Block) {
-                        this.jsonInit({
-                            type: containerBlockName,
-                            message0: `${containerBlockText}\n %1`,
-                            args0: [
-                                {
-                                    type: "input_statement",
-                                    name: "STACK"
-                                }
-                            ],
-                            colour: 230,
-                            tooltip: "Put blocks inside of the container block to modify the original block",
-                            helpUrl: ""
-                        });
-                    }
-                };
-                javascriptGenerator.forBlock[containerBlockName] = function() {
-                    return "";
-                };
+
                 const containerBlock = workspace.newBlock(containerBlockName);
                 containerBlock.initSvg();
                 let connection = containerBlock.getInput("STACK")?.connection;
@@ -93,15 +113,22 @@ export default class AssemblerMutatorV2 extends Mutator {
 
             },
             compose: function(this: any, containerBlock: Blockly.Block) {
-                    this.order = [];
-                    let itemBlock: Blockly.Block | null = containerBlock.getInputTargetBlock("STACK");
+                    const connections: Array<Connection | null> = [null];
+                    const oldOrder = this.order;
+                    const order = [];
+
+                    let itemBlock: ClauseBlock | null = containerBlock.getInputTargetBlock("STACK") as ClauseBlock | null;
                     while(itemBlock) {
-                        this.order.push(itemBlock.type);
-                        itemBlock = itemBlock.nextConnection && itemBlock.nextConnection.targetBlock();
+                        order.push(itemBlock.type);
+                        // connections.push(itemBlock.conne);
+                        itemBlock = itemBlock.nextConnection && itemBlock.nextConnection.targetBlock() as ClauseBlock | null;
                     }
-                    this.updateShape_();
+                    this.order = order;
+                    if(orderListChanged(oldOrder, this.order)) this.updateShape_();
             },
             updateShape_: function(this: Blockly.Block) {
+                console.log("state.order", this.order);
+
                     for (const inp of properties) {
                         for(const add of inp.adds) {
                             let i = 1;
@@ -119,7 +146,7 @@ export default class AssemblerMutatorV2 extends Mutator {
                             const adds = propertieMap[order].adds;
                             for (const add of adds) {
                                 inputIndexMap.set(add._name, (inputIndexMap.get(add._name)??0) + 1);
-                                const name = add._name + inputIndexMap.get(add._name) ?? 0;
+                                const name = add._name + inputIndexMap.get(add._name)   ;
                                 if (!this.getInput(name)) {
                                     const input = add.generate();
                                     this.appendInput_(input, name, add.getField());
@@ -133,7 +160,35 @@ export default class AssemblerMutatorV2 extends Mutator {
 
 
             },
+            saveConnections: function (this: any, containerBlock: Blockly.Block) {
+                    const count = new Map<string, number>();
+                    let clauseBlock = containerBlock.getInputTargetBlock("STACK") as ClauseBlock | null;
+                    while(clauseBlock) {
+                        if(clauseBlock.isInsertionMarker()) {
+                            clauseBlock = clauseBlock.getNextBlock() as ClauseBlock | null;
+                            continue;
+                        }
+                        clauseBlock.connections_ = {};
+                        //count
+                        const c = count.get(clauseBlock.type) ?? 1;
+                        const prop = propertieMap[clauseBlock.type];
+                        if(prop) {
+                            for(const add of prop.adds) {
+                                const inp = this.getInput(add._name + c);
+                                if(inp) {
 
+                                    clauseBlock.connections_[add._name + c] = inp && inp.connection!.targetConnection;
+                                    count.set(clauseBlock.type, c+1);
+                                    console.log(1, count, clauseBlock.connections_);
+                                }
+                            }
+                        }
+                        console.log(clauseBlock?.connections_);
+
+                        clauseBlock = clauseBlock.getNextBlock() as ClauseBlock | null;
+                    }
+
+            },
             appendInput_: function(this: Blockly.Block, input, name, fieldText) {
                 const inputType = input.type || "input_value"; // Default to input_value if type is not specified
                 const inputCheck = input.check; // Check for input type if specified
