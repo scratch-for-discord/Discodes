@@ -18,7 +18,11 @@ interface ClauseBlock extends Blockly.Block {
     //input_type: Connection
     connections_: {[key: string]: Connection}
 }
-type ConnectionMap = {[key: string]: Connection};
+type ConnectionMap = {[key: string]: ConnectionMapConnection};
+interface ConnectionMapConnection {
+    connection: Connection,
+    input_name: string
+}
 export default class AssemblerMutatorV2 extends Mutator {
     private readonly _properties: MutatorBlock[];
     private readonly _containerBlockText: string;
@@ -113,21 +117,31 @@ export default class AssemblerMutatorV2 extends Mutator {
 
             },
             compose: function(this: any, containerBlock: Blockly.Block) {
-                    const connections: Array<Connection | null> = [null];
+                    const connections: ConnectionMap= {};
                     const oldOrder = this.order;
                     const order = [];
 
                     let itemBlock: ClauseBlock | null = containerBlock.getInputTargetBlock("STACK") as ClauseBlock | null;
                     while(itemBlock) {
                         order.push(itemBlock.type);
+                        if(itemBlock.connections_) {
+                            for (const conStr of Object.keys(itemBlock.connections_)) {
+                                connections[conStr] = {
+                                    connection: itemBlock.connections_[conStr],
+                                    input_name: itemBlock.type
+                                };
+                            }
+                        }
                         // connections.push(itemBlock.conne);
                         itemBlock = itemBlock.nextConnection && itemBlock.nextConnection.targetBlock() as ClauseBlock | null;
                     }
                     this.order = order;
                     if(orderListChanged(oldOrder, this.order)) this.updateShape_();
+                this.reconnectChildBlocks_(
+                    connections
+                );
             },
             updateShape_: function(this: Blockly.Block) {
-                console.log("state.order", this.order);
 
                     for (const inp of properties) {
                         for(const add of inp.adds) {
@@ -167,19 +181,22 @@ export default class AssemblerMutatorV2 extends Mutator {
             ) {
                     const count = new Map<string, number>();
                 for (const connectionKey in connections) {
-                    const property = propertieMap[connectionKey];
-                    const connection = connections[connectionKey];
+                    const ConMap = connections[connectionKey];
+                    const property = propertieMap[ConMap.input_name];
+                    console.log("imp", property, ConMap.connection);
+                    const connection = ConMap.connection;
+                    if(!connection) continue;
                     for (const add of property.adds) {
                         const name = add._name;
                         const c = count.get(name) ?? 1;
-                        connection[name+c].reconnect(this,)
+                        connection.reconnect(this, name+c);
                         count.set(name, c+1);
 
                     }
                 }
-                for (let i = 1; i <= 10; i++) {
-                    connections[i]?.reconnect(this, 'IF' + i);
-                }
+                // for (let i = 1; i <= 10; i++) {
+                //     connections[i]?.reconnect(this, 'IF' + i);
+                // }
             },
             saveConnections: function (this: any, containerBlock: Blockly.Block) {
                     const count = new Map<string, number>();
@@ -200,11 +217,9 @@ export default class AssemblerMutatorV2 extends Mutator {
 
                                     clauseBlock.connections_[add._name + c] = inp && inp.connection!.targetConnection;
                                     count.set(clauseBlock.type, c+1);
-                                    console.log(1, count, clauseBlock.connections_);
                                 }
                             }
                         }
-                        console.log(clauseBlock?.connections_);
 
                         clauseBlock = clauseBlock.getNextBlock() as ClauseBlock | null;
                     }

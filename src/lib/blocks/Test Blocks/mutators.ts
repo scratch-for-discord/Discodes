@@ -28,7 +28,7 @@ const blocks: BlockDefinition[] = [
 		hidden: true
 	},
 	{
-		id: "test_item21",
+		id: "if_test",
 		text: "else if",
 		shape: BlockShape.Action,
 		inline: true,
@@ -43,7 +43,7 @@ const blocks: BlockDefinition[] = [
 		hidden: true
 	},
 	{
-		id: "test_item2",
+		id: "else_test",
 		text: "else",
 		shape: BlockShape.Bottom,
 		inline: true,
@@ -72,13 +72,13 @@ const blocks: BlockDefinition[] = [
 		},
 		mutator: new AssemblerMutator("Not content", [
 			{
-				block: "test_item",
-				adds: [new ValueInput("bob1", BlockType.Any)],
+				block: "if_test",
+				adds: [new ValueInput("elseIf", BlockType.Any)],
 				once: true
 			},
 			{
-				block: "test_item2",
-				adds: [new StatementInput("bob2")],
+				block: "else_test",
+				adds: [new StatementInput("ifThing")],
 				once: true
 			}
 		])
@@ -99,13 +99,13 @@ const blocks: BlockDefinition[] = [
 		},
 		mutator: new AssemblerMutatorV2("If", [
 			{
-				block: "test_item21",
-				adds: [new ValueInput("bob1", BlockType.Boolean).setField("else if"), new StatementInput("bob2").setField("do")],
+				block: "if_test",
+				adds: [new ValueInput("if_input", BlockType.Boolean).setField("else if"), new StatementInput("bob2").setField("do")],
 				once: true
 			},
 			{
-				block: "test_item2",
-				adds: [new StatementInput("bob2").setField("else")],
+				block: "else_test",
+				adds: [new StatementInput("else_input").setField("else")],
 				once: true
 			}
 		])
