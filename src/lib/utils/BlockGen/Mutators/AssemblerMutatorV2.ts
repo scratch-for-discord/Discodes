@@ -18,7 +18,7 @@ interface ClauseBlock extends Blockly.Block {
     //input_type: Connection
     connections_: {[key: string]: Connection}
 }
-
+type ConnectionMap = {[key: string]: Connection};
 export default class AssemblerMutatorV2 extends Mutator {
     private readonly _properties: MutatorBlock[];
     private readonly _containerBlockText: string;
@@ -159,6 +159,27 @@ export default class AssemblerMutatorV2 extends Mutator {
                     }
 
 
+            },
+            reconnectChildBlocks_: function(
+                this: Blockly.Block,
+                connections: ConnectionMap,
+
+            ) {
+                    const count = new Map<string, number>();
+                for (const connectionKey in connections) {
+                    const property = propertieMap[connectionKey];
+                    const connection = connections[connectionKey];
+                    for (const add of property.adds) {
+                        const name = add._name;
+                        const c = count.get(name) ?? 1;
+                        connection[name+c].reconnect(this,)
+                        count.set(name, c+1);
+
+                    }
+                }
+                for (let i = 1; i <= 10; i++) {
+                    connections[i]?.reconnect(this, 'IF' + i);
+                }
             },
             saveConnections: function (this: any, containerBlock: Blockly.Block) {
                     const count = new Map<string, number>();
