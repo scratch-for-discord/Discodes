@@ -91,12 +91,14 @@ export default class Block {
 						this.setOutput(true, output);
 					}
 				}
-
+				// eslint-disable-next-line @typescript-eslint/no-this-alias
+				const block = this;
 				// Warnings Code
 				this.setOnChange(function(this: Blockly.Block, changeEvent: Abstract) {
 					if (
 						(EventsToTriggerWarnings.has(changeEvent.type) || changeEvent.type == "change") &&
-						!this.isInFlyout
+						!this.isInFlyout &&
+						block.id == this.id
 					) {
 						if (!warnings) return;
 
