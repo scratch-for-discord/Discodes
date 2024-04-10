@@ -48,7 +48,7 @@ export class NodeFileSystemManager {
 			getFiles(dir, filesObj[first]);
 		};
 
-		getFiles(arr, this.files);
+		getFiles(arr, this.files[first]);
 	}
 
 	compileFiles() {
