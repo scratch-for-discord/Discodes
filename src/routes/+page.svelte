@@ -18,7 +18,7 @@
 		Blockly.serialization.workspaces.load(JSON.parse(localStorage.getItem("w") || ""), workspace);
 	};
 
-	onMount(async() => {
+	onMount(async () => {
 		const toolbox = new Toolbox();
 		toolboxJson = await toolbox.generate();
 	});

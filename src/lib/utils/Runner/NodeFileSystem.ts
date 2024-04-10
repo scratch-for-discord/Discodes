@@ -11,41 +11,44 @@ export class NodeFileSystemManager {
 	}
 
 	addFiles(to: string, content: string) {
-		const arr = to.split("/")
+		const arr = to.split("/");
 
-		if(arr.length === 1) {
-			this.files[to] = content
-			return
+		if (arr.length === 1) {
+			this.files[to] = content;
+			return;
 		}
 
 		// assume last item is file name
-		const [first, last] = [arr.shift(), arr.pop()]
+		const [first, last] = [arr.shift(), arr.pop()];
 
-		if(!first || !last) throw new Error("Unknown Error: Unable to locate first and last items of an array")
+		if (!first || !last)
+			throw new Error("Unknown Error: Unable to locate first and last items of an array");
 
-		this.files[first] = {}
+		this.files[first] = {};
 
-		if(arr.length === 0) {
-			this.files[last] = content
-			return
+		if (arr.length === 0) {
+			this.files[last] = content;
+			return;
 		}
 
 		// recurrsion baby
+		// Disable due to a dynamic object where key is the directory/file name and value is the content of that file
+		// eslint-disable-next-line
 		const getFiles = (dir: string[], filesObj: Record<string, any>) => {
-			if(dir.length === 1) {
-				filesObj[dir[0]] = content
+			if (dir.length === 1) {
+				filesObj[dir[0]] = content;
 
-				return
+				return;
 			}
 
-			const first = dir.shift() as string
+			const first = dir.shift() as string;
 
-			filesObj[first] = {}
+			filesObj[first] = {};
 
-			getFiles(dir, filesObj[first])
-		}
+			getFiles(dir, filesObj[first]);
+		};
 
-		getFiles(arr, this.files)
+		getFiles(arr, this.files);
 	}
 
 	compileFiles() {

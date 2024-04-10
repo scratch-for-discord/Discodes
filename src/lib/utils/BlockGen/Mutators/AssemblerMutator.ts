@@ -46,7 +46,7 @@ export default class AssemblerMutator extends Mutator {
 			// eslint-disable-next-line
 			decompose: function (this: any, workspace: Blockly.WorkspaceSvg) {
 				Blockly.Blocks[containerBlockName] = {
-					init: function(this: Blockly.Block) {
+					init: function (this: Blockly.Block) {
 						this.jsonInit({
 							type: containerBlockName,
 							message0: `${containerBlockText}\n %1`,
@@ -62,7 +62,7 @@ export default class AssemblerMutator extends Mutator {
 						});
 					}
 				};
-				javascriptGenerator.forBlock[containerBlockName] = function() {
+				javascriptGenerator.forBlock[containerBlockName] = function () {
 					return "";
 				};
 
@@ -101,7 +101,7 @@ export default class AssemblerMutator extends Mutator {
 				}
 				this.updateShape_();
 			},
-			updateShape_: function(this: Blockly.Block) {
+			updateShape_: function (this: Blockly.Block) {
 				// Iterate over each MutatorBlock defined in the properties array
 				for (let i = 0; i < properties.length; i++) {
 					// @ts-expect-error MutatorProp is type is "any"

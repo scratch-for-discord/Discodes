@@ -9,8 +9,8 @@ export default defineConfig({
 	// REQUIRED FOR WEB CONTAINERS! DO NOT REMOVE
 	server: {
 		headers: {
-		  'Cross-Origin-Embedder-Policy': 'require-corp',
-		  'Cross-Origin-Opener-Policy': 'same-origin',
-		},
-	},
+			"Cross-Origin-Embedder-Policy": "require-corp",
+			"Cross-Origin-Opener-Policy": "same-origin"
+		}
+	}
 });

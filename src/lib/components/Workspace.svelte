@@ -19,7 +19,7 @@
 		...En
 	});
 
-	onMount(async() => {
+	onMount(async () => {
 		await loadBlocks();
 		workspace = Blockly.inject("blocklyDiv", { ...options, toolbox: toolbox });
 

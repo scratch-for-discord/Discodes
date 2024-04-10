@@ -65,7 +65,7 @@
 				<form method="dialog">
 					<button
 						class="link link-info ml-2"
-						on:click={async() => {
+						on:click={async () => {
 							await gotoBlock(id);
 						}}>{displayWarnings[id][0].blockName?.toUpperCase()}</button
 					>

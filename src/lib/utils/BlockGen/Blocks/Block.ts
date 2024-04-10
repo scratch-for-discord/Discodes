@@ -65,7 +65,7 @@ export default class Block {
 
 		// Add The block to the blocks list
 		Blockly.Blocks[blockDef.type] = {
-			init: function(this: Blockly.Block) {
+			init: function (this: Blockly.Block) {
 				this.jsonInit(blockDef);
 
 				// Here we define the block's shape
@@ -93,7 +93,7 @@ export default class Block {
 				}
 
 				// Warnings Code
-				this.setOnChange(function(this: Blockly.Block, changeEvent: Abstract) {
+				this.setOnChange(function (this: Blockly.Block, changeEvent: Abstract) {
 					if (
 						(EventsToTriggerWarnings.has(changeEvent.type) || changeEvent.type == "change") &&
 						!this.isInFlyout
@@ -145,7 +145,7 @@ export default class Block {
 		};
 
 		// Generating the export code
-		javascriptGenerator.forBlock[blockDef.type] = function(block: Blockly.Block) {
+		javascriptGenerator.forBlock[blockDef.type] = function (block: Blockly.Block) {
 			const args: Record<string, unknown> = {}; //? Object we will pass as argument for the custom code to run properly
 
 			for (const arg in blockDef.args0) {
