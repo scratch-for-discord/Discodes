@@ -41,11 +41,11 @@ export class NodeFileSystemManager {
 				return;
 			}
 
-			const first = dir.shift() as string;
+			const dir1 = dir.shift() as string;
 
-			filesObj[first] = {};
+			filesObj[dir1] = {};
 
-			getFiles(dir, filesObj[first]);
+			getFiles(dir, filesObj[dir1]);
 		};
 
 		getFiles(arr, this.files[first]);
