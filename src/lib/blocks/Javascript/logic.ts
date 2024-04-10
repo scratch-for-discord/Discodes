@@ -97,7 +97,6 @@ const blocks: BlockDefinition[] = [
 		code: (args) => {
 			return [`${args.INPUT}`, Order.NONE];
 		},
-		imports: ["dismusic@^23"]
 	},
 	{
 		id: "ternary",

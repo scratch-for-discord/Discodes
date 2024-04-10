@@ -16,7 +16,7 @@ import { EventsToTriggerWarnings } from "$lib/constants/warnings";
 // Helpers
 import { dev } from "$app/environment";
 import salt from "$lib/utils/helpers/salt";
-import { addImport, imports } from "./importsList";
+import { addImport } from "$lib/utils/BlockGen/Blocks/importsList";
 
 export default class Block {
 	private readonly _blockDefinition: BlockDefinition;
@@ -96,8 +96,7 @@ export default class Block {
 
 				// Warnings Code
 				this.setOnChange(function(this: Blockly.Block, changeEvent: Abstract) {
-					console.log("Imports:", imports);
-					if (importName && !this.isInFlyout) {
+					if (importName && !this.isInFlyout && changeEvent.type !== Blockly.Events.VIEWPORT_CHANGE) {
 						for (const import_ of importName) {
 							addImport(import_);
 						}
