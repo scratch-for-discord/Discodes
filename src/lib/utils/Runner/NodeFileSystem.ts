@@ -27,7 +27,7 @@ export class NodeFileSystemManager {
 		this.files[first] = {};
 
 		if (arr.length === 0) {
-			this.files[last] = content;
+			this.files[first][last] = content;
 			return;
 		}
 
