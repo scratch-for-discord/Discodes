@@ -10,15 +10,46 @@ export class NodeFileSystemManager {
 		this.container = container;
 	}
 
-	setFile(name: string, content: string, toDirectory?: string) {
-		// dumb code
-		void name;
-		void content;
-		void toDirectory;
-		throw new Error("Method to be implemented!");
+	addFiles(to: string, content: string) {
+		const arr = to.split("/")
+
+		if(arr.length === 1) {
+			this.files[to] = content
+			return
+		}
+
+		// assume last item is file name
+		const [first, last] = [arr.shift(), arr.pop()]
+
+		if(!first || !last) throw new Error("Unknown Error: Unable to locate first and last items of an array")
+
+		this.files[first] = {}
+
+		if(arr.length === 0) {
+			this.files[last] = content
+			return
+		}
+
+		// recurrsion baby
+		const getFiles = (dir: string[], filesObj: Record<string, any>) => {
+			if(dir.length === 1) {
+				filesObj[dir[0]] = content
+
+				return
+			}
+
+			const first = dir.shift() as string
+
+			filesObj[first] = {}
+
+			getFiles(dir, filesObj[first])
+		}
+
+		getFiles(arr, this.files)
 	}
 
 	compileFiles() {
-		this.container.mount(this.files);
+		// I need to find a more efficient way to do this
+		// this.container.mount(this.files);
 	}
 }
