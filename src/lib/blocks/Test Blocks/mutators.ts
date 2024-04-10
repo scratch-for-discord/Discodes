@@ -44,7 +44,7 @@ const blocks: BlockDefinition[] = [
 		id: "not_mutator",
 		text: "not {operand}",
 		args: [new ValueInput("operand", BlockType.Boolean)],
-		warnings: [new Warning(WarningType.Input, "operand")],
+		warnings: [new Warning(WarningType.Input, { fieldName: "operand" })],
 		shape: BlockShape.Action,
 		inline: true,
 		colour: rgbToHex(91, 128, 165),

@@ -16,6 +16,7 @@ import { EventsToTriggerWarnings } from "$lib/constants/warnings";
 // Helpers
 import { dev } from "$app/environment";
 import salt from "$lib/utils/helpers/salt";
+import { addImport, imports } from "./importsList";
 
 export default class Block {
 	private readonly _blockDefinition: BlockDefinition;
@@ -31,6 +32,7 @@ export default class Block {
 		const shape = this._blockDefinition.shape;
 		const output = this._blockDefinition.output;
 		const warnings = this._blockDefinition.warnings;
+		const importName = this._blockDefinition.imports;
 		const mutatorName: string = this._blockDefinition.mutator
 			? this._blockDefinition.id + salt(5)
 			: "";
@@ -94,6 +96,13 @@ export default class Block {
 
 				// Warnings Code
 				this.setOnChange(function(this: Blockly.Block, changeEvent: Abstract) {
+					console.log("Imports:", imports);
+					if (importName && !this.isInFlyout) {
+						for (const import_ of importName) {
+							addImport(import_);
+						}
+					}
+
 					if (
 						(EventsToTriggerWarnings.has(changeEvent.type) || changeEvent.type == "change") &&
 						!this.isInFlyout

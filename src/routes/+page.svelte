@@ -21,6 +21,7 @@
 	onMount(async() => {
 		const toolbox = new Toolbox();
 		toolboxJson = await toolbox.generate();
+		console.log(toolboxJson);
 	});
 </script>
 
@@ -28,3 +29,21 @@
 <button class="btn" on:click={loadWorkspace}>LOAD</button>
 <Warnings bind:workspace />
 <Workspace bind:workspace options={OPTIONS} bind:toolbox={toolboxJson} />
+
+<!-- <script lang="ts">
+
+</script>
+
+<main class="flex flex-col h-screen items-center justify-center ml-52 mr-52 pb-96 mt-10">
+	<h1 class="font-bold text-3xl">Generate a bot at <span class="text-yellow-400">lightning speed</span></h1>
+	The comparaison is here 
+	<div class="diff aspect-[1/1] ">
+		<div class="diff-item-1">
+			<img alt="javascript code preview" src="images/code_preview.png" />
+		</div>
+		<div class="diff-item-2">
+			<img alt="blockly code preview" src="images/blockly_code_preview.png" />
+		</div>
+		<div class="diff-resizer"></div>
+	</div>
+</main> -->

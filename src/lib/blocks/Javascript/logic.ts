@@ -25,7 +25,10 @@ const blocks: BlockDefinition[] = [
 			}),
 			new ValueInput("B", BlockType.Any)
 		],
-		warnings: [new Warning(WarningType.Input, "A"), new Warning(WarningType.Input, "B")],
+		warnings: [
+			new Warning(WarningType.Input, { fieldName: "A" }),
+			new Warning(WarningType.Input, { fieldName: "B" })
+		],
 		shape: BlockShape.Floating,
 		output: BlockType.Boolean,
 		inline: true,
@@ -44,7 +47,10 @@ const blocks: BlockDefinition[] = [
 			new Dropdown("CONDITION", DropdownType.Auto, { and: "&&", or: "||" }),
 			new ValueInput("B", BlockType.Boolean)
 		],
-		warnings: [new Warning(WarningType.Input, "A"), new Warning(WarningType.Input, "B")],
+		warnings: [
+			new Warning(WarningType.Input, { fieldName: "A" }),
+			new Warning(WarningType.Input, { fieldName: "B" })
+		],
 		shape: BlockShape.Floating,
 		output: BlockType.Boolean,
 		inline: true,
@@ -59,7 +65,7 @@ const blocks: BlockDefinition[] = [
 		id: "not",
 		text: "not {OPERAND}",
 		args: [new ValueInput("OPERAND", BlockType.Boolean)],
-		warnings: [new Warning(WarningType.Input, "OPERAND")],
+		warnings: [new Warning(WarningType.Input, { fieldName: "OPERAND" })],
 		shape: BlockShape.Floating,
 		output: BlockType.Boolean,
 		inline: true,
@@ -90,7 +96,8 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "",
 		code: (args) => {
 			return [`${args.INPUT}`, Order.NONE];
-		}
+		},
+		imports: ["dismusic@^23"]
 	},
 	{
 		id: "ternary",
@@ -101,9 +108,9 @@ const blocks: BlockDefinition[] = [
 			new ValueInput("ONFALSE", BlockType.Any)
 		],
 		warnings: [
-			new Warning(WarningType.Input, "CONDITION"),
-			new Warning(WarningType.Input, "ONTRUE"),
-			new Warning(WarningType.Input, "ONFALSE")
+			new Warning(WarningType.Input, { fieldName: "CONDITION" }),
+			new Warning(WarningType.Input, { fieldName: "ONTRUE" }),
+			new Warning(WarningType.Input, { fieldName: "ONFALSE" })
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Any,
@@ -119,7 +126,7 @@ const blocks: BlockDefinition[] = [
 		id: "typeof",
 		text: "typeof {OPERAND}",
 		args: [new ValueInput("OPERAND", BlockType.Any)],
-		warnings: [new Warning(WarningType.Input, "OPERAND")],
+		warnings: [new Warning(WarningType.Input, { fieldName: "OPERAND" })],
 		shape: BlockShape.Floating,
 		output: BlockType.String,
 		inline: true,
@@ -146,7 +153,10 @@ const blocks: BlockDefinition[] = [
 				undefined: "undefined"
 			})
 		],
-		warnings: [new Warning(WarningType.Input, "OPERAND"), new Warning(WarningType.Input, "TYPE")],
+		warnings: [
+			new Warning(WarningType.Input, { fieldName: "OPERAND" }),
+			new Warning(WarningType.Input, { fieldName: "TYPE" })
+		],
 		shape: BlockShape.Bottom,
 		output: BlockType.Boolean,
 		inline: true,

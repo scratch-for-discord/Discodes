@@ -24,6 +24,7 @@ export type BlockDefinition =
 			code: (args: Record<string, unknown>) => string | [string, Order];
 			mutator?: Mutator;
 			hidden?: boolean;
+			imports?: `${string}@${string}`[];
 	  }
 	| {
 			label: true;
