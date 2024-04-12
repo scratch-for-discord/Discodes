@@ -2,7 +2,6 @@ import { BlockShape, BlockType } from "$lib/enums/BlockTypes";
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
 import TextInput from "$lib/utils/BlockGen/Inputs/TextInput";
-import { Order } from "blockly/javascript";
 
 const blocks: BlockDefinition[] = [
 	{
@@ -17,7 +16,7 @@ const blocks: BlockDefinition[] = [
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
 		code: (args) => {
-			return [`"${args.TEXT}"`, Order.NONE];
+			return `"${args.TEXT}"`;
 		}
 	}
 ];

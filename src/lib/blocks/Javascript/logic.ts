@@ -6,7 +6,6 @@ import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
 
-import { Order } from "blockly/javascript";
 
 const blocks: BlockDefinition[] = [
 	{
@@ -36,7 +35,7 @@ const blocks: BlockDefinition[] = [
 		tooltip: "Checks if the first input and the second input validate the condition.",
 		helpUrl: "https://www.w3schools.com/js/js_comparisons.asp",
 		code: (args) => {
-			return [`${args.A} ${args.CONDITION} ${args.B}`, Order.NONE];
+			return `${args.A} ${args.CONDITION} ${args.B}`;
 		}
 	},
 	{
@@ -58,7 +57,7 @@ const blocks: BlockDefinition[] = [
 		tooltip: "Checks if the first input and the second input validate the condition.",
 		helpUrl: "",
 		code: (args) => {
-			return [`${args.A} ${args.CONDITION} ${args.B}`, Order.NONE];
+			return `${args.A} ${args.CONDITION} ${args.B}`;
 		}
 	},
 	{
@@ -74,7 +73,7 @@ const blocks: BlockDefinition[] = [
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT",
 		code: (args) => {
-			return [`!${args.OPERAND}`, Order.NONE];
+			return `!${args.OPERAND}`;
 		}
 	},
 	{
@@ -95,7 +94,7 @@ const blocks: BlockDefinition[] = [
 		tooltip: "",
 		helpUrl: "",
 		code: (args) => {
-			return [`${args.INPUT}`, Order.NONE];
+			return `${args.INPUT}`;
 		}
 	},
 	{
@@ -118,7 +117,7 @@ const blocks: BlockDefinition[] = [
 		tooltip: "",
 		helpUrl: "",
 		code: (args) => {
-			return [`${args.CONDITION} ? ${args.ONTRUE} : ${args.ONFALSE}`, Order.NONE];
+			return `${args.CONDITION} ? ${args.ONTRUE} : ${args.ONFALSE}`;
 		}
 	},
 	{
@@ -133,7 +132,7 @@ const blocks: BlockDefinition[] = [
 		tooltip: "",
 		helpUrl: "",
 		code: (args) => {
-			return [`typeof ${args.OPERAND}`, Order.NONE];
+			return `typeof ${args.OPERAND}`;
 		}
 	},
 	{
@@ -163,7 +162,7 @@ const blocks: BlockDefinition[] = [
 		tooltip: "",
 		helpUrl: "",
 		code: (args) => {
-			return [`typeof ${args.OPERAND} === "${args.TYPE}"`, Order.NONE];
+			return `typeof ${args.OPERAND} === "${args.TYPE}"`;
 		}
 	},
 	{

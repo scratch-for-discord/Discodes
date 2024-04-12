@@ -2,7 +2,7 @@
 import Blockly from "blockly/core";
 import "@blockly/field-grid-dropdown";
 import pkg from "blockly/javascript";
-const { javascriptGenerator } = pkg;
+const { javascriptGenerator, Order } = pkg;
 
 // Types
 import type { Argument, BlockDefinition } from "$lib/types/BlockDefinition";
@@ -180,7 +180,7 @@ export default class Block {
 						break;
 				}
 			}
-			return code(args);
+			return output ? [code(args), Order.NONE] : code(args);
 		};
 	}
 }

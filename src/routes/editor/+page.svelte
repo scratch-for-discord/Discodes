@@ -8,6 +8,7 @@
 	import { onMount } from "svelte";
 	import Toolbox from "$lib/utils/ToolboxGen/Toolbox";
 	import { page } from "$app/stores";
+	import localDB, { type DiscodesWorkspace } from "$lib/utils/localDB/manager";
 
 	let workspace: Blockly.WorkspaceSvg;
 	let toolboxJson: Blockly.utils.toolbox.ToolboxDefinition;
@@ -23,8 +24,8 @@
 		const toolbox = new Toolbox();
 		toolboxJson = await toolbox.generate();
 
-		const workspaceID = $page.url.searchParams.get("id");
-		console.log(workspaceID);
+		const discodesWorkspaceID = $page.url.searchParams.get("id");
+		const dicodesWorksapce = localDB().getWorkspaceByID(discodesWorkspaceID || "1")
 	});
 </script>
 
