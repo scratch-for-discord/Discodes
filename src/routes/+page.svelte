@@ -1,49 +1,113 @@
 <script lang="ts">
-	import "blockly/blocks";
-	import Blockly from "blockly/core";
-
-	import { OPTIONS } from "$lib/constants/workspace";
-	import Workspace from "$lib/components/Workspace.svelte";
-	import Warnings from "$lib/components/Warnings.svelte";
+	import localDB, { type DiscodesWorkspace } from "$lib/utils/localDB/manager";
+	import { browser } from "$app/environment";
 	import { onMount } from "svelte";
-	import Toolbox from "$lib/utils/ToolboxGen/Toolbox";
+	import openEditor from "$lib/utils/helpers/openEditor";
 
-	let workspace: Blockly.WorkspaceSvg;
-	let toolboxJson: Blockly.utils.toolbox.ToolboxDefinition;
+	let workspaceArray: DiscodesWorkspace[];
+	let loaded: boolean = false;
+	let workspaceName: string | undefined;
+	let workspaceDescription: string | undefined;
 
-	const saveWorkspace = () => {
-		localStorage.setItem("w", JSON.stringify(Blockly.serialization.workspaces.save(workspace)));
-	};
-	const loadWorkspace = () => {
-		Blockly.serialization.workspaces.load(JSON.parse(localStorage.getItem("w") || ""), workspace);
-	};
-
-	onMount(async() => {
-		const toolbox = new Toolbox();
-		toolboxJson = await toolbox.generate();
-		console.log(toolboxJson);
+	onMount(() => {
+		workspaceArray = localDB().workspaces;
+		loaded = true;
 	});
+
+	function refreshWorksapces(): void {
+		workspaceArray = localDB().workspaces;
+	}
+
+	function createWorkspace(): void {
+		const workspaceID = `${localDB().workspaces.length + 1}`;
+
+		//? create the userID if it does't exist.
+		localDB().userID = localDB().userID || window.crypto.randomUUID();
+
+		localDB().addWorkspace({
+			id: workspaceID,
+			files: [],
+			createdAt: new Date(),
+			lastEditedAt: new Date(),
+			owner: localDB().userID as string,
+			editors: [],
+			viewers: [],
+			name: workspaceName || "My workspace",
+			description: workspaceDescription || "Awesome Discord bot!",
+			timeWasted: 0,
+			token: ""
+		});
+		workspaceName = undefined;
+		workspaceDescription = undefined;
+
+		openEditor(workspaceID);
+	}
+
+	function deleteWorkspace(id: string) {
+		localDB().deleteWorkspace(id);
+		refreshWorksapces();
+	}
 </script>
 
-<button class="btn" on:click={saveWorkspace}>SAVE</button>
-<button class="btn" on:click={loadWorkspace}>LOAD</button>
-<Warnings bind:workspace />
-<Workspace bind:workspace options={OPTIONS} bind:toolbox={toolboxJson} />
+<button class="btn btn-accent font-bold" on:click={() => { create_workspace.showModal(); }}>Create Workspace</button>
 
-<!-- <script lang="ts">
+{#if browser && loaded}
+	{#each workspaceArray as workspace}
+		<div class="card w-96 bg-neutral text-neutral-content">
+			<div class="card-body items-center text-center">
+				<h2 class="card-title">{workspace.name}</h2>
+				<p>{workspace.description}</p>
 
-</script>
-
-<main class="flex flex-col h-screen items-center justify-center ml-52 mr-52 pb-96 mt-10">
-	<h1 class="font-bold text-3xl">Generate a bot at <span class="text-yellow-400">lightning speed</span></h1>
-	The comparaison is here 
-	<div class="diff aspect-[1/1] ">
-		<div class="diff-item-1">
-			<img alt="javascript code preview" src="images/code_preview.png" />
+				<div class="card-actions justify-end">
+					<button
+						class="btn btn-primary"
+						on:click={() => {
+							openEditor(workspace.id);
+						}}>Open</button
+					>
+					<button
+						class="btn btn-ghost"
+						on:click={() => {
+							deleteWorkspace(workspace.id);
+						}}>Delete</button
+					>
+				</div>
+			</div>
 		</div>
-		<div class="diff-item-2">
-			<img alt="blockly code preview" src="images/blockly_code_preview.png" />
-		</div>
-		<div class="diff-resizer"></div>
+	{/each}
+{/if}
+
+<dialog
+	id="create_workspace"
+	class="modal modal-bottom sm:modal-middle sm:mx-[50%] sm:translate-x-[-50%] sm:w-[420px]"
+>
+	<div class="modal-box">
+		<h3 class="font-bold text-lg">Create a new workspace</h3>
+
+		<label class="form-control w-full max-w-xs">
+			<span class="label-text mt-5 mb-2">Name: </span>
+			<input
+				bind:value={workspaceName}
+				type="text"
+				placeholder="My workspace"
+				class="input input-bordered w-full max-w-xs mb-3"
+			/>
+		</label>
+
+		<label class="form-control w-full max-w-xs">
+			<span class="label-text mt-5 mb-2">Description: </span>
+			<input
+				bind:value={workspaceDescription}
+				type="text"
+				placeholder="Awesome Discord bot!"
+				class="input input-bordered w-full sm:max-w-xs mb-5"
+			/>
+		</label>
+
+		<form method="dialog" class="flex gap-2">
+			<!-- if there is a button in form, it will close the modal -->
+			<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+			<button class="btn btn-accent" on:click={createWorkspace}>Create</button>
+		</form>
 	</div>
-</main> -->
+</dialog>

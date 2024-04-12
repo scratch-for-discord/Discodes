@@ -41,7 +41,7 @@
 			if (LOG_CODE) {
 				const code = javascriptGenerator.workspaceToCode(workspace);
 				console.log("Generated code: \n", code);
-				console.warn("Imports: ", imports)
+				console.warn("Imports: ", imports);
 			}
 			if (LOG_WARNINGS) {
 				console.info("Warnings", warnings);

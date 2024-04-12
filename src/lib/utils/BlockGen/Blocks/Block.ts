@@ -96,7 +96,11 @@ export default class Block {
 
 				// Warnings Code
 				this.setOnChange(function(this: Blockly.Block, changeEvent: Abstract) {
-					if (importName && !this.isInFlyout && changeEvent.type !== Blockly.Events.VIEWPORT_CHANGE) {
+					if (
+						importName &&
+						!this.isInFlyout &&
+						changeEvent.type !== Blockly.Events.VIEWPORT_CHANGE
+					) {
 						for (const import_ of importName) {
 							addImport(import_);
 						}

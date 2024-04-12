@@ -12,7 +12,7 @@ export class UserDataGetter {
 	}
 }
 
-// SINGLETON CLASS! DO NOT BUILD
+//! SINGLETON CLASS! DO NOT BUILD
 class LocalDBManager extends Dexie {
 	plugins!: Table<DiscodesPlugin, string>;
 	workspaces!: Table<DiscodesWorkspace, string>;

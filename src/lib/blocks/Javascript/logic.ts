@@ -96,7 +96,7 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "",
 		code: (args) => {
 			return [`${args.INPUT}`, Order.NONE];
-		},
+		}
 	},
 	{
 		id: "ternary",
