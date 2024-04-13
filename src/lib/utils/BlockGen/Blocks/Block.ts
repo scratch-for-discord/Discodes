@@ -43,7 +43,7 @@ export default class Block {
 			tooltip: this._blockDefinition.tooltip,
 			helpUrl: this._blockDefinition.helpUrl,
 			inputsInline: this._blockDefinition.inline,
-			args0: [] as Record<string, unknown>[],
+			args0: [] as Record<string, string>[],
 			message0: "",
 			mutator: mutatorName == "" ? undefined : mutatorName
 		};
@@ -54,7 +54,7 @@ export default class Block {
 
 		// Converts the classes into usable objects for the block definition
 		this._blockDefinition.args?.forEach((arg: Argument) => {
-			blockDef.args0.push(arg.generate() as Record<string, unknown>);
+			blockDef.args0.push(arg.generate() as Record<string, string>);
 		});
 
 		// Converts the raw text into a blockly valid "message0" with this format: "text %1 other text %2"
@@ -158,7 +158,7 @@ export default class Block {
 
 		// Generating the export code
 		javascriptGenerator.forBlock[blockDef.type] = function(block: Blockly.Block) {
-			const args: Record<string, unknown> = {}; //? Object we will pass as argument for the custom code to run properly
+			const args: Record<string, string> = {}; //? Object we will pass as argument for the custom code to run properly
 
 			for (const arg in blockDef.args0) {
 				const argValue = blockDef.args0[arg]; //? The argument object, contains the name, the type etc..

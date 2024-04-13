@@ -3,7 +3,6 @@ import type BaseInput from "$lib/utils/BlockGen/Inputs/BaseInput";
 import type Mutator from "$lib/utils/BlockGen/Mutators/Mutator";
 import type Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import type Placeholder from "$lib/utils/ToolboxGen/Placeholder";
-import type { Order } from "blockly/javascript";
 
 export type Argument = BaseInput;
 
@@ -21,7 +20,7 @@ export type BlockDefinition =
 			colour: string;
 			tooltip: string;
 			helpUrl: string;
-			code: (args: Record<string, unknown>) => string | [string, Order];
+			code: (args: Record<string, string>) => string;
 			mutator?: Mutator;
 			hidden?: boolean;
 			imports?: `${string}@${string}`[];
