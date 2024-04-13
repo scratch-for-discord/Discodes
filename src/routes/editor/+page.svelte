@@ -7,40 +7,51 @@
 	import Workspace from "$lib/components/Workspace.svelte";
 	import { OPTIONS } from "$lib/constants/workspace";
 	import Toolbox from "$lib/utils/ToolboxGen/Toolbox";
-	import getLocalDB, { type DiscodesFile, type DiscodesWorkspace } from "$lib/utils/localDB/manager";
+	import getLocalDB from "$lib/utils/localDB/manager";
 	import { onMount } from "svelte";
 
-	const localDB = getLocalDB()
+	const localDB = getLocalDB();
 
 	let workspace: Blockly.WorkspaceSvg;
 	let toolboxJson: Blockly.utils.toolbox.ToolboxDefinition;
 
 	let currentFile: string;
-	let files: DiscodesFile[];
 	let discodesWorkspaceID: string;
 
-
 	const saveWorkspace = (currentFile: string) => {
-		localDB.saveBlocklyInFile(currentFile, discodesWorkspaceID, Blockly.serialization.workspaces.save(workspace))
+		localDB.saveBlocklyInFile(
+			currentFile,
+			discodesWorkspaceID,
+			Blockly.serialization.workspaces.save(workspace)
+		);
 	};
 	const loadWorkspace = (currentFile: string) => {
-		localDB.loadBlocklyFromFile(currentFile, discodesWorkspaceID, workspace)
+		localDB.loadBlocklyFromFile(currentFile, discodesWorkspaceID, workspace);
 	};
 
 	onMount(async() => {
 		toolboxJson = await new Toolbox().generate();
 
 		discodesWorkspaceID = $page.url.searchParams.get("id") || "1";
-		const discodesWorksapce = localDB.getWorkspaceByID(discodesWorkspaceID)
+		const discodesWorksapce = localDB.getWorkspaceByID(discodesWorkspaceID);
 
-		if (!discodesWorksapce) return
+		if (!discodesWorksapce) return;
 
-		files = discodesWorksapce.files
-		currentFile = discodesWorksapce.lastOpened
+		currentFile = discodesWorksapce.lastOpened;
 	});
 </script>
 
-<button class="btn" on:click={() => {saveWorkspace(currentFile)}}>SAVE</button>
-<button class="btn" on:click={() => {loadWorkspace(currentFile)}}>LOAD</button>
+<button
+	class="btn"
+	on:click={() => {
+		saveWorkspace(currentFile);
+	}}>SAVE</button
+>
+<button
+	class="btn"
+	on:click={() => {
+		loadWorkspace(currentFile);
+	}}>LOAD</button
+>
 <Warnings bind:workspace />
 <Workspace bind:workspace options={OPTIONS} bind:toolbox={toolboxJson} />

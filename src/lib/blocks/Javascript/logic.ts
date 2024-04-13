@@ -6,7 +6,6 @@ import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
 
-
 const blocks: BlockDefinition[] = [
 	{
 		id: "is_equal",

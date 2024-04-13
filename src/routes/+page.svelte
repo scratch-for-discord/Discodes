@@ -8,9 +8,8 @@
 	let loaded: boolean = false;
 	let workspaceName: string | undefined;
 	let workspaceDescription: string | undefined;
-	let localDB = getLocalDB()
-	let create_workspace: HTMLDialogElement
-
+	let localDB = getLocalDB();
+	let create_workspace: HTMLDialogElement;
 
 	onMount(() => {
 		workspaceArray = localDB.workspaces;
@@ -29,17 +28,19 @@
 
 		localDB.addWorkspace({
 			id: workspaceID,
-			files: [{
-				name: "index",
-				createdAt: new Date(),
-				lastEditedAt: new Date(),
-				timeWasted: 0,
-				blocklyWorkspaceSave: {
-					workspaceSave: {},
-					blockLength: 0
-				},
-				thumbnail: "" //TODO Add thumbnails later on
-			}],
+			files: [
+				{
+					name: "index",
+					createdAt: new Date(),
+					lastEditedAt: new Date(),
+					timeWasted: 0,
+					blocklyWorkspaceSave: {
+						workspaceSave: {},
+						blockLength: 0
+					},
+					thumbnail: "" //TODO Add thumbnails later on
+				}
+			],
 			createdAt: new Date(),
 			lastEditedAt: new Date(),
 			owner: localDB.userID as string,
@@ -51,7 +52,7 @@
 			token: "",
 			lastOpened: "index"
 		});
-		
+
 		workspaceName = undefined;
 		workspaceDescription = undefined;
 
@@ -64,7 +65,12 @@
 	}
 </script>
 
-<button class="btn btn-accent font-bold" on:click={() => { create_workspace.showModal(); }}>Create Workspace</button>
+<button
+	class="btn btn-accent font-bold"
+	on:click={() => {
+		create_workspace.showModal();
+	}}>Create Workspace</button
+>
 
 {#if browser && loaded}
 	{#each workspaceArray as workspace}

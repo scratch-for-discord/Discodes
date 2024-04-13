@@ -53,7 +53,7 @@ export type DiscodesWorkspace = {
 	description: string;
 	timeWasted: number;
 	token: string;
-	lastOpened: string
+	lastOpened: string;
 };
 
 class LocalDB {
@@ -159,7 +159,7 @@ class LocalDB {
 	addFile(file: DiscodesFile, workspaceID: string): void {
 		const workspace = this.getWorkspaceByID(workspaceID);
 		if (!workspace) return;
-		this.saveWorkspace(workspaceID, {...workspace, files: [...workspace.files, file]});
+		this.saveWorkspace(workspaceID, { ...workspace, files: [...workspace.files, file] });
 	}
 
 	/**
@@ -181,7 +181,7 @@ class LocalDB {
 				files[index].blocklyWorkspaceSave.workspaceSave = blocklySave;
 			}
 		}
-		this.saveWorkspace(workspaceID, {...workspace, files: files, lastEditedAt: new Date()});
+		this.saveWorkspace(workspaceID, { ...workspace, files: files, lastEditedAt: new Date() });
 	}
 
 	/**
@@ -192,8 +192,15 @@ class LocalDB {
 	 * @param {Blockly.WorkspaceSvg} blocklyWorkspace
 	 * @memberof LocalDB
 	 */
-	loadBlocklyFromFile(fileName: string, discodesWorkspaceID: string, blocklyWorkspace: Blockly.WorkspaceSvg): void {
-		Blockly.serialization.workspaces.load(this.getFile(fileName, discodesWorkspaceID)?.blocklyWorkspaceSave.workspaceSave as object, blocklyWorkspace);
+	loadBlocklyFromFile(
+		fileName: string,
+		discodesWorkspaceID: string,
+		blocklyWorkspace: Blockly.WorkspaceSvg
+	): void {
+		Blockly.serialization.workspaces.load(
+			this.getFile(fileName, discodesWorkspaceID)?.blocklyWorkspaceSave.workspaceSave as object,
+			blocklyWorkspace
+		);
 	}
 }
 

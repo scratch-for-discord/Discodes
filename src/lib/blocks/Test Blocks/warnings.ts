@@ -83,7 +83,7 @@ const blocks: BlockDefinition[] = [
 		code: () => {
 			return "";
 		}
-	},
+	}
 ];
 
 const category: CategoryDefinition = {
