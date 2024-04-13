@@ -186,7 +186,6 @@ const blocks: BlockDefinition[] = [
             id: "array_math",
             text: "{OPERATION} of list {ARRAY}",
             args: [
-                new ValueInput("ARRAY", BlockType.Array),
                 new Dropdown("OPERATION", DropdownType.Auto, {
                     "sum": "sum",
                     "min": "min",
@@ -197,7 +196,10 @@ const blocks: BlockDefinition[] = [
                     "range": "range",
                     "random": "random",
                     "standard deviation": "standard deviation",
-                })],
+                    
+                }),
+                new ValueInput("ARRAY", BlockType.Array)
+            ],
             // placeholders: [
             //     new Placeholder(PlaceholderType.Block, "ARRAY", "array", {ARRAY: [1, 2, 3]})
             // ],
@@ -234,7 +236,7 @@ const blocks: BlockDefinition[] = [
         },
         {
             id: "random_int",
-            text: "Random integer between {MIN} to {MAX}",
+            text: "random integer between {MIN} to {MAX}",
             args: [
                 new ValueInput("MIN", BlockType.Number),
                 new ValueInput("MAX", BlockType.Number)
@@ -255,7 +257,7 @@ const blocks: BlockDefinition[] = [
         },
         {
             id: "random_fraction",
-            text: "Random fraction",
+            text: "random fraction",
             args: [],
             shape: BlockShape.Floating,
             output: BlockType.Number,
@@ -268,8 +270,8 @@ const blocks: BlockDefinition[] = [
             }
         },
         {
-            id: "text {TEXT} to number",
-            text: "Text {TEXT} to number",
+            id: "toNumber",
+            text: "convert text {TEXT} to number",
             args: [
                 new ValueInput("TEXT", BlockType.String)
             ],
@@ -288,7 +290,7 @@ const blocks: BlockDefinition[] = [
         },
         {
             id: "constrain {VALUE} between {MIN} and {MAX}",
-            text: "Constrain {VALUE} between {MIN} and {MAX}",
+            text: "constrain {VALUE} between {MIN} and {MAX}",
             args: [
                 new ValueInput("VALUE", BlockType.Number),
                 new ValueInput("MIN", BlockType.Number),
@@ -309,26 +311,26 @@ const blocks: BlockDefinition[] = [
                 return `Math.min(Math.max(${args.VALUE}, ${args.MIN}), ${args.MAX})`
             }
         },
-        {
-            id: "chance {CHANCE} %",
-            text: "Chance {CHANCE} %",
-            args: [
-                new ValueInput("CHANCE", BlockType.Number)
-            ],
-            placeholders: [
-                new Placeholder(PlaceholderType.Block, "CHANCE", "number", {NUMBER: 50})
-            ],
-            shape: BlockShape.Floating,
-            output: BlockType.Boolean,
-            inline: true,
-            colour: "#5b67a5",
-            tooltip: "Chances a number between two numbers.",
-            helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
-            code: (args) => {
-                return `Math.random() * 100 < ${args.CHANCE}`
-            }
+        // {
+        //     id: "chance {CHANCE} %",
+        //     text: "{CHANCE} % chance of true",
+        //     args: [
+        //         new ValueInput("CHANCE", BlockType.Number)
+        //     ],
+        //     placeholders: [
+        //         new Placeholder(PlaceholderType.Block, "CHANCE", "number", {NUMBER: 50})
+        //     ],
+        //     shape: BlockShape.Floating,
+        //     output: BlockType.Boolean,
+        //     inline: true,
+        //     colour: "#5b67a5",
+        //     tooltip: "Chances a number between two numbers.",
+        //     helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+        //     code: (args) => {
+        //         return `Math.random() * 100 < ${args.CHANCE}`
+        //     }
 
-        }
+        // }
 
 ]
 
