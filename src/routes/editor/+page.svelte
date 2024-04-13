@@ -2,34 +2,45 @@
 	import "blockly/blocks";
 	import Blockly from "blockly/core";
 
-	import { OPTIONS } from "$lib/constants/workspace";
-	import Workspace from "$lib/components/Workspace.svelte";
-	import Warnings from "$lib/components/Warnings.svelte";
-	import { onMount } from "svelte";
-	import Toolbox from "$lib/utils/ToolboxGen/Toolbox";
 	import { page } from "$app/stores";
-	import localDB, { type DiscodesWorkspace } from "$lib/utils/localDB/manager";
+	import Warnings from "$lib/components/Warnings.svelte";
+	import Workspace from "$lib/components/Workspace.svelte";
+	import { OPTIONS } from "$lib/constants/workspace";
+	import Toolbox from "$lib/utils/ToolboxGen/Toolbox";
+	import getLocalDB, { type DiscodesFile, type DiscodesWorkspace } from "$lib/utils/localDB/manager";
+	import { onMount } from "svelte";
+
+	const localDB = getLocalDB()
 
 	let workspace: Blockly.WorkspaceSvg;
 	let toolboxJson: Blockly.utils.toolbox.ToolboxDefinition;
 
-	const saveWorkspace = () => {
-		localStorage.setItem("w", JSON.stringify(Blockly.serialization.workspaces.save(workspace)));
+	let currentFile: string;
+	let files: DiscodesFile[];
+	let discodesWorkspaceID: string;
+
+
+	const saveWorkspace = (currentFile: string) => {
+		localDB.saveBlocklyInFile(currentFile, discodesWorkspaceID, Blockly.serialization.workspaces.save(workspace))
 	};
-	const loadWorkspace = () => {
-		Blockly.serialization.workspaces.load(JSON.parse(localStorage.getItem("w") || ""), workspace);
+	const loadWorkspace = (currentFile: string) => {
+		localDB.loadBlocklyFromFile(currentFile, discodesWorkspaceID, workspace)
 	};
 
 	onMount(async() => {
-		const toolbox = new Toolbox();
-		toolboxJson = await toolbox.generate();
+		toolboxJson = await new Toolbox().generate();
 
-		const discodesWorkspaceID = $page.url.searchParams.get("id");
-		const dicodesWorksapce = localDB().getWorkspaceByID(discodesWorkspaceID || "1")
+		discodesWorkspaceID = $page.url.searchParams.get("id") || "1";
+		const discodesWorksapce = localDB.getWorkspaceByID(discodesWorkspaceID)
+
+		if (!discodesWorksapce) return
+
+		files = discodesWorksapce.files
+		currentFile = discodesWorksapce.lastOpened
 	});
 </script>
 
-<button class="btn" on:click={saveWorkspace}>SAVE</button>
-<button class="btn" on:click={loadWorkspace}>LOAD</button>
+<button class="btn" on:click={() => {saveWorkspace(currentFile)}}>SAVE</button>
+<button class="btn" on:click={() => {loadWorkspace(currentFile)}}>LOAD</button>
 <Warnings bind:workspace />
 <Workspace bind:workspace options={OPTIONS} bind:toolbox={toolboxJson} />

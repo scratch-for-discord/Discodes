@@ -1,5 +1,5 @@
 <script lang="ts">
-	import localDB, { type DiscodesWorkspace } from "$lib/utils/localDB/manager";
+	import getLocalDB, { type DiscodesWorkspace } from "$lib/utils/localDB/manager";
 	import { browser } from "$app/environment";
 	import { onMount } from "svelte";
 	import openEditor from "$lib/utils/helpers/openEditor";
@@ -8,35 +8,50 @@
 	let loaded: boolean = false;
 	let workspaceName: string | undefined;
 	let workspaceDescription: string | undefined;
+	let localDB = getLocalDB()
+	let create_workspace: HTMLDialogElement
+
 
 	onMount(() => {
-		workspaceArray = localDB().workspaces;
+		workspaceArray = localDB.workspaces;
 		loaded = true;
 	});
 
 	function refreshWorksapces(): void {
-		workspaceArray = localDB().workspaces;
+		workspaceArray = localDB.workspaces;
 	}
 
 	function createWorkspace(): void {
-		const workspaceID = `${localDB().workspaces.length + 1}`;
+		const workspaceID = `${localDB.workspaces.length + 1}`;
 
 		//? create the userID if it does't exist.
-		localDB().userID = localDB().userID || window.crypto.randomUUID();
+		localDB.userID = localDB.userID || window.crypto.randomUUID();
 
-		localDB().addWorkspace({
+		localDB.addWorkspace({
 			id: workspaceID,
-			files: [],
+			files: [{
+				name: "index",
+				createdAt: new Date(),
+				lastEditedAt: new Date(),
+				timeWasted: 0,
+				blocklyWorkspaceSave: {
+					workspaceSave: {},
+					blockLength: 0
+				},
+				thumbnail: "" //TODO Add thumbnails later on
+			}],
 			createdAt: new Date(),
 			lastEditedAt: new Date(),
-			owner: localDB().userID as string,
+			owner: localDB.userID as string,
 			editors: [],
 			viewers: [],
 			name: workspaceName || "My workspace",
 			description: workspaceDescription || "Awesome Discord bot!",
 			timeWasted: 0,
-			token: ""
+			token: "",
+			lastOpened: "index"
 		});
+		
 		workspaceName = undefined;
 		workspaceDescription = undefined;
 
@@ -44,7 +59,7 @@
 	}
 
 	function deleteWorkspace(id: string) {
-		localDB().deleteWorkspace(id);
+		localDB.deleteWorkspace(id);
 		refreshWorksapces();
 	}
 </script>
@@ -78,6 +93,7 @@
 {/if}
 
 <dialog
+	bind:this={create_workspace}
 	id="create_workspace"
 	class="modal modal-bottom sm:modal-middle sm:mx-[50%] sm:translate-x-[-50%] sm:w-[420px]"
 >

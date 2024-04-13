@@ -1,3 +1,5 @@
+import Blockly from "blockly/core";
+
 //TODO Make those interfaces!
 //? Some data are for the backend only, if you feel like it doesn't belong in the localDB don't add them! Thx <3
 // type BlockConfig = unknown;
@@ -26,11 +28,11 @@
 // };
 
 type BlocklyWorkspaceSave = {
-	workspaceSave: object | string;
+	workspaceSave: object;
 	blockLength: number;
 };
 
-type DiscodesFile = {
+export type DiscodesFile = {
 	name: string;
 	createdAt: Date;
 	lastEditedAt: Date;
@@ -51,6 +53,7 @@ export type DiscodesWorkspace = {
 	description: string;
 	timeWasted: number;
 	token: string;
+	lastOpened: string
 };
 
 class LocalDB {
@@ -129,6 +132,68 @@ class LocalDB {
 		});
 
 		this.workspaces = newWorkspaceArray;
+	}
+
+	/**
+	 * Gets all the files in a workspace , returns undefined if the workspace does not exist.
+	 *
+	 * @param {string} id
+	 * @return {*}  {(DiscodesFile[] | undefined)}
+	 * @memberof LocalDB
+	 */
+	getAllFiles(id: string): DiscodesFile[] | undefined {
+		return this.getWorkspaceByID(id)?.files;
+	}
+	/**
+	 * Gets a specific file in a a workspace
+	 *
+	 * @param {string} fileName
+	 * @param {string} workspaceID
+	 * @return {*}  {(DiscodesFile | undefined)}
+	 * @memberof LocalDB
+	 */
+	getFile(fileName: string, workspaceID: string): DiscodesFile | undefined {
+		return this.getAllFiles(workspaceID)?.find((file) => file.name === fileName);
+	}
+
+	addFile(file: DiscodesFile, workspaceID: string): void {
+		const workspace = this.getWorkspaceByID(workspaceID);
+		if (!workspace) return;
+		this.saveWorkspace(workspaceID, {...workspace, files: [...workspace.files, file]});
+	}
+
+	/**
+	 *	 Saves a blockly workspace save into a discodes workspace file.
+	 *
+	 * @param {string} fileName
+	 * @param {string} workspaceID
+	 * @param {object} blocklySave
+	 * @return {*}  {void}
+	 * @memberof LocalDB
+	 */
+	saveBlocklyInFile(fileName: string, workspaceID: string, blocklySave: object): void {
+		const workspace = this.getWorkspaceByID(workspaceID);
+		if (!workspace) return;
+		const files: DiscodesFile[] = this.getAllFiles(workspaceID) as DiscodesFile[];
+
+		for (const index in files) {
+			if (files[index].name === fileName) {
+				files[index].blocklyWorkspaceSave.workspaceSave = blocklySave;
+			}
+		}
+		this.saveWorkspace(workspaceID, {...workspace, files: files, lastEditedAt: new Date()});
+	}
+
+	/**
+	 * Loads into a workspace the blockly save currently saved in the gien file.
+	 *
+	 * @param {string} fileName
+	 * @param {string} discodesWorkspaceID
+	 * @param {Blockly.WorkspaceSvg} blocklyWorkspace
+	 * @memberof LocalDB
+	 */
+	loadBlocklyFromFile(fileName: string, discodesWorkspaceID: string, blocklyWorkspace: Blockly.WorkspaceSvg): void {
+		Blockly.serialization.workspaces.load(this.getFile(fileName, discodesWorkspaceID)?.blocklyWorkspaceSave.workspaceSave as object, blocklyWorkspace);
 	}
 }
 
