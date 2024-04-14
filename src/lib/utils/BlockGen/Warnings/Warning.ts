@@ -5,10 +5,10 @@ export default class Warning {
 	private readonly _fieldName: string;
 	private readonly _message: string;
 
-	constructor(warningType: WarningType, fieldName?: string, message?: string) {
+	constructor(warningType: WarningType, data?: { fieldName?: string; message?: string }) {
 		this._warningType = warningType;
-		this._fieldName = fieldName ? fieldName : "";
-		this._message = message ? message : "";
+		this._fieldName = data?.fieldName ? data.fieldName : "";
+		this._message = data?.message ? data.message : "";
 
 		switch (this._warningType) {
 			case WarningType.Deprec:

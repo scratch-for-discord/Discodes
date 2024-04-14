@@ -10,6 +10,7 @@
 	import { LOG_CODE, LOG_WARNINGS } from "$lib/constants/debug";
 	import loadBlocks from "$lib/utils/helpers/loadBlocks";
 	import { warnings } from "$lib/utils/BlockGen/Warnings/WarningsList";
+	import { imports, wipeImports } from "$lib/utils/BlockGen/Blocks/importsList";
 
 	export let workspace: Blockly.WorkspaceSvg;
 	export let options: typeof OPTIONS;
@@ -34,12 +35,16 @@
 		function updateCode(event: Abstract) {
 			if (workspace.isDragging()) return; // Don't update while changes are happening.
 			if (!supportedEvents.has(event.type)) return;
+
+			if (event.type === Blockly.Events.BLOCK_DELETE) wipeImports();
+
 			if (LOG_CODE) {
 				const code = javascriptGenerator.workspaceToCode(workspace);
 				console.log("Generated code: \n", code);
+				console.warn("Imports: ", imports);
 			}
 			if (LOG_WARNINGS) {
-				console.log("Warnings", warnings);
+				console.info("Warnings", warnings);
 			}
 		}
 		workspace.addChangeListener(updateCode);

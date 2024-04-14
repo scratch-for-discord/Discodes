@@ -2,7 +2,7 @@
 import Blockly from "blockly/core";
 import "@blockly/field-grid-dropdown";
 import pkg from "blockly/javascript";
-const { javascriptGenerator } = pkg;
+const { javascriptGenerator, Order } = pkg;
 
 // Types
 import type { Argument, BlockDefinition } from "$lib/types/BlockDefinition";
@@ -16,6 +16,7 @@ import { EventsToTriggerWarnings } from "$lib/constants/warnings";
 // Helpers
 import { dev } from "$app/environment";
 import salt from "$lib/utils/helpers/salt";
+import { addImport } from "$lib/utils/BlockGen/Blocks/importsList";
 
 export default class Block {
 	private readonly _blockDefinition: BlockDefinition;
@@ -31,6 +32,7 @@ export default class Block {
 		const shape = this._blockDefinition.shape;
 		const output = this._blockDefinition.output;
 		const warnings = this._blockDefinition.warnings;
+		const importName = this._blockDefinition.imports;
 		const mutatorName: string = this._blockDefinition.mutator
 			? this._blockDefinition.id + salt(5)
 			: "";
@@ -41,7 +43,7 @@ export default class Block {
 			tooltip: this._blockDefinition.tooltip,
 			helpUrl: this._blockDefinition.helpUrl,
 			inputsInline: this._blockDefinition.inline,
-			args0: [] as Record<string, unknown>[],
+			args0: [] as Record<string, string>[],
 			message0: "",
 			mutator: mutatorName == "" ? undefined : mutatorName
 		};
@@ -52,7 +54,7 @@ export default class Block {
 
 		// Converts the classes into usable objects for the block definition
 		this._blockDefinition.args?.forEach((arg: Argument) => {
-			blockDef.args0.push(arg.generate() as Record<string, unknown>);
+			blockDef.args0.push(arg.generate() as Record<string, string>);
 		});
 
 		// Converts the raw text into a blockly valid "message0" with this format: "text %1 other text %2"
@@ -95,6 +97,16 @@ export default class Block {
 				const block = this;
 				// Warnings Code
 				this.setOnChange(function(this: Blockly.Block, changeEvent: Abstract) {
+					if (
+						importName &&
+						!this.isInFlyout &&
+						changeEvent.type !== Blockly.Events.VIEWPORT_CHANGE
+					) {
+						for (const import_ of importName) {
+							addImport(import_);
+						}
+					}
+
 					if (
 						(EventsToTriggerWarnings.has(changeEvent.type) || changeEvent.type == "change") &&
 						!this.isInFlyout &&
@@ -148,7 +160,7 @@ export default class Block {
 
 		// Generating the export code
 		javascriptGenerator.forBlock[blockDef.type] = function(block: Blockly.Block) {
-			const args: Record<string, unknown> = {}; //? Object we will pass as argument for the custom code to run properly
+			const args: Record<string, string> = {}; //? Object we will pass as argument for the custom code to run properly
 
 			for (const arg in blockDef.args0) {
 				const argValue = blockDef.args0[arg]; //? The argument object, contains the name, the type etc..
@@ -170,7 +182,7 @@ export default class Block {
 						break;
 				}
 			}
-			return code(args);
+			return output ? [code(args), Order.NONE] : code(args);
 		};
 	}
 }
