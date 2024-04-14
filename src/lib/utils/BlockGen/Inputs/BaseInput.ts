@@ -1,8 +1,10 @@
 export default class BaseInput {
 	//! Replace unknown by an enum with all the types of inputs!
 	private _method: () => unknown;
-	private _fieldText: string
-	constructor() {
+	private _fieldText: string;
+	private _name: string;
+	constructor(name?: string) {
+		this._name = name ?? "";
 		this._fieldText = "";
 		this._method = () => {};
 	}
@@ -20,6 +22,12 @@ export default class BaseInput {
 	/*
 this function currently is meant for Mutator use
 */
+	public get name() {
+		return this._name;
+	}
+	public setName(newName: string) {
+		this._name = newName;
+	}
 	public getField() {
 		return this._fieldText;
 	}

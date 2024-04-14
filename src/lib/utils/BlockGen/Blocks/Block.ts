@@ -5,7 +5,7 @@ import pkg from "blockly/javascript";
 const { javascriptGenerator } = pkg;
 
 // Types
-import type { Argument, BlockDefinition } from "$lib/types/BlockDefinition";
+import type {Argument, BlockDefinition, MutatorBlock} from "$lib/types/BlockDefinition";
 import { BlockShape, BlockType, WarningType } from "$lib/enums/BlockTypes";
 import type { Abstract } from "blockly/core/events/events_abstract";
 
@@ -16,6 +16,9 @@ import { EventsToTriggerWarnings } from "$lib/constants/warnings";
 // Helpers
 import { dev } from "$app/environment";
 import salt from "$lib/utils/helpers/salt";
+import {CodeGen} from "$lib/utils/BlockGen/Blocks/codeGen";
+import {getInputValue} from "$lib/utils/helpers/getInputValue";
+import type Mutator from "$lib/utils/BlockGen/Mutators/Mutator";
 
 export default class Block {
 	private readonly _blockDefinition: BlockDefinition;
@@ -62,7 +65,7 @@ export default class Block {
 		if (Blockly.Blocks[blockDef.type] !== undefined && !dev) {
 			throw Error(`Block "${blockDef.type}" is defined twice.`);
 		}
-
+		const blockDefinition = this._blockDefinition;
 		// Add The block to the blocks list
 		Blockly.Blocks[blockDef.type] = {
 			init: function(this: Blockly.Block) {
@@ -95,6 +98,7 @@ export default class Block {
 				const block = this;
 				// Warnings Code
 				this.setOnChange(function(this: Blockly.Block, changeEvent: Abstract) {
+
 					if (
 						(EventsToTriggerWarnings.has(changeEvent.type) || changeEvent.type == "change") &&
 						!this.isInFlyout &&
@@ -145,6 +149,13 @@ export default class Block {
 				});
 			}
 		};
+		const properties = this._blockDefinition.mutator?.properties;
+		const propertyMap: Record<string, MutatorBlock> = {};
+		if(properties) {
+			for (const property of properties) {
+				propertyMap[property.block] = property;
+			}
+		}
 
 		// Generating the export code
 		javascriptGenerator.forBlock[blockDef.type] = function(block: Blockly.Block) {
@@ -153,23 +164,28 @@ export default class Block {
 			for (const arg in blockDef.args0) {
 				const argValue = blockDef.args0[arg]; //? The argument object, contains the name, the type etc..
 				const argName: string = blockDef.args0[arg].name as string;
-
-				switch (argValue.type) {
-					case "input_value":
-						args[argName] = javascriptGenerator.valueToCode(
-							block,
-							argName,
-							javascriptGenerator.ORDER_ATOMIC
-						);
-						break;
-					case "input_statement":
-						args[argName] = javascriptGenerator.statementToCode(block, argName);
-						break;
-					default:
-						args[argName] = block.getFieldValue(argName);
-						break;
-				}
+				args[argName] = getInputValue(block, argName, argValue.type);
 			}
+
+			//parse mutator values
+			for(const propertyKey of Object.keys(propertyMap)) {
+				const property = propertyMap[propertyKey];
+				for (const add of property.adds) {
+					const valueList: unknown[] = [];
+					let i = 1;
+					let input = block.getInput(add.name + i);
+					while(input) {
+						const definition = add.generate() as Record<string, unknown>;
+						valueList.push(getInputValue(block, definition.name as string + i, definition.type as string));
+						i++;
+						input = block.getInput(add.name + i);
+					}
+					args[add.name] =  valueList;
+
+				}
+
+			}
+			console.log(code(args), args)
 			return code(args);
 		};
 	}

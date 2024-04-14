@@ -15,14 +15,14 @@ interface ValueInputJSON {
  * @extends {BaseInput}
  */
 export default class ValueInput extends BaseInput {
-	private readonly _name: string;
 	private readonly _type: BlockType[];
 
 	constructor(name: string, type: BlockType | BlockType[]) {
-		super();
+		super(name);
 
 		this.setMethod(this.getDefinition);
-		this._name = name;
+		super.setName(name);
+
 		this._type = [type].flat();
 	}
 
@@ -35,7 +35,7 @@ export default class ValueInput extends BaseInput {
 	getDefinition(): ValueInputJSON {
 		const result: ValueInputJSON = {
 			type: "input_value",
-			name: this._name
+			name: super.name
 		};
 
 		const filtered = argFilter(this._type);
@@ -46,7 +46,4 @@ export default class ValueInput extends BaseInput {
 		return result;
 	}
 
-	get name(): string {
-		return this._name;
-	}
 }

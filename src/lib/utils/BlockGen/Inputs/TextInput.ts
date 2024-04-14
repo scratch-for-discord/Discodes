@@ -9,27 +9,23 @@ interface TextInputObject {
 }
 
 export default class TextInput extends BaseInput {
-	private readonly _name: string;
 	private readonly _text: string;
 
 	constructor(name: string, defaultValue: string) {
-		super();
+		super(name);
 
 		this.setMethod(this.getDefinition);
-		this._name = name;
+		super.setName(name);
 		this._text = defaultValue;
 	}
 
 	private getDefinition(): TextInputObject {
 		return {
 			type: "field_input",
-			name: this._name,
+			name: super.name,
 			text: this._text,
 			spellcheck: false
 		};
 	}
 
-	get name(): string {
-		return this._name;
-	}
 }

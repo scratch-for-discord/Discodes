@@ -24,14 +24,12 @@ interface ConnectionMapConnection {
     input_name: string
 }
 export default class AssemblerMutatorV2 extends Mutator {
-    private readonly _properties: MutatorBlock[];
     private readonly _containerBlockText: string;
     //will store each properties name
     private order: string[];
     constructor(containerBlockText: string, properties: MutatorBlock[]) {
-        super();
+        super(properties);
         this.order = [];
-        this._properties = properties;
         this._containerBlockText = containerBlockText;
         this.mixin = this.getMixin();
         this.setBlocks = this.blocks;
@@ -40,7 +38,7 @@ export default class AssemblerMutatorV2 extends Mutator {
 
     get blocks(): string[] {
         const arr: string[] = [];
-        for (const prop of this._properties) {
+        for (const prop of super.properties) {
             arr.push(prop.block);
         }
         return arr;
@@ -49,8 +47,8 @@ export default class AssemblerMutatorV2 extends Mutator {
 
     getMixin(): object {
         this.order = [];
-        const properties = this._properties;
-        const propertieMap = Object.create(null)
+        const properties = super.properties;
+        const propertieMap = Object.create(null);
         const containerBlockName = salt(10);
         const containerBlockText = this._containerBlockText;
         const extraStateObj: Record<string, number> = {};
@@ -148,7 +146,7 @@ export default class AssemblerMutatorV2 extends Mutator {
                             let i = 1;
                             let moreInputs = true;
                             while(moreInputs) {
-                                const failed =  !this.removeInput(add._name + i, true);
+                                const failed =  !this.removeInput(add.name + i, true);
                                 i++;
                                 if(failed) moreInputs = false;
                             }
@@ -159,8 +157,8 @@ export default class AssemblerMutatorV2 extends Mutator {
                         for (const order of this.order) {
                             const adds = propertieMap[order].adds;
                             for (const add of adds) {
-                                inputIndexMap.set(add._name, (inputIndexMap.get(add._name)??0) + 1);
-                                const name = add._name + inputIndexMap.get(add._name)   ;
+                                inputIndexMap.set(add._name, (inputIndexMap.get(add.name)??0) + 1);
+                                const name = add._name + inputIndexMap.get(add.name)   ;
                                 if (!this.getInput(name)) {
                                     const input = add.generate();
                                     this.appendInput_(input, name, add.getField());
@@ -183,11 +181,10 @@ export default class AssemblerMutatorV2 extends Mutator {
                 for (const connectionKey in connections) {
                     const ConMap = connections[connectionKey];
                     const property = propertieMap[ConMap.input_name];
-                    console.log("imp", property, ConMap.connection);
                     const connection = ConMap.connection;
                     if(!connection) continue;
                     for (const add of property.adds) {
-                        const name = add._name;
+                        const name = add.name;
                         const c = count.get(name) ?? 1;
                         connection.reconnect(this, name+c);
                         count.set(name, c+1);

@@ -1,12 +1,18 @@
 import Blockly from "blockly/core";
 import { dev } from "$app/environment";
+import type {MutatorBlock} from "$lib/types/BlockDefinition";
 
 export default class Mutator {
+	private _properties: MutatorBlock[];
 	private _mixin: object;
 	private _blocks: string[] | undefined;
 	private _helperFunction: (() => any) | undefined;
-	constructor() {
+	constructor(properties: MutatorBlock[]) {
+		this._properties = properties;
 		this._mixin = {};
+	}
+	get properties() {
+		return this._properties;
 	}
 
 	set mixin(mixin: object) {

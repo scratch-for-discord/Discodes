@@ -1,7 +1,6 @@
 import BaseInput from "./BaseInput";
 
 export default class NumberInput extends BaseInput {
-	private readonly _name: string;
 	private readonly _value: number;
 	private readonly _settings: {
 		min?: number;
@@ -14,10 +13,10 @@ export default class NumberInput extends BaseInput {
 		defaultValue: number,
 		settings?: { min?: number; max?: number; precision?: number }
 	) {
-		super();
+		super(name);
 
 		this.setMethod(this.getDefinition);
-		this._name = name;
+		super.setName(name);
 		this._value = defaultValue;
 		this._settings = settings || {};
 	}
@@ -25,13 +24,10 @@ export default class NumberInput extends BaseInput {
 	private getDefinition(): { type: "field_number"; name: string; value: number } {
 		return {
 			type: "field_number",
-			name: this._name,
+			name: super.name,
 			value: this._value,
 			...this._settings
 		};
 	}
 
-	get name(): string {
-		return this._name;
-	}
 }

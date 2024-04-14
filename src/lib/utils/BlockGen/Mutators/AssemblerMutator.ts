@@ -6,23 +6,21 @@ import Mutator from "./Mutator";
 import Blockly from "blockly/core";
 
 export default class AssemblerMutator extends Mutator {
-	private readonly _properties: MutatorBlock[];
 	private readonly _containerBlockText: string;
 
 	constructor(containerBlockText: string, properties: MutatorBlock[]) {
-		super();
-		this._properties = properties;
+		super(properties);
 		this._containerBlockText = containerBlockText;
 		this.mixin = this.getMixin();
 		this.setBlocks = this.blocks;
 	}
 
 	get blocks(): string[] {
-		return this._properties.map((val) => val.block);
+		return super.properties.map((val) => val.block);
 	}
 
 	getMixin(): object {
-		const properties = this._properties;
+		const properties = super.properties;
 		const containerBlockName = salt(10);
 		const containerBlockText = this._containerBlockText;
 		const extraStateObj: Record<string, number> = {};

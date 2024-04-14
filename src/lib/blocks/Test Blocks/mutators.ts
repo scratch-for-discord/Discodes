@@ -56,33 +56,33 @@ const blocks: BlockDefinition[] = [
 		},
 		hidden: true
 	},
-	{
-		id: "not_mutator",
-		text: "not {operand}",
-		args: [new ValueInput("operand", BlockType.Boolean)],
-		warnings: [new Warning(WarningType.Input, "operand")],
-		shape: BlockShape.Action,
-		inline: true,
-		colour: rgbToHex(91, 128, 165),
-		tooltip: "Returns the opposite of the input",
-		helpUrl:
-			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT",
-		code: (args) => {
-			return `!${args.operand}`;
-		},
-		mutator: new AssemblerMutator("Not content", [
-			{
-				block: "if_test",
-				adds: [new ValueInput("elseIf", BlockType.Any)],
-				once: true
-			},
-			{
-				block: "else_test",
-				adds: [new StatementInput("ifThing")],
-				once: true
-			}
-		])
-	},
+	// {
+	// 	id: "not_mutator",
+	// 	text: "not {operand}",
+	// 	args: [new ValueInput("operand", BlockType.Boolean)],
+	// 	warnings: [new Warning(WarningType.Input, "operand")],
+	// 	shape: BlockShape.Action,
+	// 	inline: true,
+	// 	colour: rgbToHex(91, 128, 165),
+	// 	tooltip: "Returns the opposite of the input",
+	// 	helpUrl:
+	// 		"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT",
+	// 	code: (args) => {
+	// 		return `!${args.operand}`;
+	// 	},
+	// 	mutator: new AssemblerMutator("Not content", [
+	// 		{
+	// 			block: "if_test",
+	// 			adds: [new ValueInput("elseIf", BlockType.Any)],
+	// 			once: true
+	// 		},
+	// 		{
+	// 			block: "else_test",
+	// 			adds: [new StatementInput("ifThing")],
+	// 			once: true
+	// 		}
+	// 	])
+	// },
 	{
 		id: "not_mutator_v2",
 		text: "if {operand} {if}",
@@ -93,14 +93,28 @@ const blocks: BlockDefinition[] = [
 		colour: rgbToHex(91, 128, 165),
 		tooltip: "Returns the opposite of the input",
 		helpUrl:
-			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT",
+			`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT`,
 		code: (args) => {
-			return `!${args.operand}`;
+			console.log(args)
+			let code = `if(${args.operand === ""? "false" : args.operand}) {
+	${args.if}
+}`;
+			const ifInputs = args.if_input as string[];
+			const ifStatementInputs = args.if_statement as string[];
+
+			for (let i=0; i < ifInputs.length; i++) {
+				const ifInp = ifInputs[i];
+				code += ` else if(${ifInp === ""? "false" : ifInp}) {
+	${ifStatementInputs[i]}
+}`;
+			}
+
+			return code;
 		},
 		mutator: new AssemblerMutatorV2("If", [
 			{
 				block: "if_test",
-				adds: [new ValueInput("if_input", BlockType.Boolean).setField("else if"), new StatementInput("bob2").setField("do")],
+				adds: [new ValueInput("if_input", BlockType.Boolean).setField("else if"), new StatementInput("if_statement").setField("do")],
 				once: true
 			},
 			{
