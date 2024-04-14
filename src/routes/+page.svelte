@@ -1,91 +1,135 @@
 <script lang="ts">
-	import "blockly/blocks";
-	import Blockly from "blockly/core";
+	import getLocalDB, { type DiscodesWorkspace } from "$lib/utils/localDB/manager";
+	import { browser } from "$app/environment";
+	import { onMount } from "svelte";
+	import openEditor from "$lib/utils/helpers/openEditor";
 
-	import { OPTIONS } from "$lib/constants/workspace";
-	import Workspace from "$lib/components/Workspace.svelte";
-	import Warnings from "$lib/components/Warnings.svelte";
-    import {createEventDispatcher, onMount} from "svelte";
-	import Toolbox from "$lib/utils/ToolboxGen/Toolbox";
-    import pkg from 'blockly/javascript';
-    const {javascriptGenerator} = pkg;
-    let workspace: Blockly.WorkspaceSvg;
-	let toolboxJson: Blockly.utils.toolbox.ToolboxDefinition;
-    let code: string = "";
-    let showModal = false;
-    const generateCode = () => {
-        code = javascriptGenerator.workspaceToCode(workspace);
-        showModal = true;
-    };
-	const saveWorkspace = () => {
-		localStorage.setItem("w", JSON.stringify(Blockly.serialization.workspaces.save(workspace)));
-	};
-	const loadWorkspace = () => {
-		Blockly.serialization.workspaces.load(JSON.parse(localStorage.getItem("w") || ""), workspace);
-	};
+	let workspaceArray: DiscodesWorkspace[];
+	let loaded: boolean = false;
+	let workspaceName: string | undefined;
+	let workspaceDescription: string | undefined;
+	let localDB = getLocalDB();
+	let create_workspace: HTMLDialogElement;
 
-	onMount(async() => {
-		const toolbox = new Toolbox();
-		toolboxJson = await toolbox.generate();
+	onMount(() => {
+		workspaceArray = localDB.workspaces;
+		loaded = true;
 	});
+
+	function refreshWorksapces(): void {
+		workspaceArray = localDB.workspaces;
+	}
+
+	function createWorkspace(): void {
+		const workspaceID = `${localDB.workspaces.length + 1}`;
+
+		//? create the userID if it does't exist.
+		localDB.userID = localDB.userID || window.crypto.randomUUID();
+
+		localDB.addWorkspace({
+			id: workspaceID,
+			files: [
+				{
+					name: "index",
+					createdAt: new Date(),
+					lastEditedAt: new Date(),
+					timeWasted: 0,
+					blocklyWorkspaceSave: {
+						workspaceSave: {},
+						blockLength: 0
+					},
+					thumbnail: "" //TODO Add thumbnails later on
+				}
+			],
+			createdAt: new Date(),
+			lastEditedAt: new Date(),
+			owner: localDB.userID as string,
+			editors: [],
+			viewers: [],
+			name: workspaceName || "My workspace",
+			description: workspaceDescription || "Awesome Discord bot!",
+			timeWasted: 0,
+			token: "",
+			lastOpened: "index"
+		});
+
+		workspaceName = undefined;
+		workspaceDescription = undefined;
+
+		openEditor(workspaceID);
+	}
+
+	function deleteWorkspace(id: string) {
+		localDB.deleteWorkspace(id);
+		refreshWorksapces();
+	}
 </script>
 
-<button class="btn" on:click={saveWorkspace}>SAVE</button>
-<button class="btn" on:click={loadWorkspace}>LOAD</button>
-<button class="btn" on:click={generateCode}>Show Code</button>
+<button
+	class="btn btn-accent font-bold"
+	on:click={() => {
+		create_workspace.showModal();
+	}}>Create Workspace</button
+>
 
-<Warnings bind:workspace />
-<Workspace bind:workspace options={OPTIONS} bind:toolbox={toolboxJson} />
-{#if showModal}
-    <dialog id="code-modal">
-        <div class="modal-content">
-            <button class="close" on:click={() => showModal = false}>&times;</button>
-            <textarea readonly bind:value={code}></textarea>
-        </div>
-    </dialog>
+{#if browser && loaded}
+	{#each workspaceArray as workspace}
+		<div class="card w-96 bg-neutral text-neutral-content">
+			<div class="card-body items-center text-center">
+				<h2 class="card-title">{workspace.name}</h2>
+				<p>{workspace.description}</p>
 
+				<div class="card-actions justify-end">
+					<button
+						class="btn btn-primary"
+						on:click={() => {
+							openEditor(workspace.id);
+						}}>Open</button
+					>
+					<button
+						class="btn btn-ghost"
+						on:click={() => {
+							deleteWorkspace(workspace.id);
+						}}>Delete</button
+					>
+				</div>
+			</div>
+		</div>
+	{/each}
 {/if}
-<style>
-    /* Style for the modal */
-    .modal {
-        display: block; /* Hidden by default */
-        position: fixed; /* Stay in place */
-        z-index: 1; /* Sit on top */
-        left: 0;
-        top: 0;
-        width: 100%; /* Full width */
-        height: 100%; /* Full height */
-        overflow: auto; /* Enable scroll if needed */
-        background-color: rgb(0,0,0); /* Fallback color */
-        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    }
 
-    /* Modal Content/Box */
-    .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
-    }
+<dialog
+	bind:this={create_workspace}
+	id="create_workspace"
+	class="modal modal-bottom sm:modal-middle sm:mx-[50%] sm:translate-x-[-50%] sm:w-[420px]"
+>
+	<div class="modal-box">
+		<h3 class="font-bold text-lg">Create a new workspace</h3>
 
-    /* Close Button */
-    .close {
-        color: #aaaaaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
+		<label class="form-control w-full max-w-xs">
+			<span class="label-text mt-5 mb-2">Name: </span>
+			<input
+				bind:value={workspaceName}
+				type="text"
+				placeholder="My workspace"
+				class="input input-bordered w-full max-w-xs mb-3"
+			/>
+		</label>
 
-    .close:hover,
-    .close:focus {
-        color: #000;
-        text-decoration: none;
-        cursor: pointer;
-    }
+		<label class="form-control w-full max-w-xs">
+			<span class="label-text mt-5 mb-2">Description: </span>
+			<input
+				bind:value={workspaceDescription}
+				type="text"
+				placeholder="Awesome Discord bot!"
+				class="input input-bordered w-full sm:max-w-xs mb-5"
+			/>
+		</label>
 
-    textarea {
-        width: 100%;
-        height: 300px;
-    }
-</style>
+		<form method="dialog" class="flex gap-2">
+			<!-- if there is a button in form, it will close the modal -->
+			<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+			<button class="btn btn-accent" on:click={createWorkspace}>Create</button>
+		</form>
+	</div>
+</dialog>

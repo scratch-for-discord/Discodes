@@ -6,8 +6,6 @@ import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
 
-import { Order } from "blockly/javascript";
-
 const blocks: BlockDefinition[] = [
 	{
 		id: "is_equal",
@@ -25,7 +23,10 @@ const blocks: BlockDefinition[] = [
 			}),
 			new ValueInput("B", BlockType.Any)
 		],
-		warnings: [new Warning(WarningType.Input, "A"), new Warning(WarningType.Input, "B")],
+		warnings: [
+			new Warning(WarningType.Input, { fieldName: "A" }),
+			new Warning(WarningType.Input, { fieldName: "B" })
+		],
 		shape: BlockShape.Floating,
 		output: BlockType.Boolean,
 		inline: true,
@@ -33,7 +34,7 @@ const blocks: BlockDefinition[] = [
 		tooltip: "Checks if the first input and the second input validate the condition.",
 		helpUrl: "https://www.w3schools.com/js/js_comparisons.asp",
 		code: (args) => {
-			return [`${args.A} ${args.CONDITION} ${args.B}`, Order.NONE];
+			return `${args.A} ${args.CONDITION} ${args.B}`;
 		}
 	},
 	{
@@ -44,7 +45,10 @@ const blocks: BlockDefinition[] = [
 			new Dropdown("CONDITION", DropdownType.Auto, { and: "&&", or: "||" }),
 			new ValueInput("B", BlockType.Boolean)
 		],
-		warnings: [new Warning(WarningType.Input, "A"), new Warning(WarningType.Input, "B")],
+		warnings: [
+			new Warning(WarningType.Input, { fieldName: "A" }),
+			new Warning(WarningType.Input, { fieldName: "B" })
+		],
 		shape: BlockShape.Floating,
 		output: BlockType.Boolean,
 		inline: true,
@@ -52,14 +56,14 @@ const blocks: BlockDefinition[] = [
 		tooltip: "Checks if the first input and the second input validate the condition.",
 		helpUrl: "",
 		code: (args) => {
-			return [`${args.A} ${args.CONDITION} ${args.B}`, Order.NONE];
+			return `${args.A} ${args.CONDITION} ${args.B}`;
 		}
 	},
 	{
 		id: "not",
 		text: "not {OPERAND}",
 		args: [new ValueInput("OPERAND", BlockType.Boolean)],
-		warnings: [new Warning(WarningType.Input, "OPERAND")],
+		warnings: [new Warning(WarningType.Input, { fieldName: "OPERAND" })],
 		shape: BlockShape.Floating,
 		output: BlockType.Boolean,
 		inline: true,
@@ -68,7 +72,7 @@ const blocks: BlockDefinition[] = [
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT",
 		code: (args) => {
-			return [`!${args.OPERAND}`, Order.NONE];
+			return `!${args.OPERAND}`;
 		}
 	},
 	{
@@ -89,7 +93,7 @@ const blocks: BlockDefinition[] = [
 		tooltip: "",
 		helpUrl: "",
 		code: (args) => {
-			return [`${args.INPUT}`, Order.NONE];
+			return `${args.INPUT}`;
 		}
 	},
 	{
@@ -101,9 +105,9 @@ const blocks: BlockDefinition[] = [
 			new ValueInput("ONFALSE", BlockType.Any)
 		],
 		warnings: [
-			new Warning(WarningType.Input, "CONDITION"),
-			new Warning(WarningType.Input, "ONTRUE"),
-			new Warning(WarningType.Input, "ONFALSE")
+			new Warning(WarningType.Input, { fieldName: "CONDITION" }),
+			new Warning(WarningType.Input, { fieldName: "ONTRUE" }),
+			new Warning(WarningType.Input, { fieldName: "ONFALSE" })
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Any,
@@ -112,14 +116,14 @@ const blocks: BlockDefinition[] = [
 		tooltip: "",
 		helpUrl: "",
 		code: (args) => {
-			return [`${args.CONDITION} ? ${args.ONTRUE} : ${args.ONFALSE}`, Order.NONE];
+			return `${args.CONDITION} ? ${args.ONTRUE} : ${args.ONFALSE}`;
 		}
 	},
 	{
 		id: "typeof",
 		text: "typeof {OPERAND}",
 		args: [new ValueInput("OPERAND", BlockType.Any)],
-		warnings: [new Warning(WarningType.Input, "OPERAND")],
+		warnings: [new Warning(WarningType.Input, { fieldName: "OPERAND" })],
 		shape: BlockShape.Floating,
 		output: BlockType.String,
 		inline: true,
@@ -127,7 +131,7 @@ const blocks: BlockDefinition[] = [
 		tooltip: "",
 		helpUrl: "",
 		code: (args) => {
-			return [`typeof ${args.OPERAND}`, Order.NONE];
+			return `typeof ${args.OPERAND}`;
 		}
 	},
 	{
@@ -146,7 +150,10 @@ const blocks: BlockDefinition[] = [
 				undefined: "undefined"
 			})
 		],
-		warnings: [new Warning(WarningType.Input, "OPERAND"), new Warning(WarningType.Input, "TYPE")],
+		warnings: [
+			new Warning(WarningType.Input, { fieldName: "OPERAND" }),
+			new Warning(WarningType.Input, { fieldName: "TYPE" })
+		],
 		shape: BlockShape.Bottom,
 		output: BlockType.Boolean,
 		inline: true,
@@ -154,7 +161,7 @@ const blocks: BlockDefinition[] = [
 		tooltip: "",
 		helpUrl: "",
 		code: (args) => {
-			return [`typeof ${args.OPERAND} === "${args.TYPE}"`, Order.NONE];
+			return `typeof ${args.OPERAND} === "${args.TYPE}"`;
 		}
 	},
 	{
