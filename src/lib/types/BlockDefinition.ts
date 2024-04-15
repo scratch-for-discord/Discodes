@@ -1,4 +1,5 @@
 import type { BlockShape, BlockType } from "$lib/enums/BlockTypes";
+import type Block from "$lib/utils/BlockGen/Blocks/Block";
 import type BaseInput from "$lib/utils/BlockGen/Inputs/BaseInput";
 import type Mutator from "$lib/utils/BlockGen/Mutators/Mutator";
 import type Warning from "$lib/utils/BlockGen/Warnings/Warning";
@@ -20,7 +21,7 @@ export type BlockDefinition =
 			colour: string;
 			tooltip: string;
 			helpUrl: string;
-			code: (args: Record<string, string>) => string;
+			code: (args: Record<string, string>, block: Block) => string;
 			mutator?: Mutator;
 			hidden?: boolean;
 			imports?: `${string}@${string}`[];

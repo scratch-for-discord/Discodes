@@ -152,7 +152,6 @@ const blocks: BlockDefinition[] = [
 		],
 		warnings: [
 			new Warning(WarningType.Input, { fieldName: "OPERAND" }),
-			new Warning(WarningType.Input, { fieldName: "TYPE" })
 		],
 		shape: BlockShape.Bottom,
 		output: BlockType.Boolean,
