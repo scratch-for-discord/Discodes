@@ -29,7 +29,7 @@ export class Mutator {
 	set setBlocks(blocks: string[]) {
 		this._blocks = blocks;
 	}
-	set setHelperFunction(helperFn: () => any) {
+	setHelperFunction(helperFn: () => void) {
 		this._helperFunction = helperFn;
 	}
 	appendInput_(this: Blockly.Block, input, name, fieldText) {

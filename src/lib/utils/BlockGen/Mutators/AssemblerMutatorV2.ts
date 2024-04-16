@@ -75,7 +75,8 @@ export default class AssemblerMutatorV2 extends Mutator {
             return "";
         };
         const mixin = {
-
+            //! Disable eslint cuz the state variable is of type any until they fully migrate to typescript
+            // eslint-disable-next-line
             saveExtraState: function(this: any): object {
 
                 const state = Object.create(null);
@@ -95,6 +96,7 @@ export default class AssemblerMutatorV2 extends Mutator {
 
                 const containerBlock = workspace.newBlock(containerBlockName);
                 containerBlock.initSvg();
+                // eslint-disable-next-line
                 const orders = (this as any).order as string[];
                 // let connection = containerBlock.getInput("STACK")?.connection;
                 let connection = containerBlock.nextConnection;
@@ -112,13 +114,15 @@ export default class AssemblerMutatorV2 extends Mutator {
                 return containerBlock;
 
             },
+            // eslint-disable-next-line
             compose: function(this: any, containerBlock: Blockly.Block) {
                     const connections: ConnectionMap= {};
                     const oldOrder = this.order;
                     const order = [];
 
                    // let itemBlock: ClauseBlock | null = containerBlock.getInputTargetBlock("STACK") as ClauseBlock | null;
-                    let itemBlock = containerBlock.nextConnection!.targetBlock();
+                    // eslint-disable-next-line
+                    let itemBlock = containerBlock.nextConnection!.targetBlock() as any;
 
                     while(itemBlock) {
                         order.push(itemBlock.type);
@@ -139,6 +143,7 @@ export default class AssemblerMutatorV2 extends Mutator {
                     connections
                 );
             },
+            // eslint-disable-next-line
             updateShape_: function(this: any) {
 
                     for (const inp of properties) {
@@ -195,7 +200,8 @@ export default class AssemblerMutatorV2 extends Mutator {
                 //     connections[i]?.reconnect(this, 'IF' + i);
                 // }
             },
-            saveConnections: function (this: any, containerBlock: Blockly.Block) {
+            // eslint-disable-next-line
+            saveConnections: function(this: any, containerBlock: Blockly.Block) {
                     const count = new Map<string, number>();
                     //let clauseBlock = containerBlock.getInputTargetBlock("STACK") as ClauseBlock | null;
                     let clauseBlock = containerBlock as ClauseBlock | null;

@@ -30,16 +30,24 @@ export type BlockDefinition =
 			text: string;
 	  };
 
-export type MutatorBlock = {
+export interface MutatorBlock  {
 	// Name of the block that appears in the block list in the UI
 	block: string;
 	// What inputs it adds to the block
 	adds: Argument[];
 	// Can it only be added once in the UI
 	once: boolean;
-	/* Used in checkbox mutator definition
-		`defaultValue: false;`
-		Shows/Hides field depending on the value
-	*/
-	defaultValue?: boolean;
+
 };
+export interface CheckBoxMutatorBlock extends MutatorBlock {
+	/**
+	 * Used in checkbox mutator definition
+	 * `defaultValue: false;`
+	 * Shows/Hides field depending on the value
+	 */
+	defaultValue?: boolean;
+	/**
+	* Text that appears in containerBlock in mutator menu
+	*/
+	text: string;
+}

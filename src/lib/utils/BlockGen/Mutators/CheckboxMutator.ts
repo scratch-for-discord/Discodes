@@ -1,5 +1,5 @@
 import {AdditionalSettings, Mutator} from "./Mutator";
-import {MutatorBlock} from "$lib/types/BlockDefinition";
+import type {CheckBoxMutatorBlock} from "$lib/types/BlockDefinition";
 import salt from "$lib/utils/helpers/salt";
 import Blockly from "blockly/core";
 import pkg from "blockly/javascript";
@@ -7,7 +7,7 @@ const { javascriptGenerator } = pkg;
 export default class CheckboxMutator extends Mutator {
 	private settings: AdditionalSettings | undefined;
 
-	constructor(containerBlockText: string, properties: MutatorBlock[], settings?: AdditionalSettings) {
+	constructor(containerBlockText: string, properties: CheckBoxMutatorBlock[], settings?: AdditionalSettings) {
 		super(properties, containerBlockText);
 		this.settings = settings;
 
@@ -23,14 +23,16 @@ export default class CheckboxMutator extends Mutator {
 		return arr;
 	}
 	getMixin(settings: AdditionalSettings): object {
-		const properties = super.properties;
-		const propertieMap = Object.create(null);
+		const properties = super.properties as CheckBoxMutatorBlock[];
+
+		// const propertieMap = Object.create(null);
 		const containerBlockName = salt(10);
 		const containerBlockText = super.containerBlockText;
-		let inputIndexMap: Map<string, number> = new Map<string, number>();
+		const inputData: Record<string, boolean> = {}
 		// First we set the save and load states.
 		for(const prop of properties) {
-			propertieMap[prop.block] = prop;
+			// propertieMap[prop.block] = prop;
+			inputData[prop.block]
 		}
 		Blockly.Blocks[containerBlockName] = {
 			init: function(this: Blockly.Block) {
@@ -51,24 +53,50 @@ export default class CheckboxMutator extends Mutator {
 			return "";
 		};
 		const mixin = {
-
+			// inputData: propertieMap,
+			/*
+			state = {
+			 "input1": true
+			}
+			*/
+			inputData: {} as Record<string, boolean>,
+			//! Disable eslint cuz the state variable is of type any until they fully migrate to typescript
+			// eslint-disable-next-line
 			saveExtraState: function(this: any): object {
-
+				// const state = this.inputData;
+				if(this.inputData) return this.inputData;
+				return {};
 			},
 			//! Disable eslint cuz the state variable is of type any until they fully migrate to typescript
 			// eslint-disable-next-line
 			loadExtraState: function (this: any, state: any): void {
-
+				this.inputData = state;
+				this.updateShape_();
 
 			},
-			decompose: function(this: Blockly.Block, workspace: Blockly.WorkspaceSvg) {},
+			// eslint-disable-next-line
+			decompose: function(this: any, workspace: Blockly.WorkspaceSvg) {
+				const containerBlock = workspace.newBlock(containerBlockName);
+				containerBlock.initSvg();
+				const inputData = this.inputData as Record<string, boolean>;
+				for (let i= 0; i<properties.length; i++) {
+					const propertie
+					containerBlock.appendDummyInput().setAlign(Blockly.inputs.Align.RIGHT).appendField()
+				}
+			},
+			//! Disable eslint cuz the state variable is of type any until they fully migrate to typescript
+			// eslint-disable-next-line
 			compose: function(this: any, containerBlock: Blockly.Block) {},
+			//! Disable eslint cuz the state variable is of type any until they fully migrate to typescript
+			// eslint-disable-next-line
 			updateShape_: function(this: any) {},
 			reconnectChildBlocks_: function(
 				this: Blockly.Block,
 				connections: Blockly.Connection,
 
 			) {},
+			//! Disable eslint cuz the state variable is of type any until they fully migrate to typescript
+			// eslint-disable-next-line
 			saveConnections: function (this: any, containerBlock: Blockly.Block) {},
 			appendInput_: function(this: Blockly.Block, input, name, fieldText) {
 				const inputType = input.type || "input_value"; // Default to input_value if type is not specified
@@ -88,7 +116,11 @@ export default class CheckboxMutator extends Mutator {
 						throw new Error(`Unsupported input type: ${inputType}`);
 				}
 			}
-		}
+		};
+		super.setHelperFunction(() => {
+
+		});
+
 		return mixin;
 	}
 
