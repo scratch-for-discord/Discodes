@@ -10,7 +10,7 @@ const blocks: BlockDefinition[] = [
 		id: "input_warning_test",
 		text: "This block has an input warning {input}",
 		args: [new ValueInput("test", BlockType.Any)],
-		warnings: [new Warning(WarningType.Input, "test")],
+		warnings: [new Warning(WarningType.Input, { fieldName: "test" })],
 		shape: BlockShape.Floating,
 		inline: true,
 		colour: "#db5c53",
@@ -42,7 +42,7 @@ const blocks: BlockDefinition[] = [
 	{
 		id: "parent_warning_test",
 		text: "This block has a parent warning",
-		warnings: [new Warning(WarningType.Parent, "parent_for_warning_test")],
+		warnings: [new Warning(WarningType.Parent, { fieldName: "parent_for_warning_test" })],
 		shape: BlockShape.Action,
 		inline: true,
 		colour: "#db5c53",
@@ -58,7 +58,7 @@ const blocks: BlockDefinition[] = [
 		text: "This block has a permanent warning",
 		warnings: [
 			//! This kinda sucks :/ Need to fix it I guess
-			new Warning(WarningType.Permanent, "any", "This is a permanent message.")
+			new Warning(WarningType.Permanent, { message: "This is a permanent message." })
 		],
 		shape: BlockShape.Floating,
 		inline: true,

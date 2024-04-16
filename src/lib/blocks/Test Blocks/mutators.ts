@@ -84,10 +84,12 @@ const blocks: BlockDefinition[] = [
 	// 	])
 	// },
 	{
+
 		id: "not_mutator_v2",
 		text: "if {operand} {if}",
 		args: [new ValueInput("operand", BlockType.Boolean), new StatementInput("if")],
 		warnings: [new Warning(WarningType.Input, "operand")],
+
 		shape: BlockShape.Action,
 		inline: true,
 		colour: rgbToHex(91, 128, 165),

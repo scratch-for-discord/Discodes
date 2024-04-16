@@ -1,6 +1,11 @@
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import Block from "$lib/utils/BlockGen/Blocks/Block";
-
+/**
+ * Loads and generates all the blocks to the Blockly library so they can be used in the workspaces.
+ *
+ * @export
+ * @return {*}  {Promise<void>}
+ */
 export default async function loadBlocks(): Promise<void> {
 	// Get all files from blocks file
 	const modules = import.meta.glob("../../blocks/**/**/*.ts");
