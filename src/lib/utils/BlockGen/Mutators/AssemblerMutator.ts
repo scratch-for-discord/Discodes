@@ -2,15 +2,14 @@ import type { MutatorBlock } from "$lib/types/BlockDefinition";
 import salt from "$lib/utils/helpers/salt";
 import pkg from "blockly/javascript";
 const { javascriptGenerator } = pkg;
-import Mutator from "./Mutator";
+import {Mutator} from "./Mutator";
 import Blockly from "blockly/core";
 
 export default class AssemblerMutator extends Mutator {
-	private readonly _containerBlockText: string;
+
 
 	constructor(containerBlockText: string, properties: MutatorBlock[]) {
-		super(properties);
-		this._containerBlockText = containerBlockText;
+		super(properties, containerBlockText);
 		this.mixin = this.getMixin();
 		this.setBlocks = this.blocks;
 	}
@@ -22,7 +21,7 @@ export default class AssemblerMutator extends Mutator {
 	getMixin(): object {
 		const properties = super.properties;
 		const containerBlockName = salt(10);
-		const containerBlockText = this._containerBlockText;
+		const containerBlockText = super.containerBlockText;
 		const extraStateObj: Record<string, number> = {};
 
 		// First we set the save and load states.

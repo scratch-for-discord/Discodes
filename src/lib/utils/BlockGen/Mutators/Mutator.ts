@@ -1,18 +1,25 @@
 import Blockly from "blockly/core";
 import { dev } from "$app/environment";
 import type {MutatorBlock} from "$lib/types/BlockDefinition";
-
-export default class Mutator {
+export interface AdditionalSettings {
+	color: number | string | undefined
+}
+export class Mutator {
 	private _properties: MutatorBlock[];
+	private readonly _containerBlockText: string;
 	private _mixin: object;
 	private _blocks: string[] | undefined;
 	private _helperFunction: (() => any) | undefined;
-	constructor(properties: MutatorBlock[]) {
+	constructor(properties: MutatorBlock[], containerBlockText: string) {
 		this._properties = properties;
+		this._containerBlockText = containerBlockText;
 		this._mixin = {};
 	}
 	get properties() {
 		return this._properties;
+	}
+	get containerBlockText() {
+		return this._containerBlockText;
 	}
 
 	set mixin(mixin: object) {
@@ -25,6 +32,24 @@ export default class Mutator {
 	set setHelperFunction(helperFn: () => any) {
 		this._helperFunction = helperFn;
 	}
+	appendInput_(this: Blockly.Block, input, name, fieldText) {
+		const inputType = input.type || "input_value"; // Default to input_value if type is not specified
+		const inputCheck = input.check; // Check for input type if specified
+
+		switch (inputType) {
+			case "input_value":
+				this.appendValueInput(name).setCheck(inputCheck).appendField(fieldText);
+				break;
+			case "input_statement":
+				this.appendStatementInput(name).setCheck(inputCheck).appendField(fieldText);
+				break;
+			case "input_dummy":
+				this.appendDummyInput(name).appendField(fieldText);
+				break;
+			default:
+				throw new Error(`Unsupported input type: ${inputType}`);
+		}
+}
 
 	registerMutator(name: string): void {
 		// Unregister the mutator if it's already registered. Without this blockly crashes.

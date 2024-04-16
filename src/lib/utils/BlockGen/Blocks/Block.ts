@@ -16,9 +16,7 @@ import { EventsToTriggerWarnings } from "$lib/constants/warnings";
 // Helpers
 import { dev } from "$app/environment";
 import salt from "$lib/utils/helpers/salt";
-import {CodeGen} from "$lib/utils/BlockGen/Blocks/codeGen";
 import {getInputValue} from "$lib/utils/helpers/getInputValue";
-import type Mutator from "$lib/utils/BlockGen/Mutators/Mutator";
 
 export default class Block {
 	private readonly _blockDefinition: BlockDefinition;
@@ -185,7 +183,6 @@ export default class Block {
 				}
 
 			}
-			console.log(code(args), args)
 			return code(args);
 		};
 	}

@@ -37,4 +37,9 @@ export type MutatorBlock = {
 	adds: Argument[];
 	// Can it only be added once in the UI
 	once: boolean;
+	/* Used in checkbox mutator definition
+		`defaultValue: false;`
+		Shows/Hides field depending on the value
+	*/
+	defaultValue?: boolean;
 };

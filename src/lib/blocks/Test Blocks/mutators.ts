@@ -122,7 +122,9 @@ const blocks: BlockDefinition[] = [
 				adds: [new StatementInput("else_input").setField("else")],
 				once: true
 			}
-		])
+		], {
+			color: rgbToHex(91, 128, 165)
+		})
 	}
 ];
 
