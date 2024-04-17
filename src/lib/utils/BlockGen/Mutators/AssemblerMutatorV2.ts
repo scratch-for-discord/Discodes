@@ -1,4 +1,4 @@
-import type { MutatorBlock } from "$lib/types/BlockDefinition";
+import type {AssemblerMutator} from "$lib/types/BlockDefinition";
 import salt from "$lib/utils/helpers/salt";
 import pkg from "blockly/javascript";
 const { javascriptGenerator } = pkg;
@@ -28,7 +28,7 @@ export default class AssemblerMutatorV2 extends Mutator {
     //will store each properties name
     private order: string[];
     private settings: AdditionalSettings | undefined;
-    constructor(containerBlockText: string, properties: MutatorBlock[], settings?: AdditionalSettings) {
+    constructor(containerBlockText: string, properties: AssemblerMutator[], settings?: AdditionalSettings) {
         super(properties, containerBlockText);
         this.order = [];
         this.mixin = this.getMixin(settings);
@@ -38,7 +38,7 @@ export default class AssemblerMutatorV2 extends Mutator {
 
     get blocks(): string[] {
         const arr: string[] = [];
-        for (const prop of super.properties) {
+        for (const prop of super.properties as AssemblerMutator[]) {
             arr.push(prop.block);
         }
         return arr;
@@ -47,7 +47,7 @@ export default class AssemblerMutatorV2 extends Mutator {
 
     getMixin(settings?: AdditionalSettings): object {
         this.order = [];
-        const properties = super.properties;
+        const properties = super.properties as AssemblerMutator[];
         const propertieMap = Object.create(null);
         const containerBlockName = salt(10);
         const containerBlockText = super.containerBlockText;
@@ -230,6 +230,24 @@ export default class AssemblerMutatorV2 extends Mutator {
                     }
 
             },
+            appendInput_: function(this: Blockly.Block, input, name, fieldText) {
+                const inputType = input.type || "input_value"; // Default to input_value if type is not specified
+                const inputCheck = input.check; // Check for input type if specified
+
+                switch (inputType) {
+                    case "input_value":
+                        this.appendValueInput(name).setCheck(inputCheck).appendField(fieldText);
+                        break;
+                    case "input_statement":
+                        this.appendStatementInput(name).setCheck(inputCheck).appendField(fieldText);
+                        break;
+                    case "input_dummy":
+                        this.appendDummyInput(name).appendField(fieldText);
+                        break;
+                    default:
+                        throw new Error(`Unsupported input type: ${inputType}`);
+                }
+            }
 
         };
 

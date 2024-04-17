@@ -1,6 +1,6 @@
 import type { BlockShape, BlockType } from "$lib/enums/BlockTypes";
 import type BaseInput from "$lib/utils/BlockGen/Inputs/BaseInput";
-import type Mutator from "$lib/utils/BlockGen/Mutators/Mutator";
+import type {Mutator} from "$lib/utils/BlockGen/Mutators/Mutator";
 import type Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import type Placeholder from "$lib/utils/ToolboxGen/Placeholder";
 
@@ -31,14 +31,9 @@ export type BlockDefinition =
 	  };
 
 export interface MutatorBlock  {
-	// Name of the block that appears in the block list in the UI
-	block: string;
 	// What inputs it adds to the block
 	adds: Argument[];
-	// Can it only be added once in the UI
-	once: boolean;
-
-};
+}
 export interface CheckBoxMutatorBlock extends MutatorBlock {
 	/**
 	 * Used in checkbox mutator definition
@@ -50,4 +45,14 @@ export interface CheckBoxMutatorBlock extends MutatorBlock {
 	* Text that appears in containerBlock in mutator menu
 	*/
 	text: string;
+	/**
+	 * name for input in container block
+	 * */
+	inputName: string;
+}
+export interface AssemblerMutator extends MutatorBlock {
+	// Name of the block that appears in the block list in the UI
+	block: string
+	// Can it only be added once in the UI
+	once: boolean;
 }
