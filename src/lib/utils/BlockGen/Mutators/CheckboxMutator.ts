@@ -3,9 +3,19 @@ import type {AdditionalSettings} from "./Mutator";
 
 import type {CheckBoxMutatorBlock} from "$lib/types/BlockDefinition";
 import salt from "$lib/utils/helpers/salt";
-import Blockly from "blockly/core";
+import Blockly, {Connection} from "blockly/core";
 import pkg from "blockly/javascript";
 const { javascriptGenerator } = pkg;
+
+interface ClauseBlock extends Blockly.Block {
+	//input_type: Connection
+	connections_: { [p: string]: Blockly.Connection }
+}
+type ConnectionMap = {[key: string]: Blockly.Connection};
+interface ConnectionMapConnection {
+	connection: Connection,
+	input_name: string
+}
 export default class CheckboxMutator extends Mutator {
 	private settings: AdditionalSettings | undefined;
 
@@ -96,10 +106,13 @@ export default class CheckboxMutator extends Mutator {
 			//! Disable eslint cuz the state variable is of type any until they fully migrate to typescript
 			// eslint-disable-next-line
 			compose: function(this: any, containerBlock: Blockly.Block) {
+				const connections: ConnectionMap= containerBlock.connections_;
+
 				for (let i = 0; i < this.inputs_.length; i++) {
 					this.inputs_[i] = containerBlock.getFieldValue(this.fields_[i]) == "TRUE";
 				}
 				this.updateShape_();
+				this.reconnectChildBlocks_(connections);
 			},
 			//! Disable eslint cuz the state variable is of type any until they fully migrate to typescript
 			// eslint-disable-next-line
@@ -121,12 +134,30 @@ export default class CheckboxMutator extends Mutator {
 			},
 			reconnectChildBlocks_: function(
 				this: Blockly.Block,
-				connections: Blockly.Connection,
+				connections: ConnectionMap,
 
-			) {},
-			//! Disable eslint cuz the state variable is of type any until they fully migrate to typescript
+			) {
+				for (const connectionKey in connections) {
+					const conn = connections[connectionKey];
+					if(!conn) continue;
+					conn.reconnect(this, connectionKey);
+				}
+				console.log(connections)
+			},
 			// eslint-disable-next-line
-			saveConnections: function (this: any, containerBlock: Blockly.Block) {},
+			saveConnections: function(this: any, containerBlock: any) {
+				(containerBlock as ClauseBlock).connections_ = {};
+				for (let i = 0; i < this.inputs_.length; i++) {
+					const property = propertieMap[this.fields_[i]];
+					if(!this.inputs_[i]) continue;
+					for (const add of property.adds) {
+						const input = this.getInput(add.name + i);
+						containerBlock.connections_[add.name + i] = input && input.connection!.targetConnection;
+					}
+				}
+
+			},
+
 			appendInput_: function(this: Blockly.Block, input, name, fieldText) {
 				const inputType = input.type || "input_value"; // Default to input_value if type is not specified
 				const inputCheck = input.check; // Check for input type if specified
