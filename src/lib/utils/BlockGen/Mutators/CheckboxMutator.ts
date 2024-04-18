@@ -5,6 +5,7 @@ import type {CheckBoxMutatorBlock} from "$lib/types/BlockDefinition";
 import salt from "$lib/utils/helpers/salt";
 import Blockly, {Connection} from "blockly/core";
 import pkg from "blockly/javascript";
+import {MutatorType} from "$lib/enums/BlockTypes";
 const { javascriptGenerator } = pkg;
 
 interface ClauseBlock extends Blockly.Block {
@@ -20,7 +21,7 @@ export default class CheckboxMutator extends Mutator {
 	private settings: AdditionalSettings | undefined;
 
 	constructor(containerBlockText: string, properties: CheckBoxMutatorBlock[], settings?: AdditionalSettings) {
-		super(properties, containerBlockText);
+		super(properties, containerBlockText, MutatorType.Checkbox);
 		this.settings = settings;
 
 		this.mixin = this.getMixin(settings);
@@ -95,7 +96,7 @@ export default class CheckboxMutator extends Mutator {
 			decompose: function(this: any, workspace: Blockly.WorkspaceSvg) {
 				const containerBlock = workspace.newBlock(containerBlockName);
 				for (let i= 0; i<properties.length; i++) {
-					containerBlock.appendDummyInput().setAlign(Blockly.inputs.Align.RIGHT).appendField(this.fields_[i]).appendField(
+					containerBlock.appendDummyInput().setAlign(Blockly.inputs.Align.RIGHT).appendField(propertieMap[this.fields_[i]].text).appendField(
 						new Blockly.FieldCheckbox(this.inputs_[i] ? "TRUE" : "FALSE"),
 						this.fields_[i]
 					);
@@ -117,15 +118,15 @@ export default class CheckboxMutator extends Mutator {
 			//! Disable eslint cuz the state variable is of type any until they fully migrate to typescript
 			// eslint-disable-next-line
 			updateShape_: function(this: any) {
-				for (let i = 0; i < this.inputs_.length; i++) {
-					const property = propertieMap[this.fields_[i]];
+				for (let i = 1; i <= this.inputs_.length; i++) {
+					const property = propertieMap[this.fields_[i-1]];
 					for (const add of property.adds) {
 						this.removeInput(add.name+i, true);
 					}
 				}
-				for (let i = 0; i < this.inputs_.length; i++) {
-					const property = propertieMap[this.fields_[i]];
-					if(!this.inputs_[i]) continue;
+				for (let i = 1; i <= this.inputs_.length; i++) {
+					const property = propertieMap[this.fields_[i-1]];
+					if(!this.inputs_[i-1]) continue;
 					for (const add of property.adds) {
 
 						this.appendInput_(add.generate(), add.name + i, add.getField());

@@ -1,10 +1,13 @@
 import type {AssemblerMutator} from "$lib/types/BlockDefinition";
 import salt from "$lib/utils/helpers/salt";
 import pkg from "blockly/javascript";
-const { javascriptGenerator } = pkg;
-import {Mutator} from "./Mutator";
 import type {AdditionalSettings} from "./Mutator";
+import {Mutator} from "./Mutator";
 import Blockly, {Connection} from "blockly/core";
+import {MutatorType} from "$lib/enums/BlockTypes";
+
+const { javascriptGenerator } = pkg;
+
 function orderListChanged(order1: string[], order2: string[]): boolean {
     if(!(Array.isArray(order1) && Array.isArray(order2))) return false;
     if(order1.length !== order2.length) return true;
@@ -29,7 +32,7 @@ export default class AssemblerMutatorV2 extends Mutator {
     private order: string[];
     private settings: AdditionalSettings | undefined;
     constructor(containerBlockText: string, properties: AssemblerMutator[], settings?: AdditionalSettings) {
-        super(properties, containerBlockText);
+        super(properties, containerBlockText, MutatorType.Assembler);
         this.order = [];
         this.mixin = this.getMixin(settings);
         this.setBlocks = this.blocks;

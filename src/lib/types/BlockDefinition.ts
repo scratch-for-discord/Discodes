@@ -20,7 +20,7 @@ export type BlockDefinition =
 			colour: string;
 			tooltip: string;
 			helpUrl: string;
-			code: (args: Record<string, string>) => string;
+			code: (args: Record<string, string | string[]>) => string;
 			mutator?: Mutator;
 			hidden?: boolean;
 			imports?: `${string}@${string}`[];

@@ -1,6 +1,7 @@
 import Blockly from "blockly/core";
 import { dev } from "$app/environment";
 import type {MutatorBlock} from "$lib/types/BlockDefinition";
+import {MutatorType} from "$lib/enums/BlockTypes";
 export interface AdditionalSettings {
 	color: number | string | undefined
 }
@@ -10,10 +11,12 @@ export class Mutator {
 	private _mixin: object;
 	private _blocks: string[] | undefined;
 	private _helperFunction: (() => any) | undefined;
-	constructor(properties: MutatorBlock[], containerBlockText: string) {
+	private mutatorType: MutatorType;
+	constructor(properties: MutatorBlock[], containerBlockText: string, mutatorType: MutatorType) {
 		this._properties = properties;
 		this._containerBlockText = containerBlockText;
 		this._mixin = {};
+		this.mutatorType = mutatorType;
 	}
 	get properties() {
 		return this._properties;
@@ -61,5 +64,7 @@ export class Mutator {
 		}
 		Blockly.Extensions.registerMutator(name, this._mixin, this._helperFunction, this._blocks);
 	}
-
+	get type() {
+		return this.mutatorType;
+	}
 }

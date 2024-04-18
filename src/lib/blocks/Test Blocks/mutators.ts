@@ -84,50 +84,7 @@ const blocks: BlockDefinition[] = [
 	// 		}
 	// 	])
 	// },
-	{
 
-		id: "not_mutator_v2",
-		text: "if {operand} {if}",
-		args: [new ValueInput("operand", BlockType.Boolean), new StatementInput("if")],
-		warnings: [new Warning(WarningType.Input, "operand")],
-		shape: BlockShape.Action,
-		inline: true,
-		colour: rgbToHex(91, 128, 165),
-		tooltip: "Returns the opposite of the input",
-		helpUrl:
-			`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT`,
-		code: (args) => {
-			console.log(args)
-			let code = `if(${args.operand === ""? "false" : args.operand}) {
-	${args.if}
-}`;
-			const ifInputs = args.if_input as string[];
-			const ifStatementInputs = args.if_statement as string[];
-
-			for (let i=0; i < ifInputs.length; i++) {
-				const ifInp = ifInputs[i];
-				code += ` else if(${ifInp === ""? "false" : ifInp}) {
-	${ifStatementInputs[i]}
-}`;
-			}
-
-			return code;
-		},
-		mutator: new AssemblerMutatorV2("If", [
-			{
-				block: "if_test",
-				adds: [new ValueInput("if_input", BlockType.Boolean).setField("else if"), new StatementInput("if_statement").setField("do")],
-				once: true
-			},
-			{
-				block: "else_test",
-				adds: [new StatementInput("else_input").setField("else")],
-				once: true
-			}
-		], {
-			color: rgbToHex(91, 128, 165)
-		})
-	},
 	{
 
 		id: "checkbox_mutator",
@@ -143,13 +100,13 @@ const blocks: BlockDefinition[] = [
 		},
 		mutator: new CheckboxMutator("hello", [
 			{
-				text: "eee",
+				text: "input 1",
 				inputName: "if_test",
 				adds: [new ValueInput("if_input", BlockType.Boolean).setField("else if"), new StatementInput("if_statement").setField("do")],
 				defaultValue: true,
 			},
 			{
-				text: "eeee",
+				text: "input 2",
 				inputName: "else_test",
 				adds: [new StatementInput("else_input").setField("else")],
 				defaultValue: false,

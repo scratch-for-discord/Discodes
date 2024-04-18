@@ -2,23 +2,28 @@
 import Blockly from "blockly/core";
 import "@blockly/field-grid-dropdown";
 import pkg from "blockly/javascript";
-const { javascriptGenerator, Order } = pkg;
-
 // Types
-import type {Argument, BlockDefinition, MutatorBlock} from "$lib/types/BlockDefinition";
-import { BlockShape, BlockType, WarningType } from "$lib/enums/BlockTypes";
-import type { Abstract } from "blockly/core/events/events_abstract";
+import type {
+	Argument,
+	AssemblerMutator,
+	BlockDefinition,
+	CheckBoxMutatorBlock,
+	MutatorBlock
+} from "$lib/types/BlockDefinition";
+import {BlockShape, BlockType, MutatorType, WarningType} from "$lib/enums/BlockTypes";
+import type {Abstract} from "blockly/core/events/events_abstract";
 
 // Warnings
-import { addWarning, removeWarning, warnings as warningsObj } from "../Warnings/WarningsList";
-import { EventsToTriggerWarnings } from "$lib/constants/warnings";
+import {addWarning, removeWarning, warnings as warningsObj} from "../Warnings/WarningsList";
+import {EventsToTriggerWarnings} from "$lib/constants/warnings";
 
 // Helpers
-import { dev } from "$app/environment";
+import {dev} from "$app/environment";
 import salt from "$lib/utils/helpers/salt";
 import {getInputValue} from "$lib/utils/helpers/getInputValue";
-import type Mutator from "$lib/utils/BlockGen/Mutators/Mutator";
-import { addImport } from "$lib/utils/BlockGen/Blocks/importsList";
+import {addImport} from "$lib/utils/BlockGen/Blocks/importsList";
+
+const { javascriptGenerator, Order } = pkg;
 
 export default class Block {
 	private readonly _blockDefinition: BlockDefinition;
@@ -164,13 +169,19 @@ export default class Block {
 		const propertyMap: Record<string, MutatorBlock> = {};
 		if(properties) {
 			for (const property of properties) {
-				propertyMap[property.block] = property;
+				if(this._blockDefinition.mutator?.type === MutatorType.Assembler) {
+					propertyMap[(property as AssemblerMutator).block] = property;
+
+				} else if(this._blockDefinition.mutator?.type === MutatorType.Checkbox) {
+					propertyMap[(property as CheckBoxMutatorBlock).inputName] = property;
+
+				}
 			}
 		}
 
 		// Generating the export code
 		javascriptGenerator.forBlock[blockDef.type] = function(block: Blockly.Block) {
-			const args: Record<string, string> = {}; //? Object we will pass as argument for the custom code to run properly
+			const args: Record<string, string | string[]> = {}; //? Object we will pass as argument for the custom code to run properly
 
 			for (const arg in blockDef.args0) {
 				const argValue = blockDef.args0[arg]; //? The argument object, contains the name, the type etc..
@@ -181,8 +192,9 @@ export default class Block {
 			//parse mutator values
 			for(const propertyKey of Object.keys(propertyMap)) {
 				const property = propertyMap[propertyKey];
+				console.log(propertyMap)
 				for (const add of property.adds) {
-					const valueList: unknown[] = [];
+					const valueList: string[] = [];
 					let i = 1;
 					let input = block.getInput(add.name + i);
 					while(input) {
