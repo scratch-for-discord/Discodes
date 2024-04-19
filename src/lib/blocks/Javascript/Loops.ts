@@ -17,7 +17,7 @@ const blocks: BlockDefinition[] = [
 		tooltip: "Repeat x times",
 		helpUrl: "",
 		code: (args) => {
-			return `for (let i = 0; i < ${args.VALUE}; i++) {\n${args.INPUT}\n}`;
+			return `for (let i = 0; i < ${args.VALUE === ""? "0" : args.VALUE}; i++) {\n${args.INPUT === ""? "" : args.INPUT}\n}`;
 		}
 	},
 	{
@@ -37,10 +37,13 @@ const blocks: BlockDefinition[] = [
 		tooltip: "Repeat while",
 		helpUrl: "",
 		code: (args) => {
-			return `while (${args.WHILE === "while" ? "" : "!"}( ${args.CONDITION} )) {\n${args.INPUT}\n}`;
+			return `while (${args.WHILE === "while" ? "" : "!"}( ${args.CONDITION === ""? "false" : args.CONDITION} )) {\n${args.INPUT === ""? "" : args.INPUT}\n}`;
 		}
 	},
 	{
+		/**
+		 * Variable blocks are needed for this to function most seamlessly
+		 * */
 		id: "for_loop",
 		text: "For {VARIABLE} from {START} to {END} step {STEP}\n {INPUT}",
 		args: [
@@ -56,7 +59,8 @@ const blocks: BlockDefinition[] = [
 		tooltip: "For loop",
 		helpUrl: "",
 		code: (args) => {
-			return `for (let ${args.VARIABLE} = ${args.START}; ${args.VARIABLE} < ${args.END}; ${args.VARIABLE} += ${args.STEP}) {\n${args.INPUT}\n}`;
+			if(args.VARIABLE === "") return ""
+			return `for (let ${args.VARIABLE} = ${args.START === ""? "0" : args.START}; ${args.VARIABLE} < ${args.END === ""? "0" : args.END}; ${args.VARIABLE} += ${args.STEP}) {\n${args.INPUT}\n}`;
 		}
 	},
 	{
