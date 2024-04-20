@@ -10,7 +10,7 @@ export class Mutator {
 	private readonly _containerBlockText: string;
 	private _mixin: object;
 	private _blocks: string[] | undefined;
-	private _helperFunction: (() => any) | undefined;
+	private _helperFunction: (() => void) | undefined;
 	private mutatorType: MutatorType;
 	constructor(properties: MutatorBlock[], containerBlockText: string, mutatorType: MutatorType) {
 		this._properties = properties;
