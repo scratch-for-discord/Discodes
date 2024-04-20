@@ -11,7 +11,7 @@ import type {
 	CheckBoxMutatorBlock,
 	MutatorBlock
 } from "$lib/types/BlockDefinition";
-import { BlockShape, BlockType, DropdownType, WarningType } from "$lib/enums/BlockTypes";
+import { BlockShape, BlockType, DropdownType, MutatorType, WarningType } from "$lib/enums/BlockTypes";
 import type { Abstract } from "blockly/core/events/events_abstract";
 import type { DiscodesInput } from "$lib/types/DiscodesInput";
 import type Warning from "../Warnings/Warning";

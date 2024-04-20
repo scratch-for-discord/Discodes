@@ -11,7 +11,6 @@ export interface NumberIDef {
 }
 
 export default class NumberInput extends BaseInput<NumberIDef> {
-	private readonly _name: string;
 	private readonly _value: number;
 	private readonly _settings: {
 		min?: number;

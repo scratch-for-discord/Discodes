@@ -14,8 +14,6 @@ export interface StatementIDef  {
  */
 
 export default class StatementInput extends BaseInput<StatementIDef> {
-	private readonly _name: string;
-
 	constructor(name: string) {
 		super(name);
 

@@ -10,7 +10,6 @@ export interface TextIDef {
 
 
 export default class TextInput extends BaseInput<TextIDef> {
-	private readonly _name: string;
 	private readonly _text: string;
 
 	constructor(name: string, defaultValue: string) {

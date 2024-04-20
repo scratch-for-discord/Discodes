@@ -16,7 +16,6 @@ export interface ValueIDef {
  */
 
 export default class ValueInput extends BaseInput<ValueIDef> {
-	private readonly _name: string;
 	private readonly _type: BlockType[];
 
 	constructor(name: string, type: BlockType | BlockType[]) {

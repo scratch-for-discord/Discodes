@@ -17,7 +17,6 @@ export interface DropdownIDef {
  */
 
 export default class Dropdown extends BaseInput<DropdownIDef> {
-	private readonly _name: string;
 	private readonly _options: Array<Array<string>>;
 	private _dropdownType: DropdownType;
 
@@ -53,7 +52,6 @@ export default class Dropdown extends BaseInput<DropdownIDef> {
 			// Automatically swaps between grid and list type depending on the length of the arguments.
 			this._dropdownType = this._options.length > 10 ? DropdownType.Grid : DropdownType.List;
 		}
-		console.log(this._options)
 		return {
 			type: this._dropdownType,
 			name: super.name,

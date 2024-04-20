@@ -61,9 +61,9 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "",
 		code: (args) => {
 			if(args.VARIABLE === "") return "";
-			let variable = `let ${args.VARIABLE} =${args.START ===""? "0" : args.START}`;
-			let condition = `${args.VARIABLE} < ${args.END === ""? "0" : args.END}`;
-			let step = `${args.VARIABLE} += ${args.STEP ===""? "0" : args.STEP}}`;
+			const variable = `let ${args.VARIABLE} =${args.START ===""? "0" : args.START}`;
+			const condition = `${args.VARIABLE} < ${args.END === ""? "0" : args.END}`;
+			const step = `${args.VARIABLE} += ${args.STEP ===""? "0" : args.STEP}}`;
 			if (args.VARIABLE === "") {
 				const varName = salt(10);
 				return `for(let vk${varName} = 0; false; vk${varName}+= 0) {}`;

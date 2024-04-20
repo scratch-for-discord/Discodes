@@ -24,7 +24,7 @@ export default class Image extends BaseInput<ImageIDef> {
 	 * @memberof NumberInput
 	 */
 	constructor(src: string, settings: { alt: string; width: number; height: number }) {
-		super();
+		super(settings.alt);
 
 		this.setMethod(this.getDefinition);
 		this._src = src;
@@ -38,9 +38,5 @@ export default class Image extends BaseInput<ImageIDef> {
 			src: this._src,
 			...this._settings
 		};
-	}
-
-	get name(): string {
-		return this._settings.alt;
 	}
 }
