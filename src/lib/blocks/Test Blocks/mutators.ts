@@ -1,12 +1,10 @@
-import { BlockShape, BlockType, WarningType } from "$lib/enums/BlockTypes";
+import { BlockShape, BlockType } from "$lib/enums/BlockTypes";
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
 import StatementInput from "$lib/utils/BlockGen/Inputs/StatementInput";
 import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
-// import AssemblerMutator from "$lib/utils/BlockGen/Mutators/AssemblerMutator";
-import Warning from "$lib/utils/BlockGen/Warnings/Warning";
+
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
-import AssemblerMutatorV2 from "$lib/utils/BlockGen/Mutators/AssemblerMutatorV2";
 import CheckboxMutator from "$lib/utils/BlockGen/Mutators/CheckboxMutator";
 
 const blocks: BlockDefinition[] = [
@@ -96,7 +94,7 @@ const blocks: BlockDefinition[] = [
 		helpUrl:
 			`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT`,
 		code: (args) => {
-			return "";
+			return "${args}";
 		},
 		mutator: new CheckboxMutator("hello", [
 			{
