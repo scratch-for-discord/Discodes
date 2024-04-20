@@ -6,7 +6,7 @@ import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import Placeholder from "$lib/utils/ToolboxGen/Placeholder";
 import StatementInput from "$lib/utils/BlockGen/Inputs/StatementInput";
 import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
-import AssemblerMutator from "$lib/utils/BlockGen/Mutators/AssemblerMutator";
+import AssemblerMutatorV2 from "$lib/utils/BlockGen/Mutators/AssemblerMutatorV2";
 
 
 const blocks: BlockDefinition[] = [
@@ -40,7 +40,7 @@ const blocks: BlockDefinition[] = [
         code: (args) => {
             return `new Text("${args.CONTENT}")`;
         },
-        mutator: new AssemblerMutator("Add Content", [
+        mutator: new AssemblerMutatorV2("Add Content", [
             {
                 block: "text_content",
                 adds: [new ValueInput("text_content", BlockType.String)],
