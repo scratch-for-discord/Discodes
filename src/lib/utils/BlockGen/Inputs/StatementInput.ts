@@ -1,6 +1,6 @@
 import BaseInput from "./BaseInput";
 
-interface StatementInputJSON {
+export interface StatementIDef  {
 	name: string;
 	type: "input_statement";
 }
@@ -12,8 +12,9 @@ interface StatementInputJSON {
  * @class ValueInput
  * @extends {BaseInput}
  */
-export default class StatementInput extends BaseInput {
 
+export default class StatementInput extends BaseInput<StatementIDef> {
+	private readonly _name: string;
 
 	constructor(name: string) {
 		super(name);
@@ -29,7 +30,7 @@ export default class StatementInput extends BaseInput {
 	 * @return {*}  {ValueInputJSON}
 	 * @memberof ValueInput
 	 */
-	getDefinition(): StatementInputJSON {
+	getDefinition(): StatementIDef {
 		return {
 			type: "input_statement",
 			name: super.name

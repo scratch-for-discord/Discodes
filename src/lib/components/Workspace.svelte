@@ -24,7 +24,6 @@
 		await loadBlocks();
 		workspace = Blockly.inject("blocklyDiv", { ...options, toolbox: toolbox });
 
-		// Only console log the code and warnings when debug mode is enabled.
 		const supportedEvents = new Set([
 			Blockly.Events.BLOCK_CHANGE,
 			Blockly.Events.BLOCK_CREATE,
@@ -33,9 +32,13 @@
 		]);
 
 		function updateCode(event: Abstract) {
+			workspace.getAllBlocks(true).forEach((block) => {
+				if (block.type === "is_equal") console.log(block)
+			})
 			if (workspace.isDragging()) return; // Don't update while changes are happening.
 			if (!supportedEvents.has(event.type)) return;
 
+			// Needed to remove the deleted block imports from the imports list.
 			if (event.type === Blockly.Events.BLOCK_DELETE) wipeImports();
 
 			if (LOG_CODE) {

@@ -1,15 +1,15 @@
-export default class BaseInput {
+export default class BaseInput<Definition> {
 	//! Replace unknown by an enum with all the types of inputs!
-	private _method: () => unknown;
+	private _method!: () => Definition;
 	private _fieldText: string;
 	private _name: string;
+
 	constructor(name?: string) {
 		this._name = name ?? "";
 		this._fieldText = "";
-		this._method = () => {};
 	}
 
-	protected setMethod(generationMethod: () => unknown) {
+	protected setMethod(generationMethod: () => Definition) {
 		this._method = generationMethod;
 	}
 	/*
@@ -31,7 +31,7 @@ this function currently is meant for Mutator use
 	public getField() {
 		return this._fieldText;
 	}
-	public generate(): unknown {
+	public generate(): Definition {
 		return this._method();
 	}
 }

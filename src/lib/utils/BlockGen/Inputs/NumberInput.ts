@@ -1,6 +1,17 @@
 import BaseInput from "./BaseInput";
 
-export default class NumberInput extends BaseInput {
+
+export interface NumberIDef { 
+	type: "field_number"; 
+	name: string; 
+	value: number
+	min? : number
+	max?: number
+	precision?: number
+}
+
+export default class NumberInput extends BaseInput<NumberIDef> {
+	private readonly _name: string;
 	private readonly _value: number;
 	private readonly _settings: {
 		min?: number;
@@ -21,7 +32,7 @@ export default class NumberInput extends BaseInput {
 		this._settings = settings || {};
 	}
 
-	private getDefinition(): { type: "field_number"; name: string; value: number } {
+	private getDefinition(): NumberIDef {
 		return {
 			type: "field_number",
 			name: super.name,

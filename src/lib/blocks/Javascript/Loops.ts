@@ -15,7 +15,7 @@ const blocks: BlockDefinition[] = [
 		shape: BlockShape.Action,
 		inline: true,
 		colour: rgbToHex(91, 165, 91),
-		tooltip: "Repeat x times",
+		tooltip: "Repeats the code inside the given ammount of times.",
 		helpUrl: "",
 		code: (args) => {
 			return `for (let i = 0; i < ${args.VALUE === ""? "0" : args.VALUE}; i++) {\n${args.INPUT === ""? "" : args.INPUT}\n}`;

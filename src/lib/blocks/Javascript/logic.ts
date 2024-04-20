@@ -2,6 +2,8 @@ import { BlockShape, BlockType, DropdownType, WarningType } from "$lib/enums/Blo
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
 import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
+import NumberInput from "$lib/utils/BlockGen/Inputs/NumberInput";
+import TextInput from "$lib/utils/BlockGen/Inputs/TextInput";
 import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
@@ -83,9 +85,18 @@ const blocks: BlockDefinition[] = [
 		colour: rgbToHex(91, 128, 165),
 		tooltip: "Checks if the first input and the second input validate the condition.",
 		helpUrl: "https://www.w3schools.com/js/js_comparisons.asp",
-		code: (args) => {
-			if(args.A === "" || args.B === "") return "false";
-			return `${args.A} ${args.CONDITION} ${args.B}`;
+		//code: (args) => {
+		//  if(args.A === "" || args.B === "") return "false";
+		//  return `${args.A} ${args.CONDITION} ${args.B}`;
+
+		code: (args, block) => {
+			block.addInput(new Dropdown("bob", DropdownType.Auto, {"bob": "hello", "alex":"nikola"}));
+			block.addInput(new ValueInput("chicken", BlockType.Any));
+			block.addInput(new NumberInput("numberrr", 50, {max: 100, min: 50, precision: 10}));
+			block.addInput(new TextInput("textttt", "I am a text input!"));
+			console.log("Args (code prop parameter): ",args);
+			return `${args.textttt}`;
+
 		}
 	},
 	{

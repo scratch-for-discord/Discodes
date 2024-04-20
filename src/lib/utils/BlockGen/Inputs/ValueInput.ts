@@ -2,7 +2,7 @@ import { BlockType } from "$lib/enums/BlockTypes";
 import BaseInput from "./BaseInput";
 import argFilter from "../../helpers/argFilter";
 
-interface ValueInputJSON {
+export interface ValueIDef {
 	name: string;
 	type: "input_value";
 	check?: BlockType | BlockType[];
@@ -14,7 +14,9 @@ interface ValueInputJSON {
  * @class ValueInput
  * @extends {BaseInput}
  */
-export default class ValueInput extends BaseInput {
+
+export default class ValueInput extends BaseInput<ValueIDef> {
+	private readonly _name: string;
 	private readonly _type: BlockType[];
 
 	constructor(name: string, type: BlockType | BlockType[]) {
@@ -32,8 +34,8 @@ export default class ValueInput extends BaseInput {
 	 * @return {*}  {ValueInputJSON}
 	 * @memberof ValueInput
 	 */
-	getDefinition(): ValueInputJSON {
-		const result: ValueInputJSON = {
+	getDefinition(): ValueIDef {
+		const result: ValueIDef = {
 			type: "input_value",
 			name: super.name
 		};
