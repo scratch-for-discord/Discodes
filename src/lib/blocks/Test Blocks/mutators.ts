@@ -1,11 +1,11 @@
-import { BlockShape, BlockType, WarningType } from "$lib/enums/BlockTypes";
+import { BlockShape, BlockType } from "$lib/enums/BlockTypes";
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
 import StatementInput from "$lib/utils/BlockGen/Inputs/StatementInput";
 import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
-import AssemblerMutator from "$lib/utils/BlockGen/Mutators/AssemblerMutator";
-import Warning from "$lib/utils/BlockGen/Warnings/Warning";
+
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
+import CheckboxMutator from "$lib/utils/BlockGen/Mutators/CheckboxMutator";
 
 const blocks: BlockDefinition[] = [
 	{
@@ -27,9 +27,24 @@ const blocks: BlockDefinition[] = [
 		hidden: true
 	},
 	{
-		id: "test_item2",
-		text: "list thing 2",
+		id: "if_test",
+		text: "else if",
 		shape: BlockShape.Action,
+		inline: true,
+		colour: rgbToHex(91, 128, 165),
+		tooltip: "Returns the opposite of the input",
+		helpUrl:
+			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT",
+		code: () => {
+			return "bob";
+		},
+
+		hidden: true
+	},
+	{
+		id: "else_test",
+		text: "else",
+		shape: BlockShape.Bottom,
 		inline: true,
 		colour: rgbToHex(91, 128, 165),
 		tooltip: "Returns the opposite of the input",
@@ -40,33 +55,65 @@ const blocks: BlockDefinition[] = [
 		},
 		hidden: true
 	},
+	// {
+	// 	id: "not_mutator",
+	// 	text: "not {operand}",
+	// 	args: [new ValueInput("operand", BlockType.Boolean)],
+	// 	warnings: [new Warning(WarningType.Input, "operand")],
+	// 	shape: BlockShape.Action,
+	// 	inline: true,
+	// 	colour: rgbToHex(91, 128, 165),
+	// 	tooltip: "Returns the opposite of the input",
+	// 	helpUrl:
+	// 		"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT",
+	// 	code: (args) => {
+	// 		return `!${args.operand}`;
+	// 	},
+	// 	mutator: new AssemblerMutator("Not content", [
+	// 		{
+	// 			block: "if_test",
+	// 			adds: [new ValueInput("elseIf", BlockType.Any)],
+	// 			once: true
+	// 		},
+	// 		{
+	// 			block: "else_test",
+	// 			adds: [new StatementInput("ifThing")],
+	// 			once: true
+	// 		}
+	// 	])
+	// },
+
 	{
-		id: "not_mutator",
-		text: "not {operand}",
-		args: [new ValueInput("operand", BlockType.Boolean)],
-		warnings: [new Warning(WarningType.Input, { fieldName: "operand" })],
+
+		id: "checkbox_mutator",
+		text: "checkbox mutator\n",
 		shape: BlockShape.Action,
 		inline: true,
 		colour: rgbToHex(91, 128, 165),
 		tooltip: "Returns the opposite of the input",
 		helpUrl:
-			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT",
+			`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT`,
 		code: (args) => {
-			return `!${args.operand}`;
+			return "${args}";
 		},
-		mutator: new AssemblerMutator("Not content", [
+		mutator: new CheckboxMutator("hello", [
 			{
-				block: "test_item",
-				adds: [new ValueInput("bob", BlockType.Any)],
-				once: true
+				text: "input 1",
+				inputName: "if_test",
+				adds: [new ValueInput("if_input", BlockType.Boolean).setField("else if"), new StatementInput("if_statement").setField("do")],
+				defaultValue: true,
 			},
 			{
-				block: "test_item2",
-				adds: [new StatementInput("bob")],
-				once: true
+				text: "input 2",
+				inputName: "else_test",
+				adds: [new StatementInput("else_input").setField("else")],
+				defaultValue: false,
+
 			}
-		])
-	}
+		], {
+			color: rgbToHex(91, 128, 165)
+		})
+	},
 ];
 
 const category: CategoryDefinition = {

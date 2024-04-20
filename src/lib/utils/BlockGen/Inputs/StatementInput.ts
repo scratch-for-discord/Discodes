@@ -12,14 +12,16 @@ export interface StatementIDef  {
  * @class ValueInput
  * @extends {BaseInput}
  */
+
 export default class StatementInput extends BaseInput<StatementIDef> {
 	private readonly _name: string;
 
 	constructor(name: string) {
-		super();
+		super(name);
 
 		this.setMethod(this.getDefinition);
-		this._name = name;
+		super.setName(name);
+
 	}
 
 	/**
@@ -31,11 +33,8 @@ export default class StatementInput extends BaseInput<StatementIDef> {
 	getDefinition(): StatementIDef {
 		return {
 			type: "input_statement",
-			name: this._name
+			name: super.name
 		};
 	}
 
-	get name(): string {
-		return this._name;
-	}
 }

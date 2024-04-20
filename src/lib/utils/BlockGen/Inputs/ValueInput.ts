@@ -14,15 +14,17 @@ export interface ValueIDef {
  * @class ValueInput
  * @extends {BaseInput}
  */
+
 export default class ValueInput extends BaseInput<ValueIDef> {
 	private readonly _name: string;
 	private readonly _type: BlockType[];
 
 	constructor(name: string, type: BlockType | BlockType[]) {
-		super();
+		super(name);
 
 		this.setMethod(this.getDefinition);
-		this._name = name;
+		super.setName(name);
+
 		this._type = [type].flat();
 	}
 
@@ -35,7 +37,7 @@ export default class ValueInput extends BaseInput<ValueIDef> {
 	getDefinition(): ValueIDef {
 		const result: ValueIDef = {
 			type: "input_value",
-			name: this._name
+			name: super.name
 		};
 
 		const filtered = argFilter(this._type);
@@ -46,7 +48,4 @@ export default class ValueInput extends BaseInput<ValueIDef> {
 		return result;
 	}
 
-	get name(): string {
-		return this._name;
-	}
 }

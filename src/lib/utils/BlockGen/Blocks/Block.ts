@@ -2,22 +2,33 @@
 import Blockly from "blockly/core";
 import * as gridDropdown from "@blockly/field-grid-dropdown";
 import pkg from "blockly/javascript";
-const { javascriptGenerator, Order } = pkg;
-
 // Types
-import type { Argument, BlockDefinition } from "$lib/types/BlockDefinition";
+
+import type {
+	Argument,
+	AssemblerMutator,
+	BlockDefinition,
+	CheckBoxMutatorBlock,
+	MutatorBlock
+} from "$lib/types/BlockDefinition";
 import { BlockShape, BlockType, DropdownType, WarningType } from "$lib/enums/BlockTypes";
 import type { Abstract } from "blockly/core/events/events_abstract";
 import type { DiscodesInput } from "$lib/types/DiscodesInput";
 import type Warning from "../Warnings/Warning";
 
+
 // Warnings
-import { addWarning, removeWarning, warnings as warningsObj } from "../Warnings/WarningsList";
-import { EventsToTriggerWarnings } from "$lib/constants/warnings";
+import {addWarning, removeWarning, warnings as warningsObj} from "../Warnings/WarningsList";
+import {EventsToTriggerWarnings} from "$lib/constants/warnings";
 
 // Helpers
-import { dev } from "$app/environment";
+import {dev} from "$app/environment";
 import salt from "$lib/utils/helpers/salt";
+
+import {getInputValue} from "$lib/utils/helpers/getInputValue";
+
+
+
 import { addImport } from "$lib/utils/BlockGen/Blocks/importsList";
 
 interface BlocklyBlockDefinition {
@@ -30,6 +41,8 @@ interface BlocklyBlockDefinition {
 	message0: string
 	mutator:string | undefined
 };
+
+const { javascriptGenerator, Order } = pkg;
 
 export default class Block {
 	private _blockDefinition: BlockDefinition;
@@ -161,7 +174,7 @@ export default class Block {
 		if (Blockly.Blocks[blockDef.type] !== undefined && !dev) {
 			throw Error(`Block "${blockDef.type}" is defined twice.`);
 		}
-
+		//const blockDefinition = this._blockDefinition;
 		// Add The block to the blocks list
 		Blockly.Blocks[blockDef.type] = {
 			init: function(this: Blockly.Block) {
@@ -193,9 +206,11 @@ export default class Block {
 						this.setOutput(true, output);
 					}
 				}
-
+				// eslint-disable-next-line @typescript-eslint/no-this-alias
+				const block = this;
 				// Warnings Code
 				this.setOnChange(function(this: Blockly.Block, changeEvent: Abstract) {
+
 					if (
 						importName &&
 						!this.isInFlyout &&
@@ -209,7 +224,8 @@ export default class Block {
 
 					if (
 						(EventsToTriggerWarnings.has(changeEvent.type) || changeEvent.type == "change") &&
-						!this.isInFlyout
+						!this.isInFlyout &&
+						block.id == this.id
 					) {
 						const warnings = blockClass._blockDefinition.label ? undefined : blockClass._blockDefinition.warnings;
 						if (!warnings) return;
@@ -257,38 +273,79 @@ export default class Block {
 				});
 			}
 		};
+		const properties = this._blockDefinition.mutator?.properties;
+		const propertyMap: Record<string, MutatorBlock> = {};
+		if(properties) {
+			for (const property of properties) {
+				if(this._blockDefinition.mutator?.type === MutatorType.Assembler) {
+					propertyMap[(property as AssemblerMutator).block] = property;
+
+				} else if(this._blockDefinition.mutator?.type === MutatorType.Checkbox) {
+					propertyMap[(property as CheckBoxMutatorBlock).inputName] = property;
+
+				}
+			}
+		}
 
 		// Generating the export code
 		javascriptGenerator.forBlock[blockDef.type] = function(block: Blockly.Block) {
-			const args: Record<string, string> = {}; //? Object we will pass as argument to be used for code generation
+
+			const args: Record<string, string | string[]> = {}; //? Object we will pass as argument for the custom code to run properly
+
+			for (const arg in blockDef.args0) {
+				const argValue = blockDef.args0[arg]; //? The argument object, contains the name, the type etc..
+				const argName: string = blockDef.args0[arg].name as string;
+				args[argName] = getInputValue(block, argName, argValue.type);
+			}
+
+			//parse mutator values
+			for(const propertyKey of Object.keys(propertyMap)) {
+				const property = propertyMap[propertyKey];
+				console.log(propertyMap)
+				for (const add of property.adds) {
+					const valueList: string[] = [];
+					let i = 1;
+					let input = block.getInput(add.name + i);
+					while(input) {
+						const definition = add.generate() as Record<string, unknown>;
+						valueList.push(getInputValue(block, definition.name as string + i, definition.type as string));
+						i++;
+						input = block.getInput(add.name + i);
+					}
+					args[add.name] =  valueList;
+
+
+// 			const args: Record<string, string> = {}; //? Object we will pass as argument to be used for code generation
 			
-			for (const arg of blockClass._blocklyDefinition.args0) {
-				//! Fix this asap...
-				//@ts-expect-error gergerg
-				if (arg.isDummy === true) {
-					// Since it's a dummy input we need to get the value from the fields array inside the dummy input!
-					//@ts-expect-error We have to access the protected value to generate it correctly.
-					args[arg.name] = block.getInput(arg.name)?.fieldRow[0].value_;
-					continue;
-				} 
+// 			for (const arg of blockClass._blocklyDefinition.args0) {
+// 				//! Fix this asap...
+// 				//@ts-expect-error gergerg
+// 				if (arg.isDummy === true) {
+// 					// Since it's a dummy input we need to get the value from the fields array inside the dummy input!
+// 					//@ts-expect-error We have to access the protected value to generate it correctly.
+// 					args[arg.name] = block.getInput(arg.name)?.fieldRow[0].value_;
+// 					continue;
+// 				} 
 
-				switch (arg.type) {
-					case "input_value":
-						args[arg.name] = javascriptGenerator.valueToCode(
-							block,
-							arg.name,
-							javascriptGenerator.ORDER_ATOMIC
-						);
-						break;
+// 				switch (arg.type) {
+// 					case "input_value":
+// 						args[arg.name] = javascriptGenerator.valueToCode(
+// 							block,
+// 							arg.name,
+// 							javascriptGenerator.ORDER_ATOMIC
+// 						);
+// 						break;
 
-					case "input_statement":
-						args[arg.name] = javascriptGenerator.statementToCode(block, arg.name);
-						break;
+// 					case "input_statement":
+// 						args[arg.name] = javascriptGenerator.statementToCode(block, arg.name);
+// 						break;
 
-					default:
-						args[arg.name] = block.getFieldValue(arg.name);
-						break;
+// 					default:
+// 						args[arg.name] = block.getFieldValue(arg.name);
+// 						break;
+
 				}
+
 			}
 			return output ? [code(args, blockClass), Order.NONE] : code(args, blockClass);
 		};

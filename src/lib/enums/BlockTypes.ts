@@ -31,3 +31,7 @@ export enum BlockShape {
 export enum PlaceholderType {
 	Block = "block"
 }
+export enum MutatorType {
+	Assembler = "assembler",
+	Checkbox = "checkbox",
+}

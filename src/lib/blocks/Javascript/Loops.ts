@@ -5,6 +5,7 @@ import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
 import StatementInput from "$lib/utils/BlockGen/Inputs/StatementInput";
 import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
+import salt from "$lib/utils/helpers/salt";
 
 const blocks: BlockDefinition[] = [
 	{
@@ -17,7 +18,7 @@ const blocks: BlockDefinition[] = [
 		tooltip: "Repeats the code inside the given ammount of times.",
 		helpUrl: "",
 		code: (args) => {
-			return `for (let i = 0; i < ${args.VALUE}; i++) {\n${args.INPUT}\n}`;
+			return `for (let i = 0; i < ${args.VALUE === ""? "0" : args.VALUE}; i++) {\n${args.INPUT === ""? "" : args.INPUT}\n}`;
 		}
 	},
 	{
@@ -37,10 +38,13 @@ const blocks: BlockDefinition[] = [
 		tooltip: "Repeat while",
 		helpUrl: "",
 		code: (args) => {
-			return `while (${args.WHILE === "while" ? "" : "!"}( ${args.CONDITION} )) {\n${args.INPUT}\n}`;
+			return `while (${args.WHILE === "while" ? "" : "!"}( ${args.CONDITION === ""? "false" : args.CONDITION} )) {\n${args.INPUT === ""? "" : args.INPUT}\n}`;
 		}
 	},
 	{
+		/**
+		 * Variable blocks are needed for this to function most seamlessly
+		 * */
 		id: "for_loop",
 		text: "For {VARIABLE} from {START} to {END} step {STEP}\n {INPUT}",
 		args: [
@@ -56,7 +60,15 @@ const blocks: BlockDefinition[] = [
 		tooltip: "For loop",
 		helpUrl: "",
 		code: (args) => {
-			return `for (let ${args.VARIABLE} = ${args.START}; ${args.VARIABLE} < ${args.END}; ${args.VARIABLE} += ${args.STEP}) {\n${args.INPUT}\n}`;
+			if(args.VARIABLE === "") return "";
+			let variable = `let ${args.VARIABLE} =${args.START ===""? "0" : args.START}`;
+			let condition = `${args.VARIABLE} < ${args.END === ""? "0" : args.END}`;
+			let step = `${args.VARIABLE} += ${args.STEP ===""? "0" : args.STEP}}`;
+			if (args.VARIABLE === "") {
+				const varName = salt(10);
+				return `for(let vk${varName} = 0; false; vk${varName}+= 0) {}`;
+			}
+			return `for (${variable}; ${condition}; ${step}) {\n${args.INPUT}\n}`;
 		}
 	},
 	{
