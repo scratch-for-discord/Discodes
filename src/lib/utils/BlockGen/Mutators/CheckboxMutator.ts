@@ -13,10 +13,7 @@ interface ClauseBlock extends Blockly.Block {
 	connections_: { [p: string]: Blockly.Connection }
 }
 type ConnectionMap = {[key: string]: Blockly.Connection};
-interface ConnectionMapConnection {
-	connection: Connection,
-	input_name: string
-}
+
 export default class CheckboxMutator extends Mutator {
 	private settings: AdditionalSettings | undefined;
 
