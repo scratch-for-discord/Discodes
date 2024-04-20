@@ -99,7 +99,7 @@ export default class Block {
 		if (Blockly.Blocks[blockDef.type] !== undefined && !dev) {
 			throw Error(`Block "${blockDef.type}" is defined twice.`);
 		}
-		const blockDefinition = this._blockDefinition;
+		//const blockDefinition = this._blockDefinition;
 		// Add The block to the blocks list
 		Blockly.Blocks[blockDef.type] = {
 			init: function(this: Blockly.Block) {
