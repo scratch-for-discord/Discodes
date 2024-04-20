@@ -8,7 +8,7 @@ import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
 import StatementInput from "$lib/utils/BlockGen/Inputs/StatementInput";
-import AssemblerMutatorV2 from "$lib/utils/BlockGen/Mutators/AssemblerMutatorV2";
+import AssemblerMutatorV2 from "$lib/utils/BlockGen/Mutators/AssemblerMutator";
 
 const blocks: BlockDefinition[] = [
 	{

@@ -12,6 +12,7 @@ export class Mutator {
 	private _blocks: string[] | undefined;
 	private _helperFunction: (() => void) | undefined;
 	private mutatorType: MutatorType;
+
 	constructor(properties: MutatorBlock[], containerBlockText: string, mutatorType: MutatorType) {
 		this._properties = properties;
 		this._containerBlockText = containerBlockText;
