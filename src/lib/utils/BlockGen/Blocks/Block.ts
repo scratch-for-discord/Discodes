@@ -74,7 +74,6 @@ export default class Block {
 		let isDummy: boolean = true;
 
 		switch(generated.type) {
-
 			case DropdownType.Grid:
 				this._block.appendDummyInput(generated.name)
 				.appendField(new gridDropdown.FieldGridDropdown(generated.options as Blockly.MenuGenerator) as Blockly.Field<string | undefined>);
@@ -264,6 +263,8 @@ export default class Block {
 			const args: Record<string, string> = {}; //? Object we will pass as argument to be used for code generation
 			
 			for (const arg of blockClass._blocklyDefinition.args0) {
+				//! Fix this asap...
+				//@ts-expect-error gergerg
 				if (arg.isDummy === true) {
 					// Since it's a dummy input we need to get the value from the fields array inside the dummy input!
 					//@ts-expect-error We have to access the protected value to generate it correctly.
@@ -288,13 +289,8 @@ export default class Block {
 						args[arg.name] = block.getFieldValue(arg.name);
 						break;
 				}
-				
-
-				
 			}
 			return output ? [code(args, blockClass), Order.NONE] : code(args, blockClass);
 		};
 	}
-
-
 }

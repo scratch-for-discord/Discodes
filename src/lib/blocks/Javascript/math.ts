@@ -1,12 +1,10 @@
-import { BlockShape, BlockType, WarningType, DropdownType, PlaceholderType } from "$lib/enums/BlockTypes";
+import { BlockShape, BlockType, DropdownType, PlaceholderType } from "$lib/enums/BlockTypes";
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
-import TextInput from "$lib/utils/BlockGen/Inputs/TextInput";
+import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
 import NumberInput from "$lib/utils/BlockGen/Inputs/NumberInput";
 import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import Placeholder from "$lib/utils/ToolboxGen/Placeholder";
-import { Order } from "blockly/javascript";
-import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
 
 const blocks: BlockDefinition[] = [
     {
@@ -93,21 +91,21 @@ const blocks: BlockDefinition[] = [
             code: (args) => {
                 switch (args.OPERATION) {
                     case "negate":
-                        return `Math.abs(${args.NUMBER}) * -1`
+                        return `Math.abs(${args.NUMBER}) * -1`;
 
                     case "inverse":
-                        return `${args.NUMBER}) * -1`
+                        return `${args.NUMBER}) * -1`;
                     case "log10":
-                        return `Math.log(${args.NUMBER}) / Math.log(10)`
+                        return `Math.log(${args.NUMBER}) / Math.log(10)`;
                     case "sin":
                     case "cos":
                     case "tan":
                     case "asin":
                     case "acos":
                     case "atan":
-                        return `(Math.(${args.OPERATION}) / Math.PI) * 180`
+                        return `(Math.(${args.OPERATION}) / Math.PI) * 180`;
                     default:
-                        return `Math.${args.OPERATION}(${args.NUMBER})`
+                        return `Math.${args.OPERATION}(${args.NUMBER})`;
                 }
             }
         },
@@ -132,7 +130,7 @@ const blocks: BlockDefinition[] = [
             tooltip: "Allows you to use constants.",
             helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
             code: (args) => {
-                return `${args.CONSTANT}`
+                return `${args.CONSTANT}`;
             }
         },
         {
@@ -164,21 +162,21 @@ const blocks: BlockDefinition[] = [
             code: (args) => {
                 switch (`${args.VALUE}`) {
                     case "number":
-                        return `typeof ${args.NUMBER} === "number" && ${args.NUMBER} % 1 === 0`
+                        return `typeof ${args.NUMBER} === "number" && ${args.NUMBER} % 1 === 0`;
                     case "even":
-                        return `${args.NUMBER} % 2 === 0`
+                        return `${args.NUMBER} % 2 === 0`;
                     case "odd":
-                        return `${args.NUMBER} % 2!== 0`
+                        return `${args.NUMBER} % 2!== 0`;
                     case "prime":
-                        return `isPrime(${args.NUMBER})`  /* function isPrime(number) {if (number < 2) {return false;};for (let i = 2; i <= Math.sqrt(number); i++) {if (number % i === 0) {return false;}}return true;} */
+                        return `isPrime(${args.NUMBER})`; /* function isPrime(number) {if (number < 2) {return false;};for (let i = 2; i <= Math.sqrt(number); i++) {if (number % i === 0) {return false;}}return true;} */
                     case "whole":
-                        return `${args.NUMBER} % 1 === 0`
+                        return `${args.NUMBER} % 1 === 0`;
                     case "positive":
-                        return `${args.NUMBER} > 0`
+                        return `${args.NUMBER} > 0`;
                     case "negative":
-                        return `${args.NUMBER} < 0`
+                        return `${args.NUMBER} < 0`;
                     default:
-                        return `${args.NUMBER} % ${args.VALUE} === 0` // fix when added mutator
+                        return `${args.NUMBER} % ${args.VALUE} === 0`; // fix when added mutator
                 }
             }
         },
@@ -212,25 +210,25 @@ const blocks: BlockDefinition[] = [
             code: (args) => {
                 switch (args.OPERATION) {
                     case "sum":
-                        return `${args.ARRAY}.reduce((a, b) => a + b)`
+                        return `${args.ARRAY}.reduce((a, b) => a + b)`;
                     case "min":
-                        return `${args.ARRAY}.reduce((a, b) => Math.min(a, b))`
+                        return `${args.ARRAY}.reduce((a, b) => Math.min(a, b))`;
                     case "max":
-                        return `${args.ARRAY}.reduce((a, b) => Math.max(a, b))`
+                        return `${args.ARRAY}.reduce((a, b) => Math.max(a, b))`;
                     case "average":
-                        return `${args.ARRAY}.reduce((a, b) => a + b) / ${args.ARRAY}.length`
+                        return `${args.ARRAY}.reduce((a, b) => a + b) / ${args.ARRAY}.length`;
                     case "median":
-                        return `${args.ARRAY}.sort((a, b) => a - b).length % 2? ${args.ARRAY}.sort((a, b) => a - b)[Math.floor(${args.ARRAY}.length / 2)] : ((${args.ARRAY}.sort((a, b) => a - b)[Math.floor(${args.ARRAY}.length / 2)] + ${args.ARRAY}.sort((a, b) => a - b - 1)[Math.floor(${args.ARRAY}.length / 2)]) / 2 ))`
+                        return `${args.ARRAY}.sort((a, b) => a - b).length % 2? ${args.ARRAY}.sort((a, b) => a - b)[Math.floor(${args.ARRAY}.length / 2)] : ((${args.ARRAY}.sort((a, b) => a - b)[Math.floor(${args.ARRAY}.length / 2)] + ${args.ARRAY}.sort((a, b) => a - b - 1)[Math.floor(${args.ARRAY}.length / 2)]) / 2 ))`;
                     case "mode":
-                        return `${args.ARRAY}.sort((a, b) => a - b).length % 2`
+                        return `${args.ARRAY}.sort((a, b) => a - b).length % 2`;
                     case "range":
-                        return `${args.ARRAY}.reduce((a, b) => Math.max(a, b) - Math.min(a, b))`
+                        return `${args.ARRAY}.reduce((a, b) => Math.max(a, b) - Math.min(a, b))`;
                     case "random":
-                        return `Math.floor(Math.random() * ${args.ARRAY}.length)`
+                        return `Math.floor(Math.random() * ${args.ARRAY}.length)`;
                     case "standard deviation":
-                        return `Math.sqrt(${args.ARRAY}.reduce((a, b) => Math.pow(a - b, 2)) / ${args.ARRAY}.length)`
+                        return `Math.sqrt(${args.ARRAY}.reduce((a, b) => Math.pow(a - b, 2)) / ${args.ARRAY}.length)`;
                     default:
-                        return `Math.${args.OPERATION}(${args.ARRAY})`
+                        return `Math.${args.OPERATION}(${args.ARRAY})`;
                 }
             }
         },
@@ -252,7 +250,7 @@ const blocks: BlockDefinition[] = [
             tooltip: "Gets a random integer between two numbers.",
             helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
             code: (args) => {
-                return `Math.floor(Math.random() * (${args.MAX} - ${args.MIN}) + ${args.MIN})`
+                return `Math.floor(Math.random() * (${args.MAX} - ${args.MIN}) + ${args.MIN})`;
             }
         },
         {
@@ -265,8 +263,8 @@ const blocks: BlockDefinition[] = [
             colour: "#5b67a5",
             tooltip: "Gets a random fraction.",
             helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
-            code: (args) => {
-                return `Math.random()`
+            code: () => {
+                return "Math.random()";
             }
         },
         {
@@ -285,7 +283,7 @@ const blocks: BlockDefinition[] = [
             tooltip: "Converts text to a number.",
             helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
             code: (args) => {
-                return `parseInt(${args.TEXT})`
+                return `parseInt(${args.TEXT})`;
             }
         },
         {
@@ -308,7 +306,7 @@ const blocks: BlockDefinition[] = [
             tooltip: "Constrains a number between two numbers.",
             helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
             code: (args) => {
-                return `Math.min(Math.max(${args.VALUE}, ${args.MIN}), ${args.MAX})`
+                return `Math.min(Math.max(${args.VALUE}, ${args.MIN}), ${args.MAX})`;
             }
         },
         // {
@@ -332,11 +330,11 @@ const blocks: BlockDefinition[] = [
 
         // }
 
-]
+];
 
 const category: CategoryDefinition = {
     name: "Math",
     colour: "#5b67a5"
-}
+};
 
-export default {blocks, category}
+export default {blocks, category};
