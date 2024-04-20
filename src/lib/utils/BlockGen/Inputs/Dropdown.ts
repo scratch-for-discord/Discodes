@@ -16,15 +16,15 @@ interface DropdownJSON {
  * @extends {BaseInput}
  */
 export default class Dropdown extends BaseInput {
-	private readonly _name: string;
+
 	private readonly _options: Array<Array<string>>;
 	private _dropdownType: DropdownType;
 
 	constructor(name: string, dropdownType: DropdownType, options: Record<string, string>) {
-		super();
+		super(name);
 		this.setMethod(this.getDefinition);
 
-		this._name = name;
+		super.setName(name);
 		this._dropdownType = dropdownType;
 		this._options = this.objectToArray(options);
 	}
@@ -52,15 +52,12 @@ export default class Dropdown extends BaseInput {
 			// Automatically swaps between grid and list type depending on the length of the arguments.
 			this._dropdownType = this._options.length > 10 ? DropdownType.Grid : DropdownType.List;
 		}
-
+		console.log(this._options)
 		return {
 			type: this._dropdownType,
-			name: this._name,
+			name: super.name,
 			options: this._options
 		};
 	}
 
-	get name(): string {
-		return this._name;
-	}
 }

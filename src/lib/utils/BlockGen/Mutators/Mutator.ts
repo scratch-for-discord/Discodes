@@ -1,12 +1,28 @@
 import Blockly from "blockly/core";
 import { dev } from "$app/environment";
-
-export default class Mutator {
+import type {MutatorBlock} from "$lib/types/BlockDefinition";
+import {MutatorType} from "$lib/enums/BlockTypes";
+export interface AdditionalSettings {
+	color: number | string | undefined
+}
+export class Mutator {
+	private _properties: MutatorBlock[];
+	private readonly _containerBlockText: string;
 	private _mixin: object;
 	private _blocks: string[] | undefined;
-
-	constructor() {
+	private _helperFunction: (() => void) | undefined;
+	private mutatorType: MutatorType;
+	constructor(properties: MutatorBlock[], containerBlockText: string, mutatorType: MutatorType) {
+		this._properties = properties;
+		this._containerBlockText = containerBlockText;
 		this._mixin = {};
+		this.mutatorType = mutatorType;
+	}
+	get properties() {
+		return this._properties;
+	}
+	get containerBlockText() {
+		return this._containerBlockText;
 	}
 
 	set mixin(mixin: object) {
@@ -16,6 +32,27 @@ export default class Mutator {
 	set setBlocks(blocks: string[]) {
 		this._blocks = blocks;
 	}
+	setHelperFunction(helperFn: () => void) {
+		this._helperFunction = helperFn;
+	}
+	appendInput_(this: Blockly.Block, input, name, fieldText) {
+		const inputType = input.type || "input_value"; // Default to input_value if type is not specified
+		const inputCheck = input.check; // Check for input type if specified
+
+		switch (inputType) {
+			case "input_value":
+				this.appendValueInput(name).setCheck(inputCheck).appendField(fieldText);
+				break;
+			case "input_statement":
+				this.appendStatementInput(name).setCheck(inputCheck).appendField(fieldText);
+				break;
+			case "input_dummy":
+				this.appendDummyInput(name).appendField(fieldText);
+				break;
+			default:
+				throw new Error(`Unsupported input type: ${inputType}`);
+		}
+}
 
 	registerMutator(name: string): void {
 		// Unregister the mutator if it's already registered. Without this blockly crashes.
@@ -25,6 +62,9 @@ export default class Mutator {
 			}
 			Blockly.Extensions.unregister(name);
 		}
-		Blockly.Extensions.registerMutator(name, this._mixin, undefined, this._blocks);
+		Blockly.Extensions.registerMutator(name, this._mixin, this._helperFunction, this._blocks);
+	}
+	get type() {
+		return this.mutatorType;
 	}
 }
