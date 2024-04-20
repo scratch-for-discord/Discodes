@@ -2,10 +2,10 @@ import BaseInput from "./BaseInput";
 
 import { DropdownType } from "$lib/enums/BlockTypes";
 
-interface DropdownJSON {
+export interface DropdownIDef {
 	name: string;
 	type: DropdownType;
-	options: Array<Array<string>>;
+	options: string[][];
 }
 
 /**
@@ -15,7 +15,7 @@ interface DropdownJSON {
  * @class Dropdown
  * @extends {BaseInput}
  */
-export default class Dropdown extends BaseInput {
+export default class Dropdown extends BaseInput<DropdownIDef> {
 	private readonly _name: string;
 	private readonly _options: Array<Array<string>>;
 	private _dropdownType: DropdownType;
@@ -47,7 +47,7 @@ export default class Dropdown extends BaseInput {
 	 * @return {*}  {DropdownJSON}
 	 * @memberof Dropdown
 	 */
-	getDefinition(): DropdownJSON {
+	getDefinition(): DropdownIDef {
 		if (this._dropdownType === DropdownType.Auto) {
 			// Automatically swaps between grid and list type depending on the length of the arguments.
 			this._dropdownType = this._options.length > 10 ? DropdownType.Grid : DropdownType.List;

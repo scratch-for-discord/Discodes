@@ -1,16 +1,11 @@
-export default class BaseInput {
-	//! Replace unknown by an enum with all the types of inputs!
-	private _method: () => unknown;
+export default class BaseInput<Definition> {
+	private _method!: () => Definition;
 
-	constructor() {
-		this._method = () => {};
-	}
-
-	protected setMethod(generationMethod: () => unknown) {
+	protected setMethod(generationMethod: () => Definition) {
 		this._method = generationMethod;
 	}
 
-	public generate(): unknown {
+	public generate(): Definition {
 		return this._method();
 	}
 }

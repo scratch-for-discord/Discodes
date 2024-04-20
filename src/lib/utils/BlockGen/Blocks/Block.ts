@@ -1,13 +1,15 @@
 // Blockly
 import Blockly from "blockly/core";
-import "@blockly/field-grid-dropdown";
+import * as gridDropdown from "@blockly/field-grid-dropdown";
 import pkg from "blockly/javascript";
 const { javascriptGenerator, Order } = pkg;
 
 // Types
 import type { Argument, BlockDefinition } from "$lib/types/BlockDefinition";
-import { BlockShape, BlockType, WarningType } from "$lib/enums/BlockTypes";
+import { BlockShape, BlockType, DropdownType, WarningType } from "$lib/enums/BlockTypes";
 import type { Abstract } from "blockly/core/events/events_abstract";
+import type { DiscodesInput } from "$lib/types/DiscodesInput";
+import type Warning from "../Warnings/Warning";
 
 // Warnings
 import { addWarning, removeWarning, warnings as warningsObj } from "../Warnings/WarningsList";
@@ -17,11 +19,22 @@ import { EventsToTriggerWarnings } from "$lib/constants/warnings";
 import { dev } from "$app/environment";
 import salt from "$lib/utils/helpers/salt";
 import { addImport } from "$lib/utils/BlockGen/Blocks/importsList";
-import type Warning from "../Warnings/Warning";
+
+interface BlocklyBlockDefinition {
+	type: string
+	colour: string
+	tooltip: string
+	helpUrl: string
+	inputsInline: boolean
+	args0: Record<string, string>[]
+	message0: string
+	mutator:string | undefined
+};
 
 export default class Block {
 	private _blockDefinition: BlockDefinition;
 	private _block!: Blockly.Block;
+	private _blocklyDefinition!: BlocklyBlockDefinition;
 
 	constructor(definition: BlockDefinition) {
 		this._blockDefinition = definition;
@@ -35,16 +48,75 @@ export default class Block {
 		this._block.setColour(colour);
 	}
 
-	addWarning(warning: Warning): void {
+	public addWarning(warning: Warning): void {
 		if (this._blockDefinition.label) throw new Error("Cannot add a warning to a label");
 		if (warningsObj[this._block.id] && warningsObj[this._block.id][warning.data.fieldName]) return;
 		this._blockDefinition.warnings = this._blockDefinition.warnings ? [...this._blockDefinition.warnings, warning] : [warning];
 	}
 
-	removeWarning(fieldName: string): void {
+	public removeWarning(fieldName: string): void {
 		if (this._blockDefinition.label) throw new Error("Cannot remove a warning form a label");
 		if ((!warningsObj[this._block.id] || !warningsObj[this._block.id][fieldName]) && this._blockDefinition.warnings !== undefined) return;
 		this._blockDefinition.warnings = this._blockDefinition.warnings?.filter(warning => warning.data.fieldName !== fieldName);
+	}
+
+	public addText(text: string, fieldName: string): void {
+		this._block.appendDummyInput(fieldName).appendField(text);
+	}
+
+	public removeText(fieldName: string): void {
+		this._block.removeInput(fieldName);
+	}
+
+	public addInput(input: DiscodesInput): void {
+		const generated = input.generate();
+		if (!this._block || this._block.getInput(generated.name) || this._block.isInFlyout) return;
+		let isDummy: boolean = true;
+
+		switch(generated.type) {
+
+			case DropdownType.Grid:
+				this._block.appendDummyInput(generated.name)
+				.appendField(new gridDropdown.FieldGridDropdown(generated.options as Blockly.MenuGenerator) as Blockly.Field<string | undefined>);
+				break;
+
+			case DropdownType.List:
+				this._block.appendDummyInput(generated.name)
+				.appendField(new Blockly.FieldDropdown(generated.options as Blockly.MenuGenerator) as Blockly.Field<string | undefined>);
+				break;
+			
+			case "input_value":
+				this._block.appendValueInput(generated.name)
+				.setCheck(generated.check as string | string[] | undefined ? generated.check as string | string[]: null);
+				isDummy = false;
+				break;
+			
+			case "input_statement":
+				this._block.appendStatementInput(generated.name);
+				isDummy = false;
+				break;
+
+			case "field_number":
+				this._block.appendDummyInput(generated.name)
+				.appendField(new Blockly.FieldNumber(generated.value, generated.min, generated.max, generated.precision));
+				break;
+
+			case "field_image":
+				this._block.appendDummyInput(generated.name)
+				.appendField(new Blockly.FieldImage(generated.src, generated.width, generated.height, generated.alt));
+				break;
+
+			case "field_input":
+				this._block.appendDummyInput(generated.name)
+				.appendField(new Blockly.FieldTextInput(generated.text, undefined,{spellcheck: generated.spellcheck}));
+				break;
+		}
+		(this._blocklyDefinition.args0 as Array<unknown>).push({...generated, isDummy: isDummy});
+	}
+
+	public removeInput(inputName: string): void {
+		if (!this._block.getInput(inputName)) return;
+		this._block.removeInput(inputName);
 	}
 
 	generate(): void {
@@ -61,16 +133,18 @@ export default class Block {
 			? this._blockDefinition.id + salt(5)
 			: "";
 
-		const blockDef = {
+		const blockDef: BlocklyBlockDefinition = {
 			type: this._blockDefinition.id,
 			colour: this._blockDefinition.colour,
 			tooltip: this._blockDefinition.tooltip,
 			helpUrl: this._blockDefinition.helpUrl,
 			inputsInline: this._blockDefinition.inline,
-			args0: [] as Record<string, string>[],
+			args0: [],
 			message0: "",
 			mutator: mutatorName == "" ? undefined : mutatorName
 		};
+
+		blockClass._blocklyDefinition = blockDef;
 
 		if (this._blockDefinition.mutator) {
 			this._blockDefinition.mutator.registerMutator(mutatorName);
@@ -128,6 +202,7 @@ export default class Block {
 						!this.isInFlyout &&
 						changeEvent.type !== Blockly.Events.VIEWPORT_CHANGE
 					) {
+						// "import" is a reserved name
 						for (const import_ of importName) {
 							addImport(import_);
 						}
@@ -186,27 +261,36 @@ export default class Block {
 
 		// Generating the export code
 		javascriptGenerator.forBlock[blockDef.type] = function(block: Blockly.Block) {
-			const args: Record<string, string> = {}; //? Object we will pass as argument for the custom code to run properly
+			const args: Record<string, string> = {}; //? Object we will pass as argument to be used for code generation
+			
+			for (const arg of blockClass._blocklyDefinition.args0) {
+				if (arg.isDummy === true) {
+					// Since it's a dummy input we need to get the value from the fields array inside the dummy input!
+					//@ts-expect-error We have to access the protected value to generate it correctly.
+					args[arg.name] = block.getInput(arg.name)?.fieldRow[0].value_;
+					continue;
+				} 
 
-			for (const arg in blockDef.args0) {
-				const argValue = blockDef.args0[arg]; //? The argument object, contains the name, the type etc..
-				const argName: string = blockDef.args0[arg].name as string;
-
-				switch (argValue.type) {
+				switch (arg.type) {
 					case "input_value":
-						args[argName] = javascriptGenerator.valueToCode(
+						args[arg.name] = javascriptGenerator.valueToCode(
 							block,
-							argName,
+							arg.name,
 							javascriptGenerator.ORDER_ATOMIC
 						);
 						break;
+
 					case "input_statement":
-						args[argName] = javascriptGenerator.statementToCode(block, argName);
+						args[arg.name] = javascriptGenerator.statementToCode(block, arg.name);
 						break;
+
 					default:
-						args[argName] = block.getFieldValue(argName);
+						args[arg.name] = block.getFieldValue(arg.name);
 						break;
 				}
+				
+
+				
 			}
 			return output ? [code(args, blockClass), Order.NONE] : code(args, blockClass);
 		};
