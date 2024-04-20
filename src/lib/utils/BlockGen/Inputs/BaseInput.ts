@@ -15,7 +15,7 @@ export default class BaseInput<Definition> {
 	/*
 	this function currently is meant for Mutator use
 	*/
-	public setField(text: string): BaseInput<Definition>	 {
+	public setField(text: string): BaseInput<Definition> {
 		this._fieldText = text;
 		return this;
 	}

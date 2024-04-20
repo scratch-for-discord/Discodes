@@ -1,6 +1,6 @@
 import BaseInput from "./BaseInput";
 
-export interface StatementIDef  {
+export interface StatementIDef {
 	name: string;
 	type: "input_statement";
 }
@@ -19,7 +19,6 @@ export default class StatementInput extends BaseInput<StatementIDef> {
 
 		this.setMethod(this.getDefinition);
 		super.setName(name);
-
 	}
 
 	/**
@@ -34,5 +33,4 @@ export default class StatementInput extends BaseInput<StatementIDef> {
 			name: super.name
 		};
 	}
-
 }

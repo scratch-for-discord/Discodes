@@ -58,5 +58,4 @@ export default class Dropdown extends BaseInput<DropdownIDef> {
 			options: this._options
 		};
 	}
-
 }

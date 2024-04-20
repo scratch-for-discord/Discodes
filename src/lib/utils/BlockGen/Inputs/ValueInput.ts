@@ -46,5 +46,4 @@ export default class ValueInput extends BaseInput<ValueIDef> {
 		result.check = [...filtered];
 		return result;
 	}
-
 }

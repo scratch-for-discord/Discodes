@@ -84,7 +84,6 @@ const blocks: BlockDefinition[] = [
 	// },
 
 	{
-
 		id: "checkbox_mutator",
 		text: "checkbox mutator\n",
 		shape: BlockShape.Action,
@@ -92,28 +91,34 @@ const blocks: BlockDefinition[] = [
 		colour: rgbToHex(91, 128, 165),
 		tooltip: "Returns the opposite of the input",
 		helpUrl:
-			`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT`,
+			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT",
 		code: (args) => {
-			return "${args}";
+			return `${args}`;
 		},
-		mutator: new CheckboxMutator("hello", [
+		mutator: new CheckboxMutator(
+			"hello",
+			[
+				{
+					text: "input 1",
+					inputName: "if_test",
+					adds: [
+						new ValueInput("if_input", BlockType.Boolean).setField("else if"),
+						new StatementInput("if_statement").setField("do")
+					],
+					defaultValue: true
+				},
+				{
+					text: "input 2",
+					inputName: "else_test",
+					adds: [new StatementInput("else_input").setField("else")],
+					defaultValue: false
+				}
+			],
 			{
-				text: "input 1",
-				inputName: "if_test",
-				adds: [new ValueInput("if_input", BlockType.Boolean).setField("else if"), new StatementInput("if_statement").setField("do")],
-				defaultValue: true,
-			},
-			{
-				text: "input 2",
-				inputName: "else_test",
-				adds: [new StatementInput("else_input").setField("else")],
-				defaultValue: false,
-
+				color: rgbToHex(91, 128, 165)
 			}
-		], {
-			color: rgbToHex(91, 128, 165)
-		})
-	},
+		)
+	}
 ];
 
 const category: CategoryDefinition = {

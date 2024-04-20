@@ -8,7 +8,6 @@ export interface TextIDef {
 	spellcheck: false;
 }
 
-
 export default class TextInput extends BaseInput<TextIDef> {
 	private readonly _text: string;
 
@@ -28,5 +27,4 @@ export default class TextInput extends BaseInput<TextIDef> {
 			spellcheck: false
 		};
 	}
-
 }

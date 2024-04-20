@@ -33,8 +33,8 @@
 
 		function updateCode(event: Abstract) {
 			workspace.getAllBlocks(true).forEach((block) => {
-				if (block.type === "is_equal") console.log(block)
-			})
+				if (block.type === "is_equal") console.log(block);
+			});
 			if (workspace.isDragging()) return; // Don't update while changes are happening.
 			if (!supportedEvents.has(event.type)) return;
 

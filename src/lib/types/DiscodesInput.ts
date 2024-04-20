@@ -6,4 +6,6 @@ import type { StatementIDef } from "$lib/utils/BlockGen/Inputs/StatementInput";
 import type { TextIDef } from "$lib/utils/BlockGen/Inputs/TextInput";
 import type { ValueIDef } from "$lib/utils/BlockGen/Inputs/ValueInput";
 
-export type DiscodesInput = BaseInput<DropdownIDef | ImageIDef | NumberIDef | StatementIDef | TextIDef | ValueIDef>;
+export type DiscodesInput = BaseInput<
+	DropdownIDef | ImageIDef | NumberIDef | StatementIDef | TextIDef | ValueIDef
+>;

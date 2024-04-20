@@ -18,7 +18,7 @@ const blocks: BlockDefinition[] = [
 		tooltip: "Repeats the code inside the given ammount of times.",
 		helpUrl: "",
 		code: (args) => {
-			return `for (let i = 0; i < ${args.VALUE === ""? "0" : args.VALUE}; i++) {\n${args.INPUT === ""? "" : args.INPUT}\n}`;
+			return `for (let i = 0; i < ${args.VALUE === "" ? "0" : args.VALUE}; i++) {\n${args.INPUT === "" ? "" : args.INPUT}\n}`;
 		}
 	},
 	{
@@ -38,7 +38,7 @@ const blocks: BlockDefinition[] = [
 		tooltip: "Repeat while",
 		helpUrl: "",
 		code: (args) => {
-			return `while (${args.WHILE === "while" ? "" : "!"}( ${args.CONDITION === ""? "false" : args.CONDITION} )) {\n${args.INPUT === ""? "" : args.INPUT}\n}`;
+			return `while (${args.WHILE === "while" ? "" : "!"}( ${args.CONDITION === "" ? "false" : args.CONDITION} )) {\n${args.INPUT === "" ? "" : args.INPUT}\n}`;
 		}
 	},
 	{
@@ -60,10 +60,10 @@ const blocks: BlockDefinition[] = [
 		tooltip: "For loop",
 		helpUrl: "",
 		code: (args) => {
-			if(args.VARIABLE === "") return "";
-			const variable = `let ${args.VARIABLE} =${args.START ===""? "0" : args.START}`;
-			const condition = `${args.VARIABLE} < ${args.END === ""? "0" : args.END}`;
-			const step = `${args.VARIABLE} += ${args.STEP ===""? "0" : args.STEP}}`;
+			if (args.VARIABLE === "") return "";
+			const variable = `let ${args.VARIABLE} =${args.START === "" ? "0" : args.START}`;
+			const condition = `${args.VARIABLE} < ${args.END === "" ? "0" : args.END}`;
+			const step = `${args.VARIABLE} += ${args.STEP === "" ? "0" : args.STEP}}`;
 			if (args.VARIABLE === "") {
 				const varName = salt(10);
 				return `for(let vk${varName} = 0; false; vk${varName}+= 0) {}`;
