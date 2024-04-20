@@ -20,25 +20,53 @@ import {EventsToTriggerWarnings} from "$lib/constants/warnings";
 // Helpers
 import {dev} from "$app/environment";
 import salt from "$lib/utils/helpers/salt";
+
 import {getInputValue} from "$lib/utils/helpers/getInputValue";
-import {addImport} from "$lib/utils/BlockGen/Blocks/importsList";
+
+
+
+import { addImport } from "$lib/utils/BlockGen/Blocks/importsList";
+import type Warning from "../Warnings/Warning";
 
 const { javascriptGenerator, Order } = pkg;
 
 export default class Block {
-	private readonly _blockDefinition: BlockDefinition;
+	private _blockDefinition: BlockDefinition;
+	private _block!: Blockly.Block;
 
 	constructor(definition: BlockDefinition) {
 		this._blockDefinition = definition;
 	}
 
+	set outputType(type: BlockType) {
+		this._block.setOutput(true, type);
+	}
+
+	set colour(colour: string) {
+		this._block.setColour(colour);
+	}
+
+	addWarning(warning: Warning): void {
+		if (this._blockDefinition.label) throw new Error("Cannot add a warning to a label");
+		if (warningsObj[this._block.id] && warningsObj[this._block.id][warning.data.fieldName]) return;
+		this._blockDefinition.warnings = this._blockDefinition.warnings ? [...this._blockDefinition.warnings, warning] : [warning];
+	}
+
+	removeWarning(fieldName: string): void {
+		if (this._blockDefinition.label) throw new Error("Cannot remove a warning form a label");
+		if ((!warningsObj[this._block.id] || !warningsObj[this._block.id][fieldName]) && this._blockDefinition.warnings !== undefined) return;
+		this._blockDefinition.warnings = this._blockDefinition.warnings?.filter(warning => warning.data.fieldName !== fieldName);
+	}
+
 	generate(): void {
 		if (this._blockDefinition.label) return;
+		
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
+		const blockClass = this; // Used because `this` is overwritten in the blockly functions.
 
 		const code = this._blockDefinition.code;
 		const shape = this._blockDefinition.shape;
 		const output = this._blockDefinition.output;
-		const warnings = this._blockDefinition.warnings;
 		const importName = this._blockDefinition.imports;
 		const mutatorName: string = this._blockDefinition.mutator
 			? this._blockDefinition.id + salt(5)
@@ -76,6 +104,9 @@ export default class Block {
 		Blockly.Blocks[blockDef.type] = {
 			init: function(this: Blockly.Block) {
 				this.jsonInit(blockDef);
+
+				// We will pass the block in different functions of the class so we need it stored.
+				blockClass._block = this;
 
 				// Here we define the block's shape
 				switch (shape) {
@@ -120,11 +151,12 @@ export default class Block {
 						!this.isInFlyout &&
 						block.id == this.id
 					) {
+						const warnings = blockClass._blockDefinition.label ? undefined : blockClass._blockDefinition.warnings;
 						if (!warnings) return;
-
+						
 						const topParent = this.getRootBlock();
 						let resultMessage: string = "";
-
+						
 						for (const warning of warnings) {
 							const { warningType, message, fieldName } = warning.data;
 							switch (warningType) {
@@ -148,12 +180,12 @@ export default class Block {
 
 								case WarningType.Deprec:
 									resultMessage += `${message}\n`;
-									addWarning(this.id, "deprecated", message);
+									addWarning(this.id, fieldName, message);
 									break;
 
 								case WarningType.Permanent:
 									resultMessage += `${message}\n`;
-									addWarning(this.id, "permanent", message);
+									addWarning(this.id, fieldName, message);
 									break;
 							}
 						}
@@ -208,7 +240,9 @@ export default class Block {
 				}
 
 			}
-			return output ? [code(args), Order.NONE] : code(args);
+			return output ? [code(args, blockClass), Order.NONE] : code(args, blockClass);
 		};
 	}
+
+
 }

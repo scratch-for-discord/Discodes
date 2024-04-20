@@ -13,6 +13,7 @@ export default class Warning {
 		switch (this._warningType) {
 			case WarningType.Deprec:
 				this._message = "This block is deprecated, please remove it from your code.";
+				this._fieldName = "deprecated";
 				break;
 			case WarningType.Input:
 				this._message = `The ${this._fieldName} input is required.`;
@@ -24,6 +25,7 @@ export default class Warning {
 				if (this._message === "") {
 					throw new Error("A message should be defined when WarningType.Permanent is being used.");
 				}
+				this._fieldName = "permanent";
 				break;
 		}
 	}
