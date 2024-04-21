@@ -331,16 +331,21 @@ export default class Block {
 		javascriptGenerator.forBlock[blockDef.type] = function(block: Blockly.Block) {
 			const args: Record<string, string | string[]> = {}; //? Object we will pass as argument for the custom code to run properly
 
-			for (const arg in blockDef.args0) {
-				const argValue = blockDef.args0[arg]; //? The argument object, contains the name, the type etc..
-				const argName: string = blockDef.args0[arg].name as string;
-				args[argName] = getInputValue(block, argName, argValue.type);
+			for (const arg of blockDef.args0) {
+				//! Fix this asap...
+				//@ts-expect-error gergerg
+				if (arg.isDummy === true) {
+					// Since it's a dummy input we need to get the value from the fields array inside the dummy input!
+					//@ts-expect-error We have to access the protected value to generate it correctly.
+					args[arg.name] = block.getInput(arg.name)?.fieldRow[0].value_;
+					continue;
+				}
+				args[arg.name] = getInputValue(block, arg.name, arg.type);
 			}
 
 			//parse mutator values
 			for (const propertyKey of Object.keys(propertyMap)) {
 				const property = propertyMap[propertyKey];
-				console.log(propertyMap);
 				for (const add of property.adds) {
 					const valueList: string[] = [];
 					let i = 1;
@@ -354,35 +359,6 @@ export default class Block {
 						input = block.getInput(add.name + i);
 					}
 					args[add.name] = valueList;
-
-					// 			const args: Record<string, string> = {}; //? Object we will pass as argument to be used for code generation
-
-					// 			for (const arg of blockClass._blocklyDefinition.args0) {
-					// 				//! Fix this asap...
-					// 				//@ts-expect-error gergerg
-					// 				if (arg.isDummy === true) {
-					// 					// Since it's a dummy input we need to get the value from the fields array inside the dummy input!
-					// 					//@ts-expect-error We have to access the protected value to generate it correctly.
-					// 					args[arg.name] = block.getInput(arg.name)?.fieldRow[0].value_;
-					// 					continue;
-					// 				}
-
-					// 				switch (arg.type) {
-					// 					case "input_value":
-					// 						args[arg.name] = javascriptGenerator.valueToCode(
-					// 							block,
-					// 							arg.name,
-					// 							javascriptGenerator.ORDER_ATOMIC
-					// 						);
-					// 						break;
-
-					// 					case "input_statement":
-					// 						args[arg.name] = javascriptGenerator.statementToCode(block, arg.name);
-					// 						break;
-
-					// 					default:
-					// 						args[arg.name] = block.getFieldValue(arg.name);
-					// 						break;
 				}
 			}
 			return output ? [code(args, blockClass), Order.NONE] : code(args, blockClass);

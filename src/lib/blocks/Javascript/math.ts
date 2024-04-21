@@ -15,7 +15,7 @@ const blocks: BlockDefinition[] = [
 		output: BlockType.Number,
 		inline: true,
 		colour: "#5b67a5",
-		tooltip: "Allows you to make a number input.",
+		tooltip: "A simple number value.",
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
 		code: (args) => {
@@ -45,7 +45,7 @@ const blocks: BlockDefinition[] = [
 		output: BlockType.Number,
 		inline: true,
 		colour: "#5b67a5",
-		tooltip: "Allows you to make operations with numbers.",
+		tooltip: "Performs a binary operation on the two given inputs.",
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
 		code: (args) => {
@@ -82,7 +82,7 @@ const blocks: BlockDefinition[] = [
 		output: BlockType.Number,
 		inline: true,
 		colour: "#5b67a5",
-		tooltip: "Allows you to make operations with numbers.",
+		tooltip: "Perform complex math operations on a number.",
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
 		code: (args) => {
@@ -124,7 +124,7 @@ const blocks: BlockDefinition[] = [
 		output: BlockType.Number,
 		inline: true,
 		colour: "#5b67a5",
-		tooltip: "Allows you to use constants.",
+		tooltip: "A set of math constants.",
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
 		code: (args) => {
@@ -200,7 +200,7 @@ const blocks: BlockDefinition[] = [
 		output: BlockType.Number,
 		inline: true,
 		colour: "#5b67a5",
-		tooltip: "Allows you to use math with arrays.",
+		tooltip: "Performs math operations on lists.",
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
 		code: (args) => {
@@ -240,14 +240,14 @@ const blocks: BlockDefinition[] = [
 		output: BlockType.Number,
 		inline: true,
 		colour: "#5b67a5",
-		tooltip: "Gets a random integer between two numbers.",
-		helpUrl:
-			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+		tooltip: "Generates a random number between the two given numbers.",
+		helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
 		code: (args) => {
 			return `Math.floor(Math.random() * (${args.MAX} - ${args.MIN}) + ${args.MIN})`;
 		}
 	},
 	{
+		//Todo: Delete/Remake completely this block.
 		id: "random_fraction",
 		text: "random fraction",
 		args: [],
@@ -255,9 +255,8 @@ const blocks: BlockDefinition[] = [
 		output: BlockType.Number,
 		inline: true,
 		colour: "#5b67a5",
-		tooltip: "Gets a random fraction.",
-		helpUrl:
-			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+		tooltip: "Generates a random fraction",
+		helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
 		code: () => {
 			return "Math.random()";
 		}
@@ -272,8 +271,7 @@ const blocks: BlockDefinition[] = [
 		inline: true,
 		colour: "#5b67a5",
 		tooltip: "Converts text to a number.",
-		helpUrl:
-			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+		helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
 		code: (args) => {
 			return `parseInt(${args.TEXT})`;
 		}

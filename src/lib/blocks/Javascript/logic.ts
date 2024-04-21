@@ -23,24 +23,18 @@ const blocks: BlockDefinition[] = [
 		shape: BlockShape.Action,
 		inline: true,
 		colour: rgbToHex(91, 128, 165),
-		tooltip: "Returns the opposite of the input",
+		tooltip: "Runs the code inside if the condition is met!",
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT",
 		code: (args) => {
-			console.log(args);
-			let code = `if(${args.operand === "" ? "false" : args.operand}) {
-	${args.if}
-}`;
+			let code = `if(${args.operand === "" ? "false" : args.operand}) {${args.if}}`;
 			const ifInputs = args.if_input as string[];
 			const ifStatementInputs = args.if_statement as string[];
 
 			for (let i = 0; i < ifInputs.length; i++) {
 				const ifInp = ifInputs[i];
-				code += ` else if(${ifInp === "" ? "false" : ifInp}) {
-	${ifStatementInputs[i]}
-}`;
+				code += ` else if(${ifInp === "" ? "false" : ifInp}) {${ifStatementInputs[i]}}`;
 			}
-
 			return code;
 		},
 		mutator: new AssemblerMutatorV2(
@@ -98,6 +92,8 @@ const blocks: BlockDefinition[] = [
 		//  return `${args.A} ${args.CONDITION} ${args.B}`;
 
 		code: (args, block) => {
+			block.colour = rgbToHex(255, 128, 165);
+			block.outputType = BlockType.Any;
 			block.addInput(new Dropdown("bob", DropdownType.Auto, { bob: "hello", alex: "nikola" }));
 			block.addInput(new ValueInput("chicken", BlockType.Any));
 			block.addInput(new NumberInput("numberrr", 50, { max: 100, min: 50, precision: 10 }));
@@ -149,7 +145,7 @@ const blocks: BlockDefinition[] = [
 		}
 	},
 	{
-		id: "values",
+		id: "booleans",
 		text: "{INPUT}",
 		args: [
 			new Dropdown("INPUT", DropdownType.Auto, {
@@ -163,7 +159,7 @@ const blocks: BlockDefinition[] = [
 		output: BlockType.Any,
 		inline: true,
 		colour: rgbToHex(91, 128, 165),
-		tooltip: "",
+		tooltip: "Boolean values used to verify conditions.",
 		helpUrl: "",
 		code: (args) => {
 			return `${args.INPUT !== "" ? args.INPUT : "null"}`;
@@ -186,7 +182,7 @@ const blocks: BlockDefinition[] = [
 		output: BlockType.Any,
 		inline: false,
 		colour: rgbToHex(91, 128, 165),
-		tooltip: "",
+		tooltip: "JavaScript ternary operator.",
 		helpUrl: "",
 		code: (args) => {
 			return `${args.CONDITION} ? ${args.ONTRUE} : ${args.ONFALSE}`;
@@ -201,7 +197,7 @@ const blocks: BlockDefinition[] = [
 		output: BlockType.String,
 		inline: true,
 		colour: rgbToHex(91, 128, 165),
-		tooltip: "",
+		tooltip: "Gives the type of the input.",
 		helpUrl: "",
 		code: (args) => {
 			if (args.OPERAND === "") return "null";
@@ -209,8 +205,8 @@ const blocks: BlockDefinition[] = [
 		}
 	},
 	{
-		id: "typeof_types",
-		text: "typeof types {TYPE}",
+		id: "types",
+		text: "type {TYPE}",
 		args: [
 			// new ValueInput("OPERAND", BlockType.Any),
 			new Dropdown("TYPE", DropdownType.Auto, {
@@ -232,7 +228,7 @@ const blocks: BlockDefinition[] = [
 		output: BlockType.Boolean,
 		inline: true,
 		colour: rgbToHex(91, 128, 165),
-		tooltip: "",
+		tooltip: "A colletion of all JavaScript base types.",
 		helpUrl: "",
 		code: (args) => {
 			return `"${args.TYPE}"`;
@@ -240,11 +236,11 @@ const blocks: BlockDefinition[] = [
 	},
 	{
 		id: "stop_script",
-		text: "stop script",
+		text: "Stop script",
 		shape: BlockShape.Bottom,
 		inline: true,
 		colour: rgbToHex(165, 91, 153),
-		tooltip: "",
+		tooltip: "Stops the script, cannot have any blocks under it.",
 		helpUrl: "",
 		code: () => {
 			return "return;";

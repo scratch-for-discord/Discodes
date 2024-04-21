@@ -35,7 +35,7 @@ const blocks: BlockDefinition[] = [
 		shape: BlockShape.Action,
 		inline: true,
 		colour: rgbToHex(91, 165, 91),
-		tooltip: "Repeat while",
+		tooltip: "Repeats the code inside until/while the condition is met.",
 		helpUrl: "",
 		code: (args) => {
 			return `while (${args.WHILE === "while" ? "" : "!"}( ${args.CONDITION === "" ? "false" : args.CONDITION} )) {\n${args.INPUT === "" ? "" : args.INPUT}\n}`;
@@ -82,7 +82,7 @@ const blocks: BlockDefinition[] = [
 		shape: BlockShape.Action,
 		inline: true,
 		colour: rgbToHex(91, 165, 91),
-		tooltip: "Array iteration",
+		tooltip: "Loops throught every item of the given array.",
 		helpUrl: "",
 		code: (args) => {
 			return `for (let ${args.ITEM} of ${args.ARRAY}) {\n${args.INPUT}\n}`;
@@ -100,7 +100,7 @@ const blocks: BlockDefinition[] = [
 		shape: BlockShape.Action,
 		inline: true,
 		colour: rgbToHex(91, 165, 91),
-		tooltip: "Break",
+		tooltip: "Breaks out of a loop.",
 		helpUrl: "",
 		code: (args) => {
 			return `${args.ACTION};`;
