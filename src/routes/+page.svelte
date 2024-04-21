@@ -6,8 +6,12 @@
 
 	let workspaceArray: DiscodesWorkspace[];
 	let loaded: boolean = false;
+
 	let workspaceName: string | undefined;
 	let workspaceDescription: string | undefined;
+	let token: string;
+	let canCreateWorkspace: boolean = false;
+
 	let localDB = getLocalDB();
 	let create_workspace: HTMLDialogElement;
 
@@ -16,11 +20,24 @@
 		loaded = true;
 	});
 
+	function canSubmit(): void {
+		if ((workspaceDescription && workspaceDescription?.length > 50) || (workspaceName && workspaceName?.length > 25)) {
+			canCreateWorkspace = false
+			return;
+		} if (token.includes(" ") || token.length === 0) {
+			canCreateWorkspace = false
+			return;
+		}
+		canCreateWorkspace = true
+	}
+
 	function refreshWorksapces(): void {
 		workspaceArray = localDB.workspaces;
 	}
 
 	function createWorkspace(): void {
+		if (!canCreateWorkspace) return;
+
 		const workspaceID = `${localDB.workspaces.length + 1}`;
 
 		//? create the userID if it does't exist.
@@ -49,7 +66,7 @@
 			name: workspaceName || "My workspace",
 			description: workspaceDescription || "Awesome Discord bot!",
 			timeWasted: 0,
-			token: "",
+			token: token,
 			lastOpened: "index"
 		});
 
@@ -107,9 +124,10 @@
 		<h3 class="font-bold text-lg">Create a new workspace</h3>
 
 		<label class="form-control w-full max-w-xs">
-			<span class="label-text mt-5 mb-2">Name: </span>
+			<span class="label-text mt-5 mb-2">Name</span>
 			<input
 				bind:value={workspaceName}
+				on:keyup={canSubmit}
 				type="text"
 				placeholder="My workspace"
 				class="input input-bordered w-full max-w-xs mb-3"
@@ -117,19 +135,32 @@
 		</label>
 
 		<label class="form-control w-full max-w-xs">
-			<span class="label-text mt-5 mb-2">Description: </span>
+			<span class="label-text mt-5 mb-2">Description</span>
 			<input
 				bind:value={workspaceDescription}
+				on:keyup={canSubmit}
 				type="text"
 				placeholder="Awesome Discord bot!"
 				class="input input-bordered w-full sm:max-w-xs mb-5"
 			/>
 		</label>
 
+		<label class="form-control w-full max-w-xs">
+			<span class="label-text mt-5 mb-2">Bot token<span class="text-red-500">*</span></span>
+			<input
+				bind:value={token}
+				on:keyup={canSubmit}
+				type="password"
+				placeholder="Your Discord bot token"
+				class="input input-bordered w-full sm:max-w-xs"
+			/>
+			<span class="label-text-alt text-red-500 mt-1 mb-5">Your token will be saved localy. Do not share your data with other people or your bot may be compromised.</span>
+		</label>
+
 		<form method="dialog" class="flex gap-2">
 			<!-- if there is a button in form, it will close the modal -->
 			<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-			<button class="btn btn-accent" on:click={createWorkspace}>Create</button>
+			<button class="btn {canCreateWorkspace ? "btn-accent" : "btn-disabled"}" on:click={createWorkspace}>Create</button>
 		</form>
 	</div>
 </dialog>
