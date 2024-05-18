@@ -17,6 +17,7 @@ export class NodeFileSystemManager {
 		this.container = container;
 	}
 
+	// eslint-disable-next-line
 	setPackageJson(content: Record<string, any>) {
 		if(this.isMounted) {
 			this.container.fs.writeFile("./package.json", JSON.stringify(content, null, 4))
