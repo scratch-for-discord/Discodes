@@ -3,7 +3,6 @@ import type {AdditionalSettings} from "./Mutator";
 
 import type {CheckBoxMutatorBlock} from "$lib/types/BlockDefinition";
 import salt from "$lib/utils/helpers/salt";
-import Blockly, {Connection} from "blockly/core";
 import pkg from "blockly/javascript";
 import {MutatorType} from "$lib/enums/BlockTypes";
 const { javascriptGenerator } = pkg;
