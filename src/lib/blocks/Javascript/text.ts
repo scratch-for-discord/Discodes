@@ -8,7 +8,6 @@ import StatementInput from "$lib/utils/BlockGen/Inputs/StatementInput";
 import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
 import AssemblerMutator from "$lib/utils/BlockGen/Mutators/AssemblerMutator";
 
-
 const blocks: BlockDefinition[] = [
 	{
 		id: "text",
