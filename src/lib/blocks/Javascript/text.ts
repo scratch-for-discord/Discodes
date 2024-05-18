@@ -6,8 +6,7 @@ import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import Placeholder from "$lib/utils/ToolboxGen/Placeholder";
 import StatementInput from "$lib/utils/BlockGen/Inputs/StatementInput";
 import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
-import AssemblerMutator from "$lib/utils/BlockGen/Mutators/AssemblerMutator";
-
+import AssemblerMutator from "$lib/utils/BlockGen/Mutators/AssemblerMutatorV2";
 
 const blocks: BlockDefinition[] = [
 	{

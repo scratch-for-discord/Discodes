@@ -93,7 +93,7 @@ const blocks: BlockDefinition[] = [
 		tooltip: "Returns the opposite of the input",
 		helpUrl:
 			`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT`,
-		code: (args) => {
+		code: () => {
 			return "${args}";
 		},
 		mutator: new CheckboxMutator("hello", [

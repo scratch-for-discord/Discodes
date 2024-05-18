@@ -1,11 +1,9 @@
-import { BlockShape, BlockType, WarningType, DropdownType, PlaceholderType } from "$lib/enums/BlockTypes";
+import { BlockShape, BlockType, DropdownType, PlaceholderType } from "$lib/enums/BlockTypes";
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
-import TextInput from "$lib/utils/BlockGen/Inputs/TextInput";
 import NumberInput from "$lib/utils/BlockGen/Inputs/NumberInput";
 import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import Placeholder from "$lib/utils/ToolboxGen/Placeholder";
-import { Order } from "blockly/javascript";
 import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
 
 const blocks: BlockDefinition[] = [
@@ -265,7 +263,7 @@ const blocks: BlockDefinition[] = [
             colour: "#5b67a5",
             tooltip: "Gets a random fraction.",
             helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
-            code: (args) => {
+            code: () => {
                 return `Math.random()`
             }
         },

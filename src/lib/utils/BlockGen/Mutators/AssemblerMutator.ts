@@ -4,31 +4,31 @@
 // const { javascriptGenerator } = pkg;
 // import {Mutator} from "./Mutator";
 // import Blockly from "blockly/core";
-//
+
 // export default class AssemblerMutator extends Mutator {
-//
-//
+
+
 // 	constructor(containerBlockText: string, properties: MutatorBlock[]) {
 // 		super(properties, containerBlockText);
 // 		this.mixin = this.getMixin();
 // 		this.setBlocks = this.blocks;
 // 	}
-//
+
 // 	get blocks(): string[] {
 // 		return super.properties.map((val) => val.block);
 // 	}
-//
+
 // 	getMixin(): object {
 // 		const properties = super.properties;
 // 		const containerBlockName = salt(10);
 // 		const containerBlockText = super.containerBlockText;
 // 		const extraStateObj: Record<string, number> = {};
-//
+
 // 		// First we set the save and load states.
 // 		const mixin = {
-//
+
 // 			saveExtraState: function(this: any): object {
-//
+
 // 				for (const mutatorProp of properties) {
 // 					extraStateObj[mutatorProp.block] = this[`${mutatorProp.block}_count_`];
 // 				}
@@ -42,9 +42,9 @@
 // 				}
 // 				this.updateShape_();
 // 			},
-//
+
 // 			decompose: function(this: any, workspace: Blockly.WorkspaceSvg) {
-//
+
 // 				Blockly.Blocks[containerBlockName] = {
 // 					init: function(this: Blockly.Block) {
 // 						this.jsonInit({
@@ -65,29 +65,29 @@
 // 				javascriptGenerator.forBlock[containerBlockName] = function() {
 // 					return "";
 // 				};
-//
+
 // 				const containerBlock = workspace.newBlock(containerBlockName);
 // 				containerBlock.initSvg();
-//
+
 // 				let connection = containerBlock.getInput("STACK")?.connection;
 // 				for (const key in extraStateObj) {
 // 					for (let i = 0; i < this[`${key}_count_`]; i++) {
 // 						const blockToAdd: string = key;
-//
+
 // 						const itemBlock = workspace.newBlock(blockToAdd);
 // 						itemBlock.initSvg();
 // 						connection?.connect(itemBlock.previousConnection);
 // 						connection = itemBlock.nextConnection;
 // 					}
 // 				}
-//
+
 // 				return containerBlock;
 // 			},
-//
-//
+
+
 // 			// eslint-disable-next-line
 // 			compose: function (this: any, containerBlock: Blockly.Block) {
-//
+
 // 				const workspaceBlocks = [];
 // 				let itemBlock = containerBlock.getInputTargetBlock("STACK");
 // 				// Iterate over each child block in the mutator workspace and add it to the array
@@ -111,14 +111,14 @@
 // 					const blockCount = this[`${mutatorProp.block}_count_`];
 // 					if (blockCount > 0) {
 // 						// Determine the number of items in the adds array for the current MutatorBlock
-//
+
 // 						// Add inputs for each block count
 // 						for (let j = 0; j < blockCount; j++) {
 // 							// @ts-expect-error MutatorProp is type is "any"
 // 							const inputName = mutatorProp.block + j;
 // 							// @ts-expect-error MutatorProp is type is "any"
 // 							const addsLength = mutatorProp.adds.length;
-//
+
 // 							if (!this.getInput(inputName)) {
 // 								// Get the input index by taking the modulo of j with the length of the adds array
 // 								const addsIndex = j % addsLength;
@@ -140,19 +140,19 @@
 // 							j++;
 // 						}
 // 					}
-//
+
 // 					// If 'once' is true, disable adding more blocks of this type
 // 					// @ts-expect-error MutatorProp is type is "any"
 // 					if (mutatorProp.once && blockCount > 0) {
 // 						// @ts-expect-error MutatorProp is type is "any"
 // 						this.getInput(mutatorProp.block + (blockCount - 1)).setCheck(null);
 // 					}
-//
+
 // 					// Break if we have reached the end of the properties array
 // 					if (i + 1 >= properties.length) {
 // 						break;
 // 					}
-//
+
 // 					// Continue adding inputs for the next MutatorBlock
 // 					const nextMutatorProp = properties[i + 1];
 // 					// @ts-expect-error nextMutatorProp is type is "any"
@@ -181,7 +181,7 @@
 // 							k++;
 // 						}
 // 					}
-//
+
 // 					// If 'once' is true, disable adding more blocks of this type
 // 					if (nextMutatorProp.once && nextBlockCount > 0) {
 // 						// @ts-expect-error MutatorProp is type is "any"
@@ -189,7 +189,7 @@
 // 					}
 // 				}
 // 			},
-//
+
 // 			/**
 // 			 * Append a Blockly input to the block
 // 			 * @param {object} input - Input definition
@@ -200,7 +200,7 @@
 // 			appendInput_: function (this: Blockly.Block, input: any, name: any) {
 // 				const inputType = input.type || "input_value"; // Default to input_value if type is not specified
 // 				const inputCheck = input.check; // Check for input type if specified
-//
+
 // 				switch (inputType) {
 // 					case "input_value":
 // 						this.appendValueInput(name).setCheck(inputCheck);
@@ -216,7 +216,7 @@
 // 				}
 // 			}
 // 		};
-//
+
 // 		return mixin;
 // 	}
 // }
