@@ -79,6 +79,7 @@ export default class Toolbox {
 									fields: {}
 								}
 							};
+							// @ts-ignore
 							inputs[data.argName]["block"]["fields"][key] = value;
 						}
 					}
@@ -115,6 +116,7 @@ export default class Toolbox {
 
 		await this.setStruct(
 			path,
+			// @ts-ignore
 			(contents[contents.length - 1] as unknown[])["contents"],
 			filesInDir,
 			topPath
