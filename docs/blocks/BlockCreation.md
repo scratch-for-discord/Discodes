@@ -32,8 +32,6 @@ import type { CategoryDefinition } from "$lib/interfaces/CategoryDefinition";
 // Inputs
 import TextInput from "$lib/utils/BlockGen/Inputs/TextInput";
 
-// Blockly
-import { Order } from "blockly/javascript";
 
 // This variable contains all the blocks in an array, each block is of type "BlockDefinition"
 const blocks: BlockDefinition[] = [
