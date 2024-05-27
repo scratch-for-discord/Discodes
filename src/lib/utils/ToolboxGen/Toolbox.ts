@@ -79,7 +79,7 @@ export default class Toolbox {
 									fields: {}
 								}
 							};
-							// @ts-expect-error
+							// @ts-expect-error Accessing unknown type
 							inputs[data.argName]["block"]["fields"][key] = value;
 						}
 					}
@@ -116,7 +116,7 @@ export default class Toolbox {
 
 		await this.setStruct(
 			path,
-			// @ts-expect-error
+			// @ts-expect-error Unknown type
 			(contents[contents.length - 1] as unknown[])["contents"],
 			filesInDir,
 			topPath

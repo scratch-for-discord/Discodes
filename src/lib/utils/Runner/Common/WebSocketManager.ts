@@ -35,8 +35,7 @@ export class WebSocketManager {
                 return
             }
 
-            // eslint-disable-next-line
-            if(options.onMessage) options.onMessage<any>(trueData.op, (trueData as WebSocketData<any>).d)
+            if(options.onMessage) options.onMessage<unknown>(trueData.op, (trueData as WebSocketData<unknown>).d)
         })
     }
 
