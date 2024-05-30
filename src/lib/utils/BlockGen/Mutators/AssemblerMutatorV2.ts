@@ -59,7 +59,6 @@ export default class AssemblerMutatorV2 extends Mutator {
         for(const prop of properties) {
             propertieMap[prop.block] = prop;
         }
-        console.log(settings)
         Blockly.Blocks[containerBlockName] = {
             init: function(this: Blockly.Block) {
                 this.jsonInit({
