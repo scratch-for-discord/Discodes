@@ -11,19 +11,22 @@
 	import loadBlocks from "$lib/utils/helpers/loadBlocks";
 	import { warnings } from "$lib/utils/BlockGen/Warnings/WarningsList";
 	import { imports, wipeImports } from "$lib/utils/BlockGen/Blocks/importsList";
+	import type Toolbox from "$lib/utils/ToolboxGen/Toolbox";
 
 	export let workspace: Blockly.WorkspaceSvg;
 	export let options: typeof OPTIONS;
-	export let toolbox: Blockly.utils.toolbox.ToolboxDefinition;
+	export let toolboxJson: Blockly.utils.toolbox.ToolboxDefinition;
+	export let toolbox: Toolbox;
 
 	Blockly.setLocale({
 		...En
 	});
 
 	onMount(async() => {
-		await loadBlocks();
-		workspace = Blockly.inject("blocklyDiv", { ...options, toolbox: toolbox });
-
+        await loadBlocks();
+        workspace = Blockly.inject("blocklyDiv", { ...options, toolbox: toolboxJson });
+		toolbox.registerCallbacks(workspace)
+        // workspace.refreshToolboxSelection();
 		// Only console log the code and warnings when debug mode is enabled.
 		const supportedEvents = new Set([
 			Blockly.Events.BLOCK_CHANGE,
@@ -48,6 +51,7 @@
 			}
 		}
 		workspace.addChangeListener(updateCode);
+
 	});
 </script>
 

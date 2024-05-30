@@ -140,7 +140,6 @@ export default class CheckboxMutator extends Mutator {
 					if(!conn) continue;
 					conn.reconnect(this, connectionKey);
 				}
-				console.log(connections)
 			},
 			// eslint-disable-next-line
 			saveConnections: function(this: any, containerBlock: any) {

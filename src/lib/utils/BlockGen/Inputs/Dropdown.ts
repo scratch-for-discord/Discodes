@@ -15,7 +15,7 @@ interface DropdownJSON {
  * @class Dropdown
  * @extends {BaseInput}
  */
-export default class Dropdown extends BaseInput {
+export default class DropdownInput extends BaseInput {
 
 	private readonly _options: Array<Array<string>>;
 	private _dropdownType: DropdownType;
@@ -52,7 +52,6 @@ export default class Dropdown extends BaseInput {
 			// Automatically swaps between grid and list type depending on the length of the arguments.
 			this._dropdownType = this._options.length > 10 ? DropdownType.Grid : DropdownType.List;
 		}
-		console.log(this._options)
 		return {
 			type: this._dropdownType,
 			name: super.name,
