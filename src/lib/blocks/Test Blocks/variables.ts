@@ -6,9 +6,7 @@ import { BlockShape, BlockType, DropdownType } from "$lib/enums/BlockTypes";
 import DropdownInput from "$lib/utils/BlockGen/Inputs/Dropdown";
 import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import VariableInput from "$lib/utils/BlockGen/Inputs/VariableInput";
-// import { xml } from "blockly/core/utils";
-// import BaseInput from "$lib/utils/BlockGen/Inputs/BaseInput";
-// let variableBlockDef: BaseInput = new BaseInput()
+
 function fixVariableName(variable: string): string {
     // Remove non-alphabetic characters from the start and end
     let fixedVariable = variable.replace(/^[^a-zA-Z]+|[^a-zA-Z0-9]+$/g, '');
@@ -35,7 +33,7 @@ const blocks: BlockDefinition[] = [
         args: [
             new VariableInput("VAR", "")
         ],
-        code(args, block) {
+        code(args) {
 
             const varName = fixVariableName(args.VAR as string)
             console.log(varName, args.VAR)
@@ -56,7 +54,7 @@ const blocks: BlockDefinition[] = [
             new VariableInput("VAR", ""),
             new ValueInput("INPUT", BlockType.Any)
         ],
-        code(args, block) {
+        code(args) {
             const varName = fixVariableName(args.VAR as string)
 
             return `${varName}${args.INPUT !== ""? " =" : ";"} ${args.INPUT !== ""? args.INPUT+";": ""}\n`
@@ -83,7 +81,7 @@ const blocks: BlockDefinition[] = [
             new ValueInput("INPUT", BlockType.Any)
 
         ],
-        code(args, block) {
+        code(args) {
             const varName = fixVariableName(args.VAR as string)
             console.log(varName)
             return `${varName}${args.INPUT !== ""? " "+ args.DROPDOWN + "=" : ";"} ${args.INPUT !== ""? args.INPUT+";": ""}\n`

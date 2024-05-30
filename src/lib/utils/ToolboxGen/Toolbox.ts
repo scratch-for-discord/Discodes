@@ -1,11 +1,11 @@
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { ToolboxDefinition, ToolboxItemInfo } from "blockly/core/utils/toolbox";
-import type {FlyoutButton} from "blockly";
 import Blockly from "blockly/core";
 
 export default class Toolbox {
-	private callbackCategory: Record<string, any>;
-	private callbackOther: Record<string, any>;
+	// eslint-disable-next-line no-use-before-define
+	private callbackCategory: Record<string, (workspace: Blockly.WorkspaceSvg) => any[]>;
+	private callbackOther: Record<string, (p1: Blockly.FlyoutButton) => void>;
 
 	constructor() {	
 		this.callbackCategory = {};
