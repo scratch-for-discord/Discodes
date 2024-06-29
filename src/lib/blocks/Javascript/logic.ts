@@ -245,7 +245,47 @@ const blocks: BlockDefinition[] = [
 		code: () => {
 			return "return;";
 		}
-	}
+	},
+	{
+
+		id: "switch_case",
+		text: "switch {INPUT} {CASE}",
+		args: [new ValueInput("INPUT", BlockType.String), new StatementInput("CASE")],
+		warnings: [new Warning(WarningType.Input, {
+			fieldName: "INPUT",
+		})],
+		shape: BlockShape.Action,
+		inline: true,
+		colour: rgbToHex(165, 91, 153),
+		tooltip: "Switch case",
+		helpUrl: "",
+		code: (args, block) => {
+			//block.removeInput("CASE");
+			console.log(args)
+			return `switch (${args.INPUT}) {
+                ${args.CASE}
+            }`;
+		},
+		mutator: new AssemblerMutatorV2("switch", [
+			{
+				block: "case",
+				adds: [new ValueInput("case", BlockType.String).setField("case"), new StatementInput("case_statement").setField("do")],
+				once: true
+			},
+			// {
+			// 	block: "break",
+			// 	adds: [new StatementInput("case_statement").setField("do")],
+			// 	once: true
+			// },
+			{
+				block: "default",
+				adds: [new StatementInput("default_statement").setField("default")],
+				once: true
+			},
+		], {
+			color: rgbToHex(91, 128, 165)
+		})
+	},
 ];
 
 const category: CategoryDefinition = {

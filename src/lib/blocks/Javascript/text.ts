@@ -25,18 +25,18 @@ const blocks: BlockDefinition[] = [
 		}
 	},
 	{
-		id: "create_text_with_x",
-		text: "create text with {CONTENT}",
-		args: [new ValueInput("CONTENT", BlockType.String)],
+		id: "create",
+		text: "create text with",
+		args: [],
 		shape: BlockShape.Floating,
 		output: BlockType.String,
-		inline: true,
+		inline: false,
 		colour: "%{BKY_TEXTS_HUE}",
 		tooltip: "Creates text with dynamic content",
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
 		code: (args) => {
-			return `new Text("${args.CONTENT}")`;
+			return `${args.text_content}.join("")`;
 		},
 		mutator: new AssemblerMutatorV2("Add Content", [
 			{

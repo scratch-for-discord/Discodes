@@ -55,6 +55,59 @@ const blocks: BlockDefinition[] = [
 		},
 		hidden: true
 	},
+	{
+		id: "case",
+		text: "case",
+		shape: BlockShape.Action,
+		inline: true,
+		colour: rgbToHex(91, 128, 165),
+		tooltip: "",
+		helpUrl:"",
+		code: (args) => {
+			return "bob";
+		},
+		hidden: true,
+		mutator: new CheckboxMutator(
+			"break",
+			[
+				{
+					text: "break",
+					inputName: "break",
+					adds: [],
+					defaultValue: true
+				},
+			],
+			{
+				color: rgbToHex(91, 128, 165)
+			}
+		)
+	},
+	{
+		id: "default",
+		text: "default",
+		shape: BlockShape.Bottom,
+		inline: true,
+		colour: rgbToHex(91, 128, 165),
+		tooltip: "",
+		helpUrl:"",
+		code: () => {
+			return "bob";
+		},
+		hidden: true
+	},
+	{
+		id: "input",
+		text: "input",
+		shape: BlockShape.Action,
+		inline: true,
+		colour: rgbToHex(91, 128, 165),
+		tooltip: "",
+		helpUrl:"",
+		code: () => {
+			return "bob";
+		},
+		hidden: true
+	},
 	// {
 	// 	id: "not_mutator",
 	// 	text: "not {operand}",
