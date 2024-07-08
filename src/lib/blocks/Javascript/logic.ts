@@ -8,7 +8,7 @@ import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
 import StatementInput from "$lib/utils/BlockGen/Inputs/StatementInput";
-import AssemblerMutatorV2 from "$lib/utils/BlockGen/Mutators/AssemblerMutator";
+import AssemblerMutator from "$lib/utils/BlockGen/Mutators/AssemblerMutator";
 
 const blocks: BlockDefinition[] = [
 	{
@@ -37,7 +37,7 @@ const blocks: BlockDefinition[] = [
 			}
 			return code;
 		},
-		mutator: new AssemblerMutatorV2(
+		mutator: new AssemblerMutator(
 			"If",
 			[
 				{
@@ -91,15 +91,8 @@ const blocks: BlockDefinition[] = [
 		//  if(args.A === "" || args.B === "") return "false";
 		//  return `${args.A} ${args.CONDITION} ${args.B}`;
 
-		code: (args, block) => {
-			block.colour = rgbToHex(255, 128, 165);
-			block.outputType = BlockType.Any;
-			block.addInput(new Dropdown("bob", DropdownType.Auto, { bob: "hello", alex: "nikola" }));
-			block.addInput(new ValueInput("chicken", BlockType.Any));
-			block.addInput(new NumberInput("numberrr", 50, { max: 100, min: 50, precision: 10 }));
-			block.addInput(new TextInput("textttt", "I am a text input!"));
-			console.log("Args (code prop parameter): ", args);
-			return `${args.textttt}`;
+		code: (args) => {
+			return `${args.A} ${args.CONDITION} ${args.B}`;
 		}
 	},
 	{

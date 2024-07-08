@@ -3,6 +3,8 @@
 	import { browser } from "$app/environment";
 	import { onMount } from "svelte";
 	import openEditor from "$lib/utils/helpers/openEditor";
+	import { CompareImage } from "svelte-compare-image";
+
 
 	let workspaceArray: DiscodesWorkspace[];
 	let loaded: boolean = false;
@@ -82,6 +84,35 @@
 	}
 </script>
 
+
+<!-- if there is a button in form, it will close the modal -->
+
+<div class="flex justify-center items-center">
+	<h2 class="text-2xl radio-canada-big text-white">Build bots in seconds ⚡</h2>
+
+	<div class="w-[500px]">
+		<CompareImage 
+			imageLeftSrc="images/blocks.png"
+			imageLeftAlt="left"
+			imageRightSrc="images/code.png"
+			imageRightAlt="right"
+			--handle-size="3rem"
+			--handle-background-color="rgba(0, 0, 0, 0.6)"
+			--handle-border-width="0rem"
+			--slider-color="#ffffff"
+			--slider-width="0.125rem"
+		>
+			<svelte:fragment slot="slider-label">
+				Set the visibility of one image over the other. 0 is full visibility of the
+				second image and 100 is full visibility of the first image. Any amount
+				in-between is a left/right cutoff at the percentage of the slider.
+			</svelte:fragment>
+		</CompareImage>
+	</div>
+	
+	<p class="font-bold text-lg radio-canada-big text-gray-300">Converts into JavaScript in real time!</p>
+</div>
+
 <button
 	class="btn btn-accent font-bold"
 	on:click={() => {
@@ -158,7 +189,6 @@
 		</label>
 
 		<form method="dialog" class="flex gap-2">
-			<!-- if there is a button in form, it will close the modal -->
 			<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
 			<button class="btn {canCreateWorkspace ? "btn-accent" : "btn-disabled"}" on:click={createWorkspace}>Create</button>
 		</form>
