@@ -1,196 +1,26 @@
-<script lang="ts">
-	import getLocalDB, { type DiscodesWorkspace } from "$lib/utils/localDB/manager";
-	import { browser } from "$app/environment";
-	import { onMount } from "svelte";
-	import openEditor from "$lib/utils/helpers/openEditor";
-	import { CompareImage } from "svelte-compare-image";
+<script lang="ts"></script>
 
-
-	let workspaceArray: DiscodesWorkspace[];
-	let loaded: boolean = false;
-
-	let workspaceName: string | undefined;
-	let workspaceDescription: string | undefined;
-	let token: string;
-	let canCreateWorkspace: boolean = false;
-
-	let localDB = getLocalDB();
-	let create_workspace: HTMLDialogElement;
-
-	onMount(() => {
-		workspaceArray = localDB.workspaces;
-		loaded = true;
-	});
-
-	function canSubmit(): void {
-		if ((workspaceDescription && workspaceDescription?.length > 50) || (workspaceName && workspaceName?.length > 25)) {
-			canCreateWorkspace = false
-			return;
-		} if (token.includes(" ") || token.length === 0) {
-			canCreateWorkspace = false
-			return;
-		}
-		canCreateWorkspace = true
-	}
-
-	function refreshWorksapces(): void {
-		workspaceArray = localDB.workspaces;
-	}
-
-	function createWorkspace(): void {
-		if (!canCreateWorkspace) return;
-
-		const workspaceID = `${localDB.workspaces.length + 1}`;
-
-		//? create the userID if it does't exist.
-		localDB.userID = localDB.userID || window.crypto.randomUUID();
-
-		localDB.addWorkspace({
-			id: workspaceID,
-			files: [
-				{
-					name: "index",
-					createdAt: new Date(),
-					lastEditedAt: new Date(),
-					timeWasted: 0,
-					blocklyWorkspaceSave: {
-						workspaceSave: {},
-						blockLength: 0
-					},
-					thumbnail: "" //TODO Add thumbnails later on
-				}
-			],
-			createdAt: new Date(),
-			lastEditedAt: new Date(),
-			owner: localDB.userID as string,
-			editors: [],
-			viewers: [],
-			name: workspaceName || "My workspace",
-			description: workspaceDescription || "Awesome Discord bot!",
-			timeWasted: 0,
-			token: token,
-			lastOpened: "index"
-		});
-
-		workspaceName = undefined;
-		workspaceDescription = undefined;
-
-		openEditor(workspaceID);
-	}
-
-	function deleteWorkspace(id: string) {
-		localDB.deleteWorkspace(id);
-		refreshWorksapces();
-	}
-</script>
-
-
-<!-- if there is a button in form, it will close the modal -->
-
-<div class="flex justify-center items-center">
-	<h2 class="text-2xl radio-canada-big text-white">Build bots in seconds ⚡</h2>
-
-	<div class="w-[500px]">
-		<CompareImage 
-			imageLeftSrc="images/blocks.png"
-			imageLeftAlt="left"
-			imageRightSrc="images/code.png"
-			imageRightAlt="right"
-			--handle-size="3rem"
-			--handle-background-color="rgba(0, 0, 0, 0.6)"
-			--handle-border-width="0rem"
-			--slider-color="#ffffff"
-			--slider-width="0.125rem"
-		>
-			<svelte:fragment slot="slider-label">
-				Set the visibility of one image over the other. 0 is full visibility of the
-				second image and 100 is full visibility of the first image. Any amount
-				in-between is a left/right cutoff at the percentage of the slider.
-			</svelte:fragment>
-		</CompareImage>
-	</div>
-	
-	<p class="font-bold text-lg radio-canada-big text-gray-300">Converts into JavaScript in real time!</p>
-</div>
-
-<button
-	class="btn btn-accent font-bold"
-	on:click={() => {
-		create_workspace.showModal();
-	}}>Create Workspace</button
->
-
-{#if browser && loaded}
-	{#each workspaceArray as workspace}
-		<div class="card w-96 bg-neutral text-neutral-content">
-			<div class="card-body items-center text-center">
-				<h2 class="card-title">{workspace.name}</h2>
-				<p>{workspace.description}</p>
-
-				<div class="card-actions justify-end">
-					<button
-						class="btn btn-primary"
-						on:click={() => {
-							openEditor(workspace.id);
-						}}>Open</button
-					>
-					<button
-						class="btn btn-ghost"
-						on:click={() => {
-							deleteWorkspace(workspace.id);
-						}}>Delete</button
-					>
+<main class="overflow-x-hidden">
+	<div class="w-screen h-screen bg-gradient-to-b from-blue-950 to-gray-900 flex items-center justify-center overflow-hidden">
+		<div class="bg-blend-darken bg-blue-400 w-60 h-60 rounded-full blur-[140px] opacity-75 absolute top-10 left-10"></div>
+		<div class="bg-blend-darken bg-purple-400 w-60 h-60 rounded-full blur-[140px] opacity-75 absolute bottom-10 right-10"></div>
+		<div class="flex items-center justify-center">
+			<div>
+				<p class="text-5xl font-varela font-extrabold text-white md:flex md:items-center md:justify-center">
+					Discord Bots
+					<span class="bg-blue-600 px-2 rounded-md flex items-center ml-2">
+						<img src="https://cdn3.emoji.gg/emojis/6817_Discord_Verified.png" alt="Discord verified" class="w-10 mr-2">
+						Simplified
+					</span>
+				</p>
+				<div class="mt-10 mx-auto text-justify text-xl text-gray-500">
+					<p>Build intuitive Discord Bots using visual scripting extremely similar to Scratch.</p>
+				</div>
+				<div class="flex items-center justify-center mt-10">
+					<a href="/interface" class="mr-2 w-40 flex items-center justify-center h-12 rounded-lg bg-blue-600 text-lg hover:bg-blue-500 transition-all text-white font-bold">Getting Started</a>
+					<a href="/docs/getting-started" class="ml-2 w-40 flex items-center justify-center h-12 rounded-lg bg-slate-600 text-lg hover:bg-slate-500 transition-all text-white font-bold">Read the Docs</a>
 				</div>
 			</div>
 		</div>
-	{/each}
-{/if}
-
-<dialog
-	bind:this={create_workspace}
-	id="create_workspace"
-	class="modal modal-bottom sm:modal-middle sm:mx-[50%] sm:translate-x-[-50%] sm:w-[420px]"
->
-	<div class="modal-box">
-		<h3 class="font-bold text-lg">Create a new workspace</h3>
-
-		<label class="form-control w-full max-w-xs">
-			<span class="label-text mt-5 mb-2">Name</span>
-			<input
-				bind:value={workspaceName}
-				on:keyup={canSubmit}
-				type="text"
-				placeholder="My workspace"
-				class="input input-bordered w-full max-w-xs mb-3"
-			/>
-		</label>
-
-		<label class="form-control w-full max-w-xs">
-			<span class="label-text mt-5 mb-2">Description</span>
-			<input
-				bind:value={workspaceDescription}
-				on:keyup={canSubmit}
-				type="text"
-				placeholder="Awesome Discord bot!"
-				class="input input-bordered w-full sm:max-w-xs mb-5"
-			/>
-		</label>
-
-		<label class="form-control w-full max-w-xs">
-			<span class="label-text mt-5 mb-2">Bot token<span class="text-red-500">*</span></span>
-			<input
-				bind:value={token}
-				on:keyup={canSubmit}
-				type="password"
-				placeholder="Your Discord bot token"
-				class="input input-bordered w-full sm:max-w-xs"
-			/>
-			<span class="label-text-alt text-red-500 mt-1 mb-5">Your token will be saved localy. Do not share your data with other people or your bot may be compromised.</span>
-		</label>
-
-		<form method="dialog" class="flex gap-2">
-			<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-			<button class="btn {canCreateWorkspace ? "btn-accent" : "btn-disabled"}" on:click={createWorkspace}>Create</button>
-		</form>
 	</div>
-</dialog>
+</main>
