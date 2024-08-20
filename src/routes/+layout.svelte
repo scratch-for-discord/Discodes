@@ -3,5 +3,7 @@
 	import Navbar from "$lib/components/Navbar.svelte";
 </script>
 
-<Navbar />
+{#await Promise.resolve() then _}
+	<Navbar />
+{/await}
 <slot />

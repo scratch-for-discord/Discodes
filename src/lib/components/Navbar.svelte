@@ -5,6 +5,7 @@
 	let user: any;
 
 	onMount(() => {
+		// TODO: Implement server side log-in for users instead of locally storing it.
 		const userDummy = window.localStorage.getItem("user");
 
 		if (userDummy) user = JSON.parse(userDummy);
@@ -12,8 +13,8 @@
 </script>
 
 <nav class="absolute top-0 left-0 z-10 w-screen h-20 flex items-center md:pl-24 pl-12">
-	<img src={Logo} alt="Discodes Logo" class="w-16 rounded-md" />
-	<h1 class="font-sans text-3xl font-bold ml-4 text-white">Discodes</h1>
+	<img src={Logo} alt="Discodes Logo" class="lg:w-16 w-12 rounded-md" />
+	<h1 class="font-sans lg:text-3xl md:text-2xl text-xl font-bold ml-4 text-white">Discodes</h1>
 	<div class="md:flex items-center text-xl text-gray-300 hidden">
 		<a href="/">
 			<p class="ml-16 hover:text-gray-50 transition-all">Home</p>
@@ -36,7 +37,7 @@
 		<div class="ml-auto md:mr-24 mr-12 flex justify-center items-center">
 			<img
 				src={`https://cdn.discordapp.com/avatars/691111067807514685/${user.avatar}.png`}
-				class="h-14 rounded-full mr-5"
+				class="lg:h-14 md:h-12 lg:block md:block hidden rounded-full mr-5"
 				alt=""
 			/>
 			<p class="text-2xl font-bold text-white">{user.global_name}</p>
