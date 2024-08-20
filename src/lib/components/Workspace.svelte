@@ -11,18 +11,24 @@
 	import loadBlocks from "$lib/utils/helpers/loadBlocks";
 	import { warnings } from "$lib/utils/BlockGen/Warnings/WarningsList";
 	import { imports, wipeImports } from "$lib/utils/BlockGen/Blocks/importsList";
+	import { createEventDispatcher } from "svelte";
+	import "../utils/custom_category.js"
 
 	export let workspace: Blockly.WorkspaceSvg;
 	export let options: typeof OPTIONS;
 	export let toolbox: Blockly.utils.toolbox.ToolboxDefinition;
 
+	const dispatch = createEventDispatcher();
+
 	Blockly.setLocale({
 		...En
 	});
 
-	onMount(async() => {
+	onMount(async () => {
 		await loadBlocks();
 		workspace = Blockly.inject("blocklyDiv", { ...options, toolbox: toolbox });
+		dispatch("workspaceInject"); // May be useful in the future
+		dispatch("updateNavbarPadding"); // Updates the padding-left property of the navbar (look at /routes/editor/+page.svelte)
 
 		const supportedEvents = new Set([
 			Blockly.Events.BLOCK_CHANGE,
@@ -48,6 +54,11 @@
 			}
 		}
 		workspace.addChangeListener(updateCode);
+
+		workspace.addChangeListener((event: Abstract) => {
+			// Updates the padding-left property of the navbar due to potential toolbox width change (look at /routes/editor/+page.svelte)
+			if (event.type === "toolbox_item_select") dispatch("updateNavbarPadding");
+		});
 	});
 </script>
 
