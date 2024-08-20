@@ -42,7 +42,6 @@
 	"type": "module",
 	"dependencies": {
 		"@blockly/field-grid-dropdown": "^4.0.11",
-		"@webcontainer/api": "^1.1.9",
 		"bits-ui": "^0.21.13",
 		"blockly": "^10.4.3",
 		"clsx": "^2.1.1",

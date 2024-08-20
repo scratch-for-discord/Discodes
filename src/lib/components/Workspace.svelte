@@ -11,12 +11,15 @@
 	import loadBlocks from "$lib/utils/helpers/loadBlocks";
 	import { warnings } from "$lib/utils/BlockGen/Warnings/WarningsList";
 	import { imports, wipeImports } from "$lib/utils/BlockGen/Blocks/importsList";
+
 	import { createEventDispatcher } from "svelte";
 	import "../utils/custom_category.js"
+	import type Toolbox from "$lib/utils/ToolboxGen/Toolbox";
 
 	export let workspace: Blockly.WorkspaceSvg;
 	export let options: typeof OPTIONS;
-	export let toolbox: Blockly.utils.toolbox.ToolboxDefinition;
+	export let toolboxJson: Blockly.utils.toolbox.ToolboxDefinition;
+	export let toolbox: Toolbox;
 
 	const dispatch = createEventDispatcher();
 
@@ -26,7 +29,8 @@
 
 	onMount(async () => {
 		await loadBlocks();
-		workspace = Blockly.inject("blocklyDiv", { ...options, toolbox: toolbox });
+		workspace = Blockly.inject("blocklyDiv", { ...options, toolbox: toolboxJson });
+		toolbox.registerCallbacks(workspace)
 		dispatch("workspaceInject"); // May be useful in the future
 		dispatch("updateNavbarPadding"); // Updates the padding-left property of the navbar (look at /routes/editor/+page.svelte)
 

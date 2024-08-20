@@ -578,11 +578,6 @@
     loupe "^2.3.7"
     pretty-format "^29.7.0"
 
-"@webcontainer/api@^1.1.9":
-  version "1.1.9"
-  resolved "https://registry.npmjs.org/@webcontainer/api/-/api-1.1.9.tgz#b546bc71f06740975d15c8dbf9b8287f51f92a9b"
-  integrity sha512-Sp6PV0K9D/3f8fSbCubqhfmBFH8XbngZCBOCF+aExyGqnz2etmw+KYvbQ/JxYvYX5KPaSxM+asFQwoP2RHl5cg==
-
 abab@^2.0.6:
   version "2.0.6"
   resolved "https://registry.npmjs.org/abab/-/abab-2.0.6.tgz#41b80f2c871d19686216b82309231cfd3cb3d291"

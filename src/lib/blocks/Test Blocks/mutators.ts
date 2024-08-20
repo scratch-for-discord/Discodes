@@ -91,9 +91,9 @@ const blocks: BlockDefinition[] = [
 		colour: rgbToHex(91, 128, 165),
 		tooltip: "Returns the opposite of the input",
 		helpUrl:
-			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT",
-		code: (args) => {
-			return `${args}`;
+			`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT`,
+		code: () => {
+			return "${args}";
 		},
 		mutator: new CheckboxMutator(
 			"hello",
