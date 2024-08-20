@@ -77,7 +77,6 @@
 	}
 }
 
-
 /* Blockly stuff */
 
 /* Blockly toolbox scrollbar always visible fix */
@@ -85,23 +84,31 @@ svg[display="none"] {
 	display: none;
 }
 .blocklyTreeLabel {
-  color: white;
+	color: white;
 }
 /* Adds padding around the group of categories and separators. */
 .blocklyToolboxContents {
-  padding: 0.5em;
+	padding: 0.5em;
 }
 /* Adds space between the categories, rounds the corners and adds space around the label. */
 .blocklyTreeRow {
-  padding: 5px;
-  margin-bottom: 0.5em;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  height: 35px;
-  padding-left: 0px;
-  @apply transition-all;
+	padding: 5px;
+	margin-bottom: 0.5em;
+	border-radius: 4px;
+	display: flex;
+	align-items: center;
+	height: 35px;
+	text-align: center;
+	@apply transition-all;
 }
+.blocklyTreeRowContentContainer {
+	width: 100%;
+}
+
 .blocklyToolboxDiv {
-  z-index: 20;
+	z-index: 20;
+}
+.blocklyTreeIcon {
+	display: none;
+	@apply hidden;
 }
