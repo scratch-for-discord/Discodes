@@ -15,10 +15,6 @@ export interface DropdownIDef {
  * @class Dropdown
  * @extends {BaseInput}
  */
-<<<<<<< HEAD
-=======
-export default class DropdownInput extends BaseInput {
->>>>>>> master
 
 export default class Dropdown extends BaseInput<DropdownIDef> {
 	private readonly _options: Array<Array<string>>;

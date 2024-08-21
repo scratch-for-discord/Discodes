@@ -6,7 +6,7 @@ import type Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import type Placeholder from "$lib/utils/ToolboxGen/Placeholder";
 import {FlyoutButton} from "blockly";
 
-export type Argument = BaseInput;
+export type Argument<T> = BaseInput<T>;
 
 export type BlockDefinition =
 	| {
@@ -15,7 +15,7 @@ export type BlockDefinition =
 			text: string; // This is "message0"
 			output?: BlockType;
 			shape: BlockShape; // The block shape
-			args?: Argument[]; // This is "args0"
+			args?: Argument<unknown>[]; // This is "args0"
 			warnings?: Warning[];
 			placeholders?: Placeholder<unknown>[];
 			inline: boolean; // This is "inputsInline"
@@ -41,7 +41,7 @@ export type BlockDefinition =
 
 export interface MutatorBlock {
 	// What inputs it adds to the block
-	adds: Argument[];
+	adds: Argument<unknown>[];
 }
 export interface CheckBoxMutatorBlock extends MutatorBlock {
 	/**
