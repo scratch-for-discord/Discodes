@@ -4,7 +4,6 @@ import type BaseInput from "$lib/utils/BlockGen/Inputs/BaseInput";
 import type { Mutator } from "$lib/utils/BlockGen/Mutators/Mutator";
 import type Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import type Placeholder from "$lib/utils/ToolboxGen/Placeholder";
-import {FlyoutButton} from "blockly";
 
 export type Argument = BaseInput;
 
@@ -31,13 +30,7 @@ export type BlockDefinition =
 	| {
 			label: true;
 			text: string;
-	  } |
-	{
-		kind: "button";
-		text: string;
-		callbackKey: string;
-		callback: (p1: FlyoutButton) => void;
-	};
+	  };
 
 export interface MutatorBlock {
 	// What inputs it adds to the block

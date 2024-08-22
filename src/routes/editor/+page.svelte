@@ -18,7 +18,7 @@
 
 	let workspace: Blockly.WorkspaceSvg;
 	let toolboxJson: Blockly.utils.toolbox.ToolboxDefinition;
-	let toolbox: Toolbox;
+
 	let currentFile: string;
 	let discodesWorkspaceID: string;
 
@@ -36,8 +36,7 @@
 	};
 
 	onMount(async() => {
-		toolbox = await new Toolbox();
-		toolboxJson = await toolbox.generate();
+		toolboxJson = await new Toolbox().generate();
 
 		discodesWorkspaceID = $page.url.searchParams.get("id") || "1";
 		const discodesWorksapce = localDB.getWorkspaceByID(discodesWorkspaceID);
@@ -79,5 +78,9 @@
 	}}>LOAD</button
 >
 <Warnings bind:workspace />
+<<<<<<< HEAD
 <Workspace bind:workspace options={OPTIONS} bind:toolbox={toolbox} bind:toolboxJson={toolboxJson} />
 >>>>>>> master
+=======
+<Workspace bind:workspace options={OPTIONS} bind:toolbox={toolboxJson} />
+>>>>>>> parent of 7dd02ae (Variable category, dynamic categories, buttons (#29))

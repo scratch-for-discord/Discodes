@@ -68,9 +68,12 @@ export default class Block {
 	public addWarning(warning: Warning): void {
 =======
 	addWarning(warning: Warning): void {
+<<<<<<< HEAD
 		if (this._blockDefinition.kind) throw new Error("Cannot add a warning to a input/button");
 
 >>>>>>> master
+=======
+>>>>>>> parent of 7dd02ae (Variable category, dynamic categories, buttons (#29))
 		if (this._blockDefinition.label) throw new Error("Cannot add a warning to a label");
 		if (warningsObj[this._block.id] && warningsObj[this._block.id][warning.data.fieldName]) return;
 		this._blockDefinition.warnings = this._blockDefinition.warnings
@@ -184,20 +187,17 @@ export default class Block {
 
 =======
 	removeWarning(fieldName: string): void {
-		if (this._blockDefinition.kind) throw new Error("Cannot remove a warning from a input/button");
-
-		if (this._blockDefinition.label) throw new Error("Cannot remove a warning from a label");
+		if (this._blockDefinition.label) throw new Error("Cannot remove a warning form a label");
 		if ((!warningsObj[this._block.id] || !warningsObj[this._block.id][fieldName]) && this._blockDefinition.warnings !== undefined) return;
 		this._blockDefinition.warnings = this._blockDefinition.warnings?.filter(warning => warning.data.fieldName !== fieldName);
 	}
 
 	generate(): void {
-		if (this._blockDefinition.label || this._blockDefinition.kind) return;
+		if (this._blockDefinition.label) return;
 		
 >>>>>>> master
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const blockClass = this; // Used because `this` is overwritten in the blockly functions.
-
 
 		const code = this._blockDefinition.code;
 		const shape = this._blockDefinition.shape;
@@ -258,10 +258,6 @@ export default class Block {
 						// opposite of terminal
 						this.setNextStatement(true);
 						break;
-					case BlockShape.Value:
-						this.setPreviousStatement(false);
-						this.setNextStatement(false);
-					break;
 				}
 
 				// Here we add an output if needed
@@ -367,9 +363,11 @@ export default class Block {
 				}
 				args[arg.name] = getInputValue(block, arg.name, arg.type);
 			}
+
 			//parse mutator values
 			for (const propertyKey of Object.keys(propertyMap)) {
 				const property = propertyMap[propertyKey];
+				console.log(propertyMap)
 				for (const add of property.adds) {
 					const valueList: string[] = [];
 					let i = 1;

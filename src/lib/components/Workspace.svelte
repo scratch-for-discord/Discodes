@@ -11,15 +11,17 @@
 	import loadBlocks from "$lib/utils/helpers/loadBlocks";
 	import { warnings } from "$lib/utils/BlockGen/Warnings/WarningsList";
 	import { imports, wipeImports } from "$lib/utils/BlockGen/Blocks/importsList";
+<<<<<<< HEAD
 
 	import { createEventDispatcher } from "svelte";
 	import "../utils/custom_category.js"
 	import type Toolbox from "$lib/utils/ToolboxGen/Toolbox";
+=======
+>>>>>>> parent of 7dd02ae (Variable category, dynamic categories, buttons (#29))
 
 	export let workspace: Blockly.WorkspaceSvg;
 	export let options: typeof OPTIONS;
-	export let toolboxJson: Blockly.utils.toolbox.ToolboxDefinition;
-	export let toolbox: Toolbox;
+	export let toolbox: Blockly.utils.toolbox.ToolboxDefinition;
 
 	const dispatch = createEventDispatcher();
 
@@ -27,6 +29,7 @@
 		...En
 	});
 
+<<<<<<< HEAD
 	onMount(async () => {
 		await loadBlocks();
 		workspace = Blockly.inject("blocklyDiv", { ...options, toolbox: toolboxJson });
@@ -34,6 +37,13 @@
 		dispatch("workspaceInject"); // May be useful in the future
 		dispatch("updateNavbarPadding"); // Updates the padding-left property of the navbar (look at /routes/editor/+page.svelte)
 
+=======
+	onMount(async() => {
+		await loadBlocks();
+		workspace = Blockly.inject("blocklyDiv", { ...options, toolbox: toolbox });
+
+		// Only console log the code and warnings when debug mode is enabled.
+>>>>>>> parent of 7dd02ae (Variable category, dynamic categories, buttons (#29))
 		const supportedEvents = new Set([
 			Blockly.Events.BLOCK_CHANGE,
 			Blockly.Events.BLOCK_CREATE,
@@ -58,11 +68,14 @@
 			}
 		}
 		workspace.addChangeListener(updateCode);
+<<<<<<< HEAD
 
 		workspace.addChangeListener((event: Abstract) => {
 			// Updates the padding-left property of the navbar due to potential toolbox width change (look at /routes/editor/+page.svelte)
 			if (event.type === "toolbox_item_select") dispatch("updateNavbarPadding");
 		});
+=======
+>>>>>>> parent of 7dd02ae (Variable category, dynamic categories, buttons (#29))
 	});
 </script>
 
