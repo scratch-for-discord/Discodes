@@ -13,7 +13,8 @@
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
 		"test:unit": "vitest",
-		"test:gh": "vitest run"
+		"test:gh": "vitest run",
+		"dev:blocks": "vite build --watch"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
