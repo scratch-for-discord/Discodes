@@ -10,10 +10,6 @@
 	import { onMount } from "svelte";
 	import EditorNavbar from "$lib/components/EditorNavbar.svelte";
 
-	import { showNavbar } from "$lib/stores/navbarStore";
-
-	$showNavbar = false;
-
 	const localDB = getLocalDB();
 
 	let workspace: Blockly.WorkspaceSvg;
@@ -52,10 +48,6 @@
 	}
 </script>
 
-<div class="w-screen h-screen bg-gradient-to-b from-blue-950 to-gray-900"></div>
-<div
-	class="bg-blend-darken bg-blue-400 w-60 h-60 rounded-full blur-[140px] opacity-75 absolute top-10 left-10"
-></div>
 <EditorNavbar
 	{toolBoxWidth}
 	{workspace}
@@ -66,6 +58,5 @@
 	bind:workspace
 	options={OPTIONS}
 	bind:toolboxJson={toolboxJson}
-	bind:toolbox={toolbox}
 	on:updateNavbarPadding={updateNavbarPadding}
 />

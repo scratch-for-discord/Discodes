@@ -1,8 +1,10 @@
-<script>
+<script lang='ts'>
 	import "../app.pcss";
 	import Navbar from "$lib/components/Navbar.svelte";
-	// import { showNavbar } from "$lib/stores/navbarStore";
+	import { page } from "$app/stores";
 </script>
 
-<Navbar />
+{#if $page.route.id !== "/editor"}
+	<Navbar />
+{/if}
 <slot />

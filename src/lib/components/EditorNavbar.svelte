@@ -3,14 +3,16 @@
 	export let workspace: any; // Im just too lazy for this
 
 	import Warnings from "$lib/components/Warnings.svelte";
-	import { createEventDispatcher, onMount } from "svelte";
+	import { createEventDispatcher } from "svelte";
 
 	import { Button } from "$lib/components/ui/button";
+	// import { showNavbar } from "$lib/stores/navbarStore";
+	// import Page from "../../routes/editor/+page.svelte";
 
 	const dispatch = createEventDispatcher();
 </script>
 
-<div class="navbarDiv" style={`padding-left: ${toolBoxWidth + 20}px`}>
+<div class="absolute top-4 w-full z-20 pr-5" style={`padding-left: ${toolBoxWidth + 20}px`}>
 	<div
 		class="w-full bg-background p-1 px-2 rounded-md shadow-xl border-gray-200 dark:border-neutral-700 py-2"
 	>
@@ -26,18 +28,13 @@
 			class="h-8"
 			on:click={() => {
 				dispatch("load");
-			}}>LOAD</Button
+			}}
 		>
+			LOAD
+		</Button>
+		<Button variant="link" class="h-8" href='/'>
+			Home
+		</Button>
 		<Warnings bind:workspace />
 	</div>
 </div>
-
-<style>
-	.navbarDiv {
-		position: absolute;
-		top: 6rem; /* Adjust as needed */
-		width: 100%;
-		z-index: 20;
-		padding-right: 20px;
-	}
-</style>

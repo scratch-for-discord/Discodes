@@ -14,11 +14,11 @@
 
 	import { createEventDispatcher } from "svelte";
 	import "../utils/custom_category.js"
-	import type Toolbox from "$lib/utils/ToolboxGen/Toolbox";
+	// import type Toolbox from "$lib/utils/ToolboxGen/Toolbox";
 
 	export let workspace: Blockly.WorkspaceSvg;
 	export let options: typeof OPTIONS;
-	export let toolbox: Toolbox;
+	// export let toolbox: Toolbox;
 	export let toolboxJson: Blockly.utils.toolbox.ToolboxDefinition
 
 	const dispatch = createEventDispatcher();
@@ -66,4 +66,4 @@
 	});
 </script>
 
-<div id="blocklyDiv" class="w-full h-[calc(100vh-80px)] top-20 absolute" />
+<div id="blocklyDiv" class="w-full h-dvh" />
