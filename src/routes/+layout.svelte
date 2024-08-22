@@ -1,10 +1,9 @@
-<script lang="ts">
+<script>
 	import "../app.pcss";
 	import Navbar from "$lib/components/Navbar.svelte";
-	import { showNavbar } from "$lib/stores/navbarStore";
 </script>
 
-{#if showNavbar}
+{#await Promise.resolve() then _}
 	<Navbar />
-{/if}
+{/await}
 <slot />
