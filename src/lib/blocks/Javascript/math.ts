@@ -319,8 +319,249 @@ const blocks: BlockDefinition[] = [
 	//         return `Math.random() * 100 < ${args.CHANCE}`
 	//     }
 
+<<<<<<< HEAD
 	// }
 ];
+=======
+                    case "inverse":
+                        return `${args.NUMBER}) * -1`
+                    case "log10":
+                        return `Math.log(${args.NUMBER}) / Math.log(10)`
+                    case "sin":
+                    case "cos":
+                    case "tan":
+                    case "asin":
+                    case "acos":
+                    case "atan":
+                        return `(Math.(${args.OPERATION}) / Math.PI) * 180`
+                    default:
+                        return `Math.${args.OPERATION}(${args.NUMBER})`
+                }
+            }
+        },
+        {
+            id: "constants",
+            text: "{CONSTANT}",
+            args: [
+                new Dropdown("CONSTANT", DropdownType.Auto, {
+                    "π": "Math.PI",
+                    "e": "Math.E",
+                    "ϕ": "(1 + Math.sqrt(5)) / 2",
+                    "√(2)": "Math.SQRT2",
+                    "√(½)": "Math.Math.SQRT1_2",
+                    "∞": "Infinity",
+                    "NaN": "NaN",
+                 })
+            ],
+            shape: BlockShape.Floating,
+            output: BlockType.Number,
+            inline: true,
+            colour: "#5b67a5",
+            tooltip: "Allows you to use constants.",
+            helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+            code: (args) => {
+                return `${args.CONSTANT}`
+            }
+        },
+        {
+            id: "is",
+            text: "{NUMBER} is {VALUE}",
+            args: [
+                new ValueInput("NUMBER", BlockType.Number),
+                new Dropdown("VALUE", DropdownType.Auto, {
+                    "number": "number",
+                    "even": "even",
+                    "odd": "odd",
+                    "prime": "prime",
+                    "whole": "whole",
+                    "positive": "positive",
+                    "negative": "negative",
+                    "divisible by": "divisible"
+                })],
+            placeholders: [
+                    new Placeholder(PlaceholderType.Block, "NUMBER", "number", {NUMBER: 1}),
+
+        
+            ],
+            shape: BlockShape.Floating,
+            output: BlockType.Boolean,
+            inline: true,
+            colour: "#5b67a5",
+            tooltip: "Checks if a number is even, odd, prime, whole, positive, negative, or div",
+            helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+            code: (args) => {
+                switch (`${args.VALUE}`) {
+                    case "number":
+                        return `typeof ${args.NUMBER} === "number" && ${args.NUMBER} % 1 === 0`
+                    case "even":
+                        return `${args.NUMBER} % 2 === 0`
+                    case "odd":
+                        return `${args.NUMBER} % 2!== 0`
+                    case "prime":
+                        return `isPrime(${args.NUMBER})`  /* function isPrime(number) {if (number < 2) {return false;};for (let i = 2; i <= Math.sqrt(number); i++) {if (number % i === 0) {return false;}}return true;} */
+                    case "whole":
+                        return `${args.NUMBER} % 1 === 0`
+                    case "positive":
+                        return `${args.NUMBER} > 0`
+                    case "negative":
+                        return `${args.NUMBER} < 0`
+                    default:
+                        return `${args.NUMBER} % ${args.VALUE} === 0` // fix when added mutator
+                }
+            }
+        },
+        {
+            id: "array_math",
+            text: "{OPERATION} of list {ARRAY}",
+            args: [
+                new Dropdown("OPERATION", DropdownType.Auto, {
+                    "sum": "sum",
+                    "min": "min",
+                    "max": "max",
+                    "average": "average",
+                    "median": "median",
+                    "mode": "mode",
+                    "range": "range",
+                    "random": "random",
+                    "standard deviation": "standard deviation",
+                    
+                }),
+                new ValueInput("ARRAY", BlockType.Array)
+            ],
+            // placeholders: [
+            //     new Placeholder(PlaceholderType.Block, "ARRAY", "array", {ARRAY: [1, 2, 3]})
+            // ],
+            shape: BlockShape.Floating,
+            output: BlockType.Number,
+            inline: true,
+            colour: "#5b67a5",
+            tooltip: "Allows you to use math with arrays.",
+            helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+            code: (args) => {
+                switch (args.OPERATION) {
+                    case "sum":
+                        return `${args.ARRAY}.reduce((a, b) => a + b)`
+                    case "min":
+                        return `${args.ARRAY}.reduce((a, b) => Math.min(a, b))`
+                    case "max":
+                        return `${args.ARRAY}.reduce((a, b) => Math.max(a, b))`
+                    case "average":
+                        return `${args.ARRAY}.reduce((a, b) => a + b) / ${args.ARRAY}.length`
+                    case "median":
+                        return `${args.ARRAY}.sort((a, b) => a - b).length % 2? ${args.ARRAY}.sort((a, b) => a - b)[Math.floor(${args.ARRAY}.length / 2)] : ((${args.ARRAY}.sort((a, b) => a - b)[Math.floor(${args.ARRAY}.length / 2)] + ${args.ARRAY}.sort((a, b) => a - b - 1)[Math.floor(${args.ARRAY}.length / 2)]) / 2 ))`
+                    case "mode":
+                        return `${args.ARRAY}.sort((a, b) => a - b).length % 2`
+                    case "range":
+                        return `${args.ARRAY}.reduce((a, b) => Math.max(a, b) - Math.min(a, b))`
+                    case "random":
+                        return `Math.floor(Math.random() * ${args.ARRAY}.length)`
+                    case "standard deviation":
+                        return `Math.sqrt(${args.ARRAY}.reduce((a, b) => Math.pow(a - b, 2)) / ${args.ARRAY}.length)`
+                    default:
+                        return `Math.${args.OPERATION}(${args.ARRAY})`
+                }
+            }
+        },
+        {
+            id: "random_int",
+            text: "random integer between {MIN} to {MAX}",
+            args: [
+                new ValueInput("MIN", BlockType.Number),
+                new ValueInput("MAX", BlockType.Number)
+            ],
+            placeholders: [
+                new Placeholder(PlaceholderType.Block, "MIN", "number", {NUMBER: 1}),
+                new Placeholder(PlaceholderType.Block, "MAX", "number", {NUMBER: 10})
+            ],
+            shape: BlockShape.Floating,
+            output: BlockType.Number,
+            inline: true,
+            colour: "#5b67a5",
+            tooltip: "Gets a random integer between two numbers.",
+            helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+            code: (args) => {
+                return `Math.floor(Math.random() * (${args.MAX} - ${args.MIN}) + ${args.MIN})`
+            }
+        },
+        {
+            id: "random_fraction",
+            text: "random fraction",
+            args: [],
+            shape: BlockShape.Floating,
+            output: BlockType.Number,
+            inline: true,
+            colour: "#5b67a5",
+            tooltip: "Gets a random fraction.",
+            helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+            code: () => {
+                return `Math.random()`
+            }
+        },
+        {
+            id: "toNumber",
+            text: "convert text {TEXT} to number",
+            args: [
+                new ValueInput("TEXT", BlockType.String)
+            ],
+            placeholders: [
+                new Placeholder(PlaceholderType.Block, "TEXT", "text", {TEXT: "123"})
+            ],
+            shape: BlockShape.Floating,
+            output: BlockType.Number,
+            inline: true,
+            colour: "#5b67a5",
+            tooltip: "Converts text to a number.",
+            helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+            code: (args) => {
+                return `parseInt(${args.TEXT})`
+            }
+        },
+        {
+            id: "constrain {VALUE} between {MIN} and {MAX}",
+            text: "constrain {VALUE} between {MIN} and {MAX}",
+            args: [
+                new ValueInput("VALUE", BlockType.Number),
+                new ValueInput("MIN", BlockType.Number),
+                new ValueInput("MAX", BlockType.Number)
+                ],
+            placeholders: [
+                new Placeholder(PlaceholderType.Block, "VALUE", "number", {NUMBER: 50}),
+                new Placeholder(PlaceholderType.Block, "MIN", "number", {NUMBER: 1}),
+                new Placeholder(PlaceholderType.Block, "MAX", "number", {NUMBER: 100})
+            ],
+            shape: BlockShape.Floating,
+            output: BlockType.Number,
+            inline: true,
+            colour: "#5b67a5",
+            tooltip: "Constrains a number between two numbers.",
+            helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+            code: (args) => {
+                return `Math.min(Math.max(${args.VALUE}, ${args.MIN}), ${args.MAX})`
+            }
+        },
+        // {
+        //     id: "chance {CHANCE} %",
+        //     text: "{CHANCE} % chance of true",
+        //     args: [
+        //         new ValueInput("CHANCE", BlockType.Number)
+        //     ],
+        //     placeholders: [
+        //         new Placeholder(PlaceholderType.Block, "CHANCE", "number", {NUMBER: 50})
+        //     ],
+        //     shape: BlockShape.Floating,
+        //     output: BlockType.Boolean,
+        //     inline: true,
+        //     colour: "#5b67a5",
+        //     tooltip: "Chances a number between two numbers.",
+        //     helpUrl: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+        //     code: (args) => {
+        //         return `Math.random() * 100 < ${args.CHANCE}`
+        //     }
+
+        // }
+
+]
+>>>>>>> master
 
 const category: CategoryDefinition = {
 	name: "Math",
