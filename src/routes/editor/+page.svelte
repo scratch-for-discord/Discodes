@@ -9,7 +9,6 @@
 	import getLocalDB from "$lib/utils/localDB/manager";
 	import { onMount } from "svelte";
 	import EditorNavbar from "$lib/components/EditorNavbar.svelte";
-	import Warnings from "$lib/components/Warnings.svelte";
 
 	import { showNavbar } from "$lib/stores/navbarStore";
 
@@ -37,7 +36,7 @@
 	};
 
 	onMount(async() => {
-		toolbox = await new Toolbox();
+		toolbox = new Toolbox();
 		toolboxJson = await toolbox.generate();
 
 		discodesWorkspaceID = $page.url.searchParams.get("id") || "1";
@@ -49,21 +48,24 @@
 	});
 
 	function updateNavbarPadding() {
-		toolBoxWidth = (document.querySelector(".blocklyToolboxDiv") as HTMLDivElement).offsetWidth;
+		toolBoxWidth = (document.querySelector(".blocklyToolboxDiv") as HTMLDivElement)?.offsetWidth;
 	}
 </script>
 
-<button
-	class="btn"
-	on:click={() => {
-		saveWorkspace(currentFile);
-	}}>SAVE</button
->
-<button
-	class="btn"
-	on:click={() => {
-		loadWorkspace(currentFile);
-	}}>LOAD</button
->
-<Warnings bind:workspace />
-<Workspace bind:workspace options={OPTIONS} bind:toolbox={toolbox} bind:toolboxJson={toolboxJson} />
+<div class="w-screen h-screen bg-gradient-to-b from-blue-950 to-gray-900"></div>
+<div
+	class="bg-blend-darken bg-blue-400 w-60 h-60 rounded-full blur-[140px] opacity-75 absolute top-10 left-10"
+></div>
+<EditorNavbar
+	{toolBoxWidth}
+	{workspace}
+	on:save={() => saveWorkspace(currentFile)}
+	on:load={() => loadWorkspace(currentFile)}
+/>
+<Workspace
+	bind:workspace
+	options={OPTIONS}
+	bind:toolboxJson={toolboxJson}
+	bind:toolbox={toolbox}
+	on:updateNavbarPadding={updateNavbarPadding}
+/>

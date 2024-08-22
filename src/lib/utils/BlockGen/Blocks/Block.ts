@@ -64,9 +64,7 @@ export default class Block {
 		this._block.setColour(colour);
 	}
 
-	addWarning(warning: Warning): void {
-		if (this._blockDefinition.kind) throw new Error("Cannot add a warning to a input/button");
-
+	public addWarning(warning: Warning): void {
 		if (this._blockDefinition.label) throw new Error("Cannot add a warning to a label");
 		if (warningsObj[this._block.id] && warningsObj[this._block.id][warning.data.fieldName]) return;
 		this._blockDefinition.warnings = this._blockDefinition.warnings

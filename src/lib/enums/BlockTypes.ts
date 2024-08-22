@@ -24,8 +24,7 @@ export enum BlockShape {
 	Event, //Block shape for a floating block with an input inside. Can be replaced with FLOATING, but keeps code consistent.
 	Floating, //Block shape for a block that cannot have any parent blocks.
 	Bottom, //Block shape for a block with no blocks allowed to attach after.
-	Top, //Block shape for a block that cannot have any blocks attached before it.
-	Value // Block shape for a block that is a value and is placed inside inputs 
+	Top //Block shape for a block that cannot have any blocks attached before it.
 }
 
 // This is used for the toolbox generation, it translates to kind:"block" in the blockly shadows.

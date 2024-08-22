@@ -216,9 +216,7 @@ export default class AssemblerMutator extends Mutator {
 					clauseBlock = clauseBlock.getNextBlock() as ClauseBlock | null;
 				}
 			},
-			// TODO: Add better types for input
-			/* eslint-disable-next-line */
-			appendInput_: function(this: Blockly.Block, input: any, name: any, fieldText: any) {
+			appendInput_: function(this: Blockly.Block, input, name, fieldText) {
 				const inputType = input.type || "input_value"; // Default to input_value if type is not specified
 				const inputCheck = input.check; // Check for input type if specified
 

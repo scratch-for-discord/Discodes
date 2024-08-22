@@ -1,7 +1,7 @@
 import { BlockShape, BlockType, DropdownType } from "$lib/enums/BlockTypes";
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
-import DropdownInput from "$lib/utils/BlockGen/Inputs/Dropdown";
+import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
 import StatementInput from "$lib/utils/BlockGen/Inputs/StatementInput";
 import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
@@ -25,7 +25,7 @@ const blocks: BlockDefinition[] = [
 		id: "repeat_while",
 		text: "Repeat {WHILE} {CONDITION}\n {INPUT}",
 		args: [
-			new DropdownInput("WHILE", DropdownType.Auto, {
+			new Dropdown("WHILE", DropdownType.Auto, {
 				while: "while",
 				until: "until"
 			}),
@@ -92,7 +92,7 @@ const blocks: BlockDefinition[] = [
 		id: "break",
 		text: "{ACTION} of loop",
 		args: [
-			new DropdownInput("ACTION", DropdownType.Auto, {
+			new Dropdown("ACTION", DropdownType.Auto, {
 				break: "break",
 				continue: "continue"
 			})

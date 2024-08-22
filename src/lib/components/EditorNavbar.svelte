@@ -3,7 +3,7 @@
 	export let workspace: any; // Im just too lazy for this
 
 	import Warnings from "$lib/components/Warnings.svelte";
-	import { createEventDispatcher } from "svelte";
+	import { createEventDispatcher, onMount } from "svelte";
 
 	import { Button } from "$lib/components/ui/button";
 
@@ -35,7 +35,7 @@
 <style>
 	.navbarDiv {
 		position: absolute;
-		top: 15px; /* Adjust as needed */
+		top: 6rem; /* Adjust as needed */
 		width: 100%;
 		z-index: 20;
 		padding-right: 20px;

@@ -1,7 +1,7 @@
 import { BlockShape, BlockType, DropdownType, WarningType } from "$lib/enums/BlockTypes";
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
-import DropdownInput from "$lib/utils/BlockGen/Inputs/Dropdown";
+import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
 import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
@@ -62,7 +62,7 @@ const blocks: BlockDefinition[] = [
 		text: "{A} {CONDITION} {B}",
 		args: [
 			new ValueInput("A", BlockType.Any),
-			new DropdownInput("CONDITION", DropdownType.Auto, {
+			new Dropdown("CONDITION", DropdownType.Auto, {
 				"=": "===",
 				"≠": "!=",
 				"<": "<",
@@ -98,7 +98,7 @@ const blocks: BlockDefinition[] = [
 		text: "{A} {CONDITION} {B}",
 		args: [
 			new ValueInput("A", BlockType.Boolean),
-			new DropdownInput("CONDITION", DropdownType.Auto, { and: "&&", or: "||" }),
+			new Dropdown("CONDITION", DropdownType.Auto, { and: "&&", or: "||" }),
 			new ValueInput("B", BlockType.Boolean)
 		],
 		warnings: [
@@ -139,7 +139,7 @@ const blocks: BlockDefinition[] = [
 		id: "booleans",
 		text: "{INPUT}",
 		args: [
-			new DropdownInput("INPUT", DropdownType.Auto, {
+			new Dropdown("INPUT", DropdownType.Auto, {
 				true: "true",
 				false: "false",
 				null: "null"
@@ -200,7 +200,7 @@ const blocks: BlockDefinition[] = [
 		text: "type {TYPE}",
 		args: [
 			// new ValueInput("OPERAND", BlockType.Any),
-			new DropdownInput("TYPE", DropdownType.Auto, {
+			new Dropdown("TYPE", DropdownType.Auto, {
 				string: "string",
 				number: "number",
 				boolean: "boolean",

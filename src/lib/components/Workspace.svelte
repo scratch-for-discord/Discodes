@@ -18,8 +18,8 @@
 
 	export let workspace: Blockly.WorkspaceSvg;
 	export let options: typeof OPTIONS;
-	export let toolboxJson: Blockly.utils.toolbox.ToolboxDefinition;
 	export let toolbox: Toolbox;
+	export let toolboxJson: Blockly.utils.toolbox.ToolboxDefinition
 
 	const dispatch = createEventDispatcher();
 
@@ -30,7 +30,7 @@
 	onMount(async () => {
 		await loadBlocks();
 		workspace = Blockly.inject("blocklyDiv", { ...options, toolbox: toolboxJson });
-		toolbox.registerCallbacks(workspace)
+		// toolbox.registerCallbacks(workspace)
 		dispatch("workspaceInject"); // May be useful in the future
 		dispatch("updateNavbarPadding"); // Updates the padding-left property of the navbar (look at /routes/editor/+page.svelte)
 
@@ -66,4 +66,4 @@
 	});
 </script>
 
-<div id="blocklyDiv" class="w-full h-dvh" />
+<div id="blocklyDiv" class="w-full h-[calc(100vh-80px)] top-20 absolute" />
