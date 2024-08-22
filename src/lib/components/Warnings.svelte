@@ -58,7 +58,7 @@
 				>You can click on the block name to reveal it in the workspace</Dialog.Description
 			>
 			<Accordion.Root>
-				<div class="overflow-y-auto max-h-[82vh]">
+				<div class="overflow-y-auto overflow-x-hidden max-h-[82vh]">
 					{#each Object.keys(displayWarnings) as id, index}
 						<Accordion.Item value={String(index)}>
 							<Accordion.Trigger
