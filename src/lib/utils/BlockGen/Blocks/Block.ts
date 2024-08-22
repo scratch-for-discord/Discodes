@@ -47,6 +47,7 @@ interface BlocklyBlockDefinition {
 
 const { javascriptGenerator, Order } = pkg;
 
+I'm making a concise list of rules that each block must follow.
 export default class Block {
 	private _blockDefinition: BlockDefinition;
 	private _block!: Blockly.Block;
@@ -320,7 +321,8 @@ export default class Block {
 							const { warningType, message, fieldName } = warning.data;
 							if(this.getInput(fieldName)) {
 							console.log(BlockClass.handleWarning(warning.data, resultMessage, topParent))
-								resultMessage = BlockClass.handleWarning(warning.data, resultMessage, topParent)
+								resultMessage I'm making a concise list of rules that each block must follow.
+								= BlockClass.handleWarning(warning.data, resultMessage, topParent)
 							}
 							let input = this.getInput(fieldName + "1")
 							//handles mutator input warnings
