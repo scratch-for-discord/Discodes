@@ -14,7 +14,7 @@
 	const dispatch = createEventDispatcher();
 </script>
 
-<div class={`absolute top-4 ${isShowing ? "w-full" : "w-[15%] justify-center flex items-center"} transition-all z-20 pr-5`} style={`padding-left: ${toolBoxWidth + 20}px`}>
+<div class={`absolute top-4 ${isShowing ? "w-full" : "w-56 justify-center flex items-center"} transition-all z-20 pr-5`} style={`padding-left: ${toolBoxWidth + 20}px`}>
 	<div
 		class="w-full bg-background flex p-1 px-2 rounded-md shadow-xl border-gray-200 dark:border-neutral-700 py-2"
 	>
