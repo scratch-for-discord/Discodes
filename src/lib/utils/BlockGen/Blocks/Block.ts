@@ -84,7 +84,42 @@ export default class Block {
 			(warning) => warning.data.fieldName !== fieldName
 		);
 	}
-
+	public handleWarning(data: { message: string; warningType: WarningType; fieldName: string }, resultMessage: string, topParent: Blockly.Block): string {
+		const {message, warningType, fieldName} = data
+		
+		switch (warningType) {
+			case WarningType.Parent:  
+				if (topParent.type != fieldName) {
+					resultMessage += `${message}\n`;
+					addWarning(this._block.id, fieldName, message);
+					break;
+				}
+				removeWarning(this._block.id, fieldName);
+				break;
+	
+			case WarningType.Input:
+				if (this._block.getInput(fieldName)?.connection?.targetConnection === null) {
+					resultMessage += `${message}\n`;
+					addWarning(this._block.id, fieldName, message);
+					break;
+				}
+				
+				removeWarning(this._block.id, fieldName);
+				break;
+	
+			case WarningType.Deprec:
+				resultMessage += `${message}\n`;
+				addWarning(this._block.id, fieldName, message);
+				break;
+	
+			case WarningType.Permanent:
+				resultMessage += `${message}\n`;
+				addWarning(this._block.id, fieldName, message);
+				break;
+		}
+		return resultMessage
+	}
+	
 	public addText(text: string, fieldName: string): void {
 		this._block.appendDummyInput(fieldName).appendField(text);
 	}
@@ -216,6 +251,7 @@ export default class Block {
 			throw Error(`Block "${blockDef.type}" is defined twice.`);
 		}
 		//const blockDefinition = this._blockDefinition;
+		const BlockClass = this;
 		// Add The block to the blocks list
 		Blockly.Blocks[blockDef.type] = {
 			init: function(this: Blockly.Block) {
@@ -275,41 +311,41 @@ export default class Block {
 						const topParent = this.getRootBlock();
 						let resultMessage: string = "";
 
+						/*
+						make check warning function
+						check if input + "1" exists if exists go to mutator detecting
+						where it goes in a loop unitl input + "n" doesn't exist	
+						*/
 						for (const warning of warnings) {
 							const { warningType, message, fieldName } = warning.data;
-							switch (warningType) {
-								case WarningType.Parent:
-									if (topParent.type != fieldName) {
-										resultMessage += `${message}\n`;
-										addWarning(this.id, fieldName, message);
-										break;
-									}
-									removeWarning(this.id, fieldName);
-									break;
-
-								case WarningType.Input:
-									if (this.getInput(fieldName)?.connection?.targetConnection === null) {
-										resultMessage += `${message}\n`;
-										addWarning(this.id, fieldName, message);
-										break;
-									}
-									removeWarning(this.id, fieldName);
-									break;
-
-								case WarningType.Deprec:
-									resultMessage += `${message}\n`;
-									addWarning(this.id, fieldName, message);
-									break;
-
-								case WarningType.Permanent:
-									resultMessage += `${message}\n`;
-									addWarning(this.id, fieldName, message);
-									break;
+							if(this.getInput(fieldName)) {
+							console.log(BlockClass.handleWarning(warning.data, resultMessage, topParent))
+								resultMessage = BlockClass.handleWarning(warning.data, resultMessage, topParent)
 							}
+							let input = this.getInput(fieldName + "1")
+							//handles mutator input warnings
+							if(input) {
+							const warningObject = {
+								message: message,
+								fieldName: fieldName,
+								warningType: warningType
+							}
+								let i = 1;
+								while(input) {
+									warningObject.fieldName = warning.data.fieldName+ i
+									resultMessage = BlockClass.handleWarning(warningObject, resultMessage, topParent)
+									i++
+									input = this.getInput(`${fieldName}${i}`)
+								}
+							}
+
+							
+				
 						}
 						if (warningsObj[this.id] && Object.keys(warningsObj[this.id]).length === 0) {
 							delete warningsObj[this.id];
 						}
+						console.log(resultMessage)
 						this.setWarningText(resultMessage);
 					}
 				});
@@ -358,7 +394,12 @@ export default class Block {
 						i++;
 						input = block.getInput(add.name + i);
 					}
-					args[add.name] = valueList;
+					/*
+					_list is added that so basic inputs and mutator inputs can have the same names and it creates better block warnings
+					*/
+						args[add.name + "_list"] = valueList;
+
+
 				}
 			}
 			return output ? [code(args, blockClass), Order.NONE] : code(args, blockClass);

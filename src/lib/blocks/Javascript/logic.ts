@@ -9,15 +9,19 @@ import Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
 import StatementInput from "$lib/utils/BlockGen/Inputs/StatementInput";
 import AssemblerMutatorV2 from "$lib/utils/BlockGen/Mutators/AssemblerMutator";
-
+/*
+Logic category is finished.
+*/
 const blocks: BlockDefinition[] = [
 	{
 		id: "if_block",
-		text: "if {operand} {if}",
-		args: [new ValueInput("operand", BlockType.Boolean), new StatementInput("if")],
+		text: "if {if_input} {if}",
+		args: [new ValueInput("if_input", BlockType.Boolean), new StatementInput("if")],
 		warnings: [
+
 			new Warning(WarningType.Input, {
-				fieldName: "operand"
+
+				fieldName: "if_input"
 			})
 		],
 		shape: BlockShape.Action,
@@ -27,14 +31,16 @@ const blocks: BlockDefinition[] = [
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT",
 		code: (args) => {
-			let code = `if(${args.operand === "" ? "false" : args.operand}) {${args.if}}`;
-			const ifInputs = args.if_input as string[];
-			const ifStatementInputs = args.if_statement as string[];
-
+			console.log(args)
+			let code = `if(${args.if_input === "" ? "false" : args.if_input}) {\n${args.if}\n}`;
+			const ifInputs = args.if_input_list as string[];
+			const ifStatementInputs = args.if_statement_list as string[];
+			const else_input = args.else_input_list as string[]
 			for (let i = 0; i < ifInputs.length; i++) {
 				const ifInp = ifInputs[i];
-				code += ` else if(${ifInp === "" ? "false" : ifInp}) {${ifStatementInputs[i]}}`;
+				code += ` else if(${ifInp === "" ? "false" : ifInp}) {\n${ifStatementInputs[i]}\n}`;
 			}
+			if(else_input.length !== 0) code += ` else {\n${else_input}\n}`
 			return code;
 		},
 		mutator: new AssemblerMutatorV2(
@@ -65,14 +71,12 @@ const blocks: BlockDefinition[] = [
 		args: [
 			new ValueInput("A", BlockType.Any),
 			new Dropdown("CONDITION", DropdownType.Auto, {
-				"=": "===",
+				"=": "===",//Based on research better to use "===", but it can always be changed
 				"≠": "!=",
 				"<": "<",
 				"≤": "<=",
 				">": ">",
 				"≥": ">="
-				//always need to use === instead of == in js, removed this
-				//because user is always going to select the first one and question the last one.
 				//"==": "==="
 			}),
 			new ValueInput("B", BlockType.Any)
@@ -151,18 +155,31 @@ const blocks: BlockDefinition[] = [
 			new Dropdown("INPUT", DropdownType.Auto, {
 				true: "true",
 				false: "false",
-				null: "null"
 				//undefined: "undefined"
 			})
 		],
 		shape: BlockShape.Floating,
-		output: BlockType.Any,
+		output: BlockType.Boolean,
 		inline: true,
 		colour: rgbToHex(91, 128, 165),
 		tooltip: "Boolean values used to verify conditions.",
 		helpUrl: "",
 		code: (args) => {
 			return `${args.INPUT !== "" ? args.INPUT : "null"}`;
+		}
+	},
+	{
+		id: "null",
+		text: "null",
+
+		shape: BlockShape.Floating,
+		output: BlockType.Any,
+		inline: true,
+		colour: rgbToHex(91, 128, 165),
+		tooltip: "Null values used to check null conditions.",
+		helpUrl: "",
+		code: (args) => {
+			return `null`;
 		}
 	},
 	{

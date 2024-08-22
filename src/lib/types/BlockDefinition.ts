@@ -5,7 +5,7 @@ import type { Mutator } from "$lib/utils/BlockGen/Mutators/Mutator";
 import type Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import type Placeholder from "$lib/utils/ToolboxGen/Placeholder";
 
-export type Argument = BaseInput;
+export type Argument = BaseInput<any>;
 
 export type BlockDefinition =
 	| {
