@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Home from "$lib/components/Interface/SideBar/Home.svelte";
+	import Workspaces from "$lib/components/Interface/SideBar/Workspaces.svelte";
 	import getLocalDB from "../../lib/utils/localDB/manager"
     import "./interface.css"
 
@@ -31,9 +32,12 @@
                 </button>
             </div>
         </div>
+        <!-- Changing layout without reloading the page -->
         <div class="ml-6 h-[80%] mt-8 w-[70%]">
             {#if currentPage === "home"}
                 <Home />
+            {:else if currentPage === "workspace"}
+                <Workspaces />
             {/if}
         </div>
     </div>

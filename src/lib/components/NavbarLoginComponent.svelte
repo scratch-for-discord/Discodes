@@ -21,7 +21,7 @@
 {:else}
 <div class="ml-auto md:mr-24 mr-12 flex justify-center items-center">
     <img
-        src={`https://cdn.discordapp.com/avatars/691111067807514685/${user.avatar}.png`}
+        src={`https://cdn.discordapp.com/avatars/${localStorage.getItem("userID")}/${user.avatar}.png`}
         class="lg:h-14 md:h-12 lg:block md:block hidden rounded-full mr-5"
         alt=""
     />
