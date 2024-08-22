@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { cn } from "$lib/utils";
+	import ChevronLeft from "lucide-svelte/icons/chevron-left";
+
 	export let toolBoxWidth;
 	export let workspace: any; // Im just too lazy for this
 
@@ -9,14 +12,21 @@
 	// import { showNavbar } from "$lib/stores/navbarStore";
 	// import Page from "../../routes/editor/+page.svelte";
 
-	let isShowing = true
+	let isShowing = true;
 
 	const dispatch = createEventDispatcher();
 </script>
 
-<div class={`absolute top-4 ${isShowing ? "w-full" : "w-56 justify-center flex items-center"} transition-all z-20 pr-5`} style={`padding-left: ${toolBoxWidth + 20}px`}>
+<div
+	class="absolute top-4 w-full z-20 pr-5 flex justify-end overflow-hidden"
+	style={`padding-left: ${toolBoxWidth + 20}px`}
+>
 	<div
-		class="w-full bg-background flex p-1 px-2 rounded-md shadow-xl border-gray-200 dark:border-neutral-700 py-2"
+		class={cn(
+			!isShowing && `w-[56px]`,
+			isShowing && "w-full",
+			"bg-background flex p-1 px-2 rounded-md shadow-xl border-gray-200 dark:border-neutral-700 py-2 transition-all"
+		)}
 	>
 		{#if isShowing}
 			<Button
@@ -35,19 +45,17 @@
 			>
 				LOAD
 			</Button>
-			<Button variant="link" class="h-8 mx-1" href='/'>
-				Home
-			</Button>
+			<Button variant="link" class="h-8 mx-1" href="/">Home</Button>
 			<Warnings bind:workspace />
 		{/if}
 		<Button
 			variant="default"
-			class="h-8 ml-auto flex items-center"
+			class="h-8 ml-auto flex items-center w-[40.02px] p-0"
 			on:click={() => {
-				isShowing = !isShowing
+				isShowing = !isShowing;
 			}}
 		>
-			{isShowing ? "<" : ">"}
+			<ChevronLeft class={cn(isShowing && "rotate-180", !isShowing && "", "transition-all")} />
 		</Button>
 	</div>
 </div>
