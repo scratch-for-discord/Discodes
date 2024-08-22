@@ -15,14 +15,6 @@ export interface DropdownIDef {
  * @class Dropdown
  * @extends {BaseInput}
  */
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-export default class DropdownInput extends BaseInput {
->>>>>>> master
-=======
-export default class Dropdown extends BaseInput {
->>>>>>> parent of 7dd02ae (Variable category, dynamic categories, buttons (#29))
 
 export default class Dropdown extends BaseInput<DropdownIDef> {
 	private readonly _options: Array<Array<string>>;
@@ -60,7 +52,6 @@ export default class Dropdown extends BaseInput<DropdownIDef> {
 			// Automatically swaps between grid and list type depending on the length of the arguments.
 			this._dropdownType = this._options.length > 10 ? DropdownType.Grid : DropdownType.List;
 		}
-		console.log(this._options)
 		return {
 			type: this._dropdownType,
 			name: super.name,

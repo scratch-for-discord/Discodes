@@ -18,7 +18,7 @@
 
 	let workspace: Blockly.WorkspaceSvg;
 	let toolboxJson: Blockly.utils.toolbox.ToolboxDefinition;
-
+	let toolbox: Toolbox;
 	let currentFile: string;
 	let discodesWorkspaceID: string;
 
@@ -36,7 +36,8 @@
 	};
 
 	onMount(async() => {
-		toolboxJson = await new Toolbox().generate();
+		toolbox = new Toolbox();
+		toolboxJson = await toolbox.generate();
 
 		discodesWorkspaceID = $page.url.searchParams.get("id") || "1";
 		const discodesWorksapce = localDB.getWorkspaceByID(discodesWorkspaceID);
@@ -47,11 +48,14 @@
 	});
 
 	function updateNavbarPadding() {
-		toolBoxWidth = (document.querySelector(".blocklyToolboxDiv") as HTMLDivElement).offsetWidth;
+		toolBoxWidth = (document.querySelector(".blocklyToolboxDiv") as HTMLDivElement)?.offsetWidth;
 	}
 </script>
 
-<<<<<<< HEAD
+<div class="w-screen h-screen bg-gradient-to-b from-blue-950 to-gray-900"></div>
+<div
+	class="bg-blend-darken bg-blue-400 w-60 h-60 rounded-full blur-[140px] opacity-75 absolute top-10 left-10"
+></div>
 <EditorNavbar
 	{toolBoxWidth}
 	{workspace}
@@ -61,26 +65,7 @@
 <Workspace
 	bind:workspace
 	options={OPTIONS}
-	bind:toolbox={toolboxJson}
+	bind:toolboxJson={toolboxJson}
+	bind:toolbox={toolbox}
 	on:updateNavbarPadding={updateNavbarPadding}
 />
-=======
-<button
-	class="btn"
-	on:click={() => {
-		saveWorkspace(currentFile);
-	}}>SAVE</button
->
-<button
-	class="btn"
-	on:click={() => {
-		loadWorkspace(currentFile);
-	}}>LOAD</button
->
-<Warnings bind:workspace />
-<<<<<<< HEAD
-<Workspace bind:workspace options={OPTIONS} bind:toolbox={toolbox} bind:toolboxJson={toolboxJson} />
->>>>>>> master
-=======
-<Workspace bind:workspace options={OPTIONS} bind:toolbox={toolboxJson} />
->>>>>>> parent of 7dd02ae (Variable category, dynamic categories, buttons (#29))

@@ -3,11 +3,8 @@ import type { AdditionalSettings } from "./Mutator";
 
 import type { CheckBoxMutatorBlock } from "$lib/types/BlockDefinition";
 import salt from "$lib/utils/helpers/salt";
-<<<<<<< HEAD
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Blockly, { Connection } from "blockly/core";
-=======
->>>>>>> master
 import pkg from "blockly/javascript";
 import { MutatorType } from "$lib/enums/BlockTypes";
 const { javascriptGenerator } = pkg;
