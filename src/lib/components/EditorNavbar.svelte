@@ -15,6 +15,10 @@
 	let isShowing = true;
 
 	const dispatch = createEventDispatcher();
+
+	function wait(n: number) {
+		return new Promise((res) => setTimeout(res, n));
+	}
 </script>
 
 <div
@@ -29,24 +33,26 @@
 		)}
 	>
 		{#if isShowing}
-			<Button
-				variant="outline"
-				class="h-8 mx-1"
-				on:click={() => {
-					dispatch("save");
-				}}>SAVE</Button
-			>
-			<Button
-				variant="outline"
-				class="h-8 mx-1"
-				on:click={() => {
-					dispatch("load");
-				}}
-			>
-				LOAD
-			</Button>
-			<Button variant="link" class="h-8 mx-1" href="/">Home</Button>
-			<Warnings bind:workspace />
+			{#await wait(50) then _}
+				<Button
+					variant="outline"
+					class="h-8 mx-1"
+					on:click={() => {
+						dispatch("save");
+					}}>SAVE</Button
+				>
+				<Button
+					variant="outline"
+					class="h-8 mx-1"
+					on:click={() => {
+						dispatch("load");
+					}}
+				>
+					LOAD
+				</Button>
+				<Button variant="link" class="h-8 mx-1" href="/">Home</Button>
+				<Warnings bind:workspace />
+			{/await}
 		{/if}
 		<Button
 			variant="default"
