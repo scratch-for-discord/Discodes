@@ -64,9 +64,13 @@ export default class Block {
 		this._block.setColour(colour);
 	}
 
+<<<<<<< HEAD
+	public addWarning(warning: Warning): void {
+=======
 	addWarning(warning: Warning): void {
 		if (this._blockDefinition.kind) throw new Error("Cannot add a warning to a input/button");
 
+>>>>>>> master
 		if (this._blockDefinition.label) throw new Error("Cannot add a warning to a label");
 		if (warningsObj[this._block.id] && warningsObj[this._block.id][warning.data.fieldName]) return;
 		this._blockDefinition.warnings = this._blockDefinition.warnings
@@ -74,6 +78,7 @@ export default class Block {
 			: [warning];
 	}
 
+<<<<<<< HEAD
 	public removeWarning(fieldName: string): void {
 		if (this._blockDefinition.label) throw new Error("Cannot remove a warning form a label");
 		if (
@@ -177,6 +182,19 @@ export default class Block {
 	generate(): void {
 		if (this._blockDefinition.label) return;
 
+=======
+	removeWarning(fieldName: string): void {
+		if (this._blockDefinition.kind) throw new Error("Cannot remove a warning from a input/button");
+
+		if (this._blockDefinition.label) throw new Error("Cannot remove a warning from a label");
+		if ((!warningsObj[this._block.id] || !warningsObj[this._block.id][fieldName]) && this._blockDefinition.warnings !== undefined) return;
+		this._blockDefinition.warnings = this._blockDefinition.warnings?.filter(warning => warning.data.fieldName !== fieldName);
+	}
+
+	generate(): void {
+		if (this._blockDefinition.label || this._blockDefinition.kind) return;
+		
+>>>>>>> master
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const blockClass = this; // Used because `this` is overwritten in the blockly functions.
 

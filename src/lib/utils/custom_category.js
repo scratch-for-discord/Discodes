@@ -1,5 +1,5 @@
 //@ts-nocheck Idk why it's checking on a js file
-import Blockly from "blockly";
+import * as Blockly from "blockly";
 
 const dom = {
 	addClass(element, className) {

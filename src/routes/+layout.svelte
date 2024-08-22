@@ -4,7 +4,7 @@
 	import { showNavbar } from "$lib/stores/navbarStore";
 </script>
 
-{#if false}
+{#if showNavbar}
 	<Navbar />
 {/if}
 <slot />

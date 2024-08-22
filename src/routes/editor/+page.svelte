@@ -9,7 +9,6 @@
 	import getLocalDB from "$lib/utils/localDB/manager";
 	import { onMount } from "svelte";
 	import EditorNavbar from "$lib/components/EditorNavbar.svelte";
-	import Warnings from "$lib/components/Warnings.svelte";
 
 	import { showNavbar } from "$lib/stores/navbarStore";
 
@@ -53,6 +52,20 @@
 	}
 </script>
 
+<<<<<<< HEAD
+<EditorNavbar
+	{toolBoxWidth}
+	{workspace}
+	on:save={() => saveWorkspace(currentFile)}
+	on:load={() => loadWorkspace(currentFile)}
+/>
+<Workspace
+	bind:workspace
+	options={OPTIONS}
+	bind:toolbox={toolboxJson}
+	on:updateNavbarPadding={updateNavbarPadding}
+/>
+=======
 <button
 	class="btn"
 	on:click={() => {
@@ -67,3 +80,4 @@
 >
 <Warnings bind:workspace />
 <Workspace bind:workspace options={OPTIONS} bind:toolbox={toolbox} bind:toolboxJson={toolboxJson} />
+>>>>>>> master
