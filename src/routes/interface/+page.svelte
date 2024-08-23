@@ -4,8 +4,11 @@
 	import Workspaces from "$lib/components/Interface/SideBar/SidebarComponents/Workspaces.svelte";
 	import getLocalDB from "../../lib/utils/localDB/manager"
     import "./interface.css"
+    import { Button } from "$lib/components/ui/button";
+    import ChevronLeft from "lucide-svelte/icons/chevron-left";
 
     let currentPage: "home"|"workspace" = "home"
+    let isShowing = false
 
     const db = getLocalDB()
 
@@ -15,8 +18,17 @@
 </script>
 
 <main class="w-screen h-screen bg-slate-800">
-    <Sidebar bind:currentPage />
-    <div class="w-[calc(100vw-208px)] h-[calc(100vh-64px)] absolute top-16 right-0">
+    <Sidebar bind:currentPage bind:isShowing />
+    <Button
+        variant="default"
+        class={`absolute ${isShowing ? "left-56" : "left-3 rotate-180"} transition-all z-20 top-20 lg:hidden md:hidden`}
+        on:click={() => {
+            isShowing = !isShowing
+        }}
+    >
+        <ChevronLeft />
+    </Button>
+    <div class={`w-[calc(100vw-208px)] h-[calc(100vh-64px)] absolute lg:pl-0 md:pl-0 pl-28 top-16 lg:right-0 md:right-0 ${isShowing ? "blur-sm brightness-50 transition-all" : ""}`}>
         {#if currentPage === "home"}
             <Home />
         {:else if currentPage === "workspace"}
