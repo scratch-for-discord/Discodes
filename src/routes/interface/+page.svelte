@@ -1,10 +1,11 @@
 <script lang="ts">
-	import Home from "$lib/components/Interface/SideBar/Home.svelte";
-	import Workspaces from "$lib/components/Interface/SideBar/Workspaces.svelte";
+	import Home from "$lib/components/Interface/SideBar/SidebarComponents/Home.svelte";
+	import Sidebar from "$lib/components/Interface/SideBar/Sidebar.svelte";
+	import Workspaces from "$lib/components/Interface/SideBar/SidebarComponents/Workspaces.svelte";
 	import getLocalDB from "../../lib/utils/localDB/manager"
     import "./interface.css"
 
-    let currentPage: "home"|"workspace"|string = "home"
+    let currentPage: "home"|"workspace" = "home"
 
     const db = getLocalDB()
 
@@ -13,32 +14,13 @@
     }
 </script>
 
-<main class="w-screen h-screen bg-blue-950">
-    <div class="w-72 h-72 bg-purple-400 opacity-20 top-6 left-6 border-white border-2 rounded-full absolute shadow-2xl transition-all"></div>
-    <div class="flex pt-20 w-full h-full justify-center absolute">
-        <div class="glassmorphism mt-8 w-60 h-[80%]">
-            <div class="w-full mt-5 px-8">
-                <button class="sidebar-tab group hover:bg-gray-400" on:click={() => {
-                    if(currentPage === "home") return
-                    currentPage = "home"
-                }}>
-                    <p class="sidebar-text group-hover:text-black">Home</p>
-                </button>
-                <button class="sidebar-tab group hover:bg-gray-400" on:click={() => {
-                    if(currentPage === "workspace") return
-                    currentPage = "workspace"
-                }}>
-                    <p class="sidebar-text group-hover:text-black">Workspaces</p>
-                </button>
-            </div>
-        </div>
-        <!-- Changing layout without reloading the page -->
-        <div class="ml-6 h-[80%] mt-8 w-[70%]">
-            {#if currentPage === "home"}
-                <Home />
-            {:else if currentPage === "workspace"}
-                <Workspaces />
-            {/if}
-        </div>
+<main class="w-screen h-screen bg-slate-800">
+    <Sidebar bind:currentPage />
+    <div class="w-[calc(100vw-208px)] h-[calc(100vh-64px)] absolute top-16 right-0">
+        {#if currentPage === "home"}
+            <Home />
+        {:else if currentPage === "workspace"}
+            <Workspaces />
+        {/if}
     </div>
 </main>

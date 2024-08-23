@@ -22,9 +22,9 @@
 <div class="ml-auto md:mr-24 mr-12 flex justify-center items-center">
     <img
         src={`https://cdn.discordapp.com/avatars/${localStorage.getItem("userID")}/${user.avatar}.png`}
-        class="lg:h-14 md:h-12 lg:block md:block hidden rounded-full mr-5"
+        class="lg:h-12 md:h-10 lg:block md:block hidden rounded-full mr-5"
         alt=""
     />
-    <p class="text-2xl font-bold text-white">{user.global_name}</p>
+    <p class="text-xl font-bold text-white">{user.global_name}</p>
 </div>
 {/if}
