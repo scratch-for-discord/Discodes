@@ -28,7 +28,7 @@
     >
         <ChevronLeft />
     </Button>
-    <div class={`w-[calc(100vw-208px)] h-[calc(100vh-64px)] absolute lg:pl-0 md:pl-0 pl-28 top-16 lg:right-0 md:right-0 ${isShowing ? "blur-sm brightness-50 transition-all" : ""}`}>
+    <div class={`lg:w-[calc(100vw-208px)] md:w-[calc(100vw-208px)] h-[calc(100vh-64px)] w-screen absolute lg:pl-0 md:pl-0 pl-12 top-16 lg:right-0 md:right-0 overflow-x-hidden ${isShowing ? "blur-sm brightness-50 transition-all" : ""}`}>
         {#if currentPage === "home"}
             <Home />
         {:else if currentPage === "workspace"}
