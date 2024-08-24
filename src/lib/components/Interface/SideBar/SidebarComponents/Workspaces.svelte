@@ -5,7 +5,12 @@
 
     const db = getDB()
 
-    const workspaces = db.workspaces
+    let workspaces = db.workspaces
+
+    window.addEventListener("storage", (event) => {
+        console.log(event.newValue)
+        if(event.key === "workspaces") workspaces = JSON.parse(event.newValue ?? '{"workspaces": []}').workspaces
+    })
 </script>
 
 <div class="w-full h-full pl-10 pt-10 lg:pr-10 md:pr-10 pr-0 lg:overflow-auto md:overflow-auto overflow-x-hidden">
