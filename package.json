@@ -48,6 +48,7 @@
 		"clsx": "^2.1.1",
 		"dexie": "^4.0.1",
 		"lucide-svelte": "^0.428.0",
+		"mode-watcher": "^0.4.1",
 		"svelte-compare-image": "^3.0.0",
 		"svelte-icons": "^2.1.0",
 		"tailwind-merge": "^2.5.2",
