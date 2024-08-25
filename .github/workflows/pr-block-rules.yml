@@ -1,0 +1,20 @@
+name: PR Block Rules
+
+on:
+  pull_request:
+    types: [opened, edited]
+
+jobs:
+  comment-on-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Display block rules
+      run: |
+        RULES=$(cat ./block_creation_rules.md)
+        gh pr comment ${{ github.event.pull_request.number }} --body "$RULES"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

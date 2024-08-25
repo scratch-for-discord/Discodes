@@ -39,6 +39,7 @@
 			if (workspace.isDragging()) return; // Don't update while changes are happening.
 			if (!supportedEvents.has(event.type)) return;
 
+			// Needed to remove the deleted block imports from the imports list.
 			if (event.type === Blockly.Events.BLOCK_DELETE) wipeImports();
 
 			if (LOG_CODE) {

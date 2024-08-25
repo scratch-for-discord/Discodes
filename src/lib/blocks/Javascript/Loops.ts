@@ -15,10 +15,10 @@ const blocks: BlockDefinition[] = [
 		shape: BlockShape.Action,
 		inline: true,
 		colour: rgbToHex(91, 165, 91),
-		tooltip: "Repeat x times",
+		tooltip: "Repeats the code inside the given ammount of times.",
 		helpUrl: "",
 		code: (args) => {
-			return `for (let i = 0; i < ${args.VALUE === ""? "0" : args.VALUE}; i++) {\n${args.INPUT === ""? "" : args.INPUT}\n}`;
+			return `for (let i = 0; i < ${args.VALUE === "" ? "0" : args.VALUE}; i++) {\n${args.INPUT === "" ? "" : args.INPUT}\n}`;
 		}
 	},
 	{
@@ -35,10 +35,10 @@ const blocks: BlockDefinition[] = [
 		shape: BlockShape.Action,
 		inline: true,
 		colour: rgbToHex(91, 165, 91),
-		tooltip: "Repeat while",
+		tooltip: "Repeats the code inside until/while the condition is met.",
 		helpUrl: "",
 		code: (args) => {
-			return `while (${args.WHILE === "while" ? "" : "!"}( ${args.CONDITION === ""? "false" : args.CONDITION} )) {\n${args.INPUT === ""? "" : args.INPUT}\n}`;
+			return `while (${args.WHILE === "while" ? "" : "!"}( ${args.CONDITION === "" ? "false" : args.CONDITION} )) {\n${args.INPUT === "" ? "" : args.INPUT}\n}`;
 		}
 	},
 	{
@@ -60,10 +60,10 @@ const blocks: BlockDefinition[] = [
 		tooltip: "For loop",
 		helpUrl: "",
 		code: (args) => {
-			if(args.VARIABLE === "") return "";
-			let variable = `let ${args.VARIABLE} =${args.START ===""? "0" : args.START}`;
-			let condition = `${args.VARIABLE} < ${args.END === ""? "0" : args.END}`;
-			let step = `${args.VARIABLE} += ${args.STEP ===""? "0" : args.STEP}}`;
+			if (args.VARIABLE === "") return "";
+			const variable = `let ${args.VARIABLE} =${args.START === "" ? "0" : args.START}`;
+			const condition = `${args.VARIABLE} < ${args.END === "" ? "0" : args.END}`;
+			const step = `${args.VARIABLE} += ${args.STEP === "" ? "0" : args.STEP}}`;
 			if (args.VARIABLE === "") {
 				const varName = salt(10);
 				return `for(let vk${varName} = 0; false; vk${varName}+= 0) {}`;
@@ -82,7 +82,7 @@ const blocks: BlockDefinition[] = [
 		shape: BlockShape.Action,
 		inline: true,
 		colour: rgbToHex(91, 165, 91),
-		tooltip: "Array iteration",
+		tooltip: "Loops throught every item of the given array.",
 		helpUrl: "",
 		code: (args) => {
 			return `for (let ${args.ITEM} of ${args.ARRAY}) {\n${args.INPUT}\n}`;
@@ -100,7 +100,7 @@ const blocks: BlockDefinition[] = [
 		shape: BlockShape.Action,
 		inline: true,
 		colour: rgbToHex(91, 165, 91),
-		tooltip: "Break",
+		tooltip: "Breaks out of a loop.",
 		helpUrl: "",
 		code: (args) => {
 			return `${args.ACTION};`;

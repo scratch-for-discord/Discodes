@@ -11,4 +11,6 @@ export function addWarning(block: string, field: string, message: string): void 
 export function removeWarning(block: string, field: string): void {
 	if (!warnings[block] || !warnings[block][field]) return;
 	delete warnings[block][field];
+	if(Object.keys(warnings[block]).length === 0) return;
+	delete warnings[block]
 }

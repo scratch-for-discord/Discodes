@@ -1,12 +1,12 @@
 import type { BlockShape, BlockType } from "$lib/enums/BlockTypes";
 import type Block from "$lib/utils/BlockGen/Blocks/Block";
 import type BaseInput from "$lib/utils/BlockGen/Inputs/BaseInput";
-import type {Mutator} from "$lib/utils/BlockGen/Mutators/Mutator";
+import type { Mutator } from "$lib/utils/BlockGen/Mutators/Mutator";
 import type Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import type Placeholder from "$lib/utils/ToolboxGen/Placeholder";
 import {FlyoutButton} from "blockly";
 
-export type Argument = BaseInput;
+export type Argument = BaseInput<any>;
 
 export type BlockDefinition =
 	| {
@@ -39,7 +39,7 @@ export type BlockDefinition =
 		callback: (p1: FlyoutButton) => void;
 	};
 
-export interface MutatorBlock  {
+export interface MutatorBlock {
 	// What inputs it adds to the block
 	adds: Argument[];
 }
@@ -51,8 +51,8 @@ export interface CheckBoxMutatorBlock extends MutatorBlock {
 	 */
 	defaultValue?: boolean;
 	/**
-	* Text that appears in containerBlock in mutator menu
-	*/
+	 * Text that appears in containerBlock in mutator menu
+	 */
 	text: string;
 	/**
 	 * name for input in container block
@@ -61,7 +61,7 @@ export interface CheckBoxMutatorBlock extends MutatorBlock {
 }
 export interface AssemblerMutator extends MutatorBlock {
 	// Name of the block that appears in the block list in the UI
-	block: string
+	block: string;
 	// Can it only be added once in the UI
 	once: boolean;
 }
