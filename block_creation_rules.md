@@ -30,3 +30,4 @@ Before merging, please ensure that each modified or newly created block meets th
 ##### 9. Consider user feedback.
 
 These rules will make app development easier, help eliminate pesky bugs, and simplify refactoring.
+
