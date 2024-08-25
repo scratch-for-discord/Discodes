@@ -31,7 +31,6 @@ const blocks: BlockDefinition[] = [
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT",
 		code: (args) => {
-			console.log(args)
 			let code = `if(${args.if_input === "" ? "false" : args.if_input}) {\n${args.if}\n}`;
 			const ifInputs = args.if_input_list as string[];
 			const ifStatementInputs = args.if_statement_list as string[];
@@ -96,14 +95,8 @@ const blocks: BlockDefinition[] = [
 		//  return `${args.A} ${args.CONDITION} ${args.B}`;
 
 		code: (args, block) => {
-			block.colour = rgbToHex(255, 128, 165);
-			block.outputType = BlockType.Any;
-			block.addInput(new Dropdown("bob", DropdownType.Auto, { bob: "hello", alex: "nikola" }));
-			block.addInput(new ValueInput("chicken", BlockType.Any));
-			block.addInput(new NumberInput("numberrr", 50, { max: 100, min: 50, precision: 10 }));
-			block.addInput(new TextInput("textttt", "I am a text input!"));
-			console.log("Args (code prop parameter): ", args);
-			return `${args.textttt}`;
+
+			return (args.A == '' || args.B == '')? `false ${args.CONDITION} false` : `${args.A} ${args.CONDITION} ${args.B}`;
 		}
 	},
 	{
@@ -111,7 +104,7 @@ const blocks: BlockDefinition[] = [
 		text: "{A} {CONDITION} {B}",
 		args: [
 			new ValueInput("A", BlockType.Boolean),
-			new DropdownInput("CONDITION", DropdownType.Auto, { and: "&&", or: "||" }),
+			new Dropdown("CONDITION", DropdownType.Auto, { and: "&&", or: "||" }),
 			new ValueInput("B", BlockType.Boolean)
 		],
 		warnings: [
@@ -152,7 +145,7 @@ const blocks: BlockDefinition[] = [
 		id: "booleans",
 		text: "{INPUT}",
 		args: [
-			new DropdownInput("INPUT", DropdownType.Auto, {
+			new Dropdown("INPUT", DropdownType.Auto, {
 				true: "true",
 				false: "false",
 				//undefined: "undefined"
@@ -226,7 +219,7 @@ const blocks: BlockDefinition[] = [
 		text: "type {TYPE}",
 		args: [
 			// new ValueInput("OPERAND", BlockType.Any),
-			new DropdownInput("TYPE", DropdownType.Auto, {
+			new Dropdown("TYPE", DropdownType.Auto, {
 				string: "string",
 				number: "number",
 				boolean: "boolean",

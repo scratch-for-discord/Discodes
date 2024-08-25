@@ -9,36 +9,39 @@ import {FlyoutButton} from "blockly";
 export type Argument = BaseInput<any>;
 
 export type BlockDefinition =
-	| {
-			id: string; // This is the "type" of the block
-			label?: false; // To see if the definition is a label or not
-			text: string; // This is "message0"
-			output?: BlockType;
-			shape: BlockShape; // The block shape
-			args?: Argument[]; // This is "args0"
-			warnings?: Warning[];
-			placeholders?: Placeholder<unknown>[];
-			inline: boolean; // This is "inputsInline"
-			colour: string;
-			tooltip: string;
-			helpUrl: string;
-			code: (args: Record<string, string | string[]>, block: Block) => string;
+	| BlockBlockDefinition
+	| LabelBlockDefinition 
+	| ButtonBlockDefinition;
+export interface BlockBlockDefinition {
+	id: string; // This is the "type" of the block
+	kind?: null;
+	label?: false; // To see if the definition is a label or not
+	text: string; // This is "message0"
+	output?: BlockType;
+	shape: BlockShape; // The block shape
+	args?: Argument[]; // This is "args0"
+	warnings?: Warning[];
+	placeholders?: Placeholder<unknown>[];
+	inline: boolean; // This is "inputsInline"
+	colour: string;
+	tooltip: string;
+	helpUrl: string;
+	code: (args: Record<string, string | string[]>, block: Block) => string;
 
-			mutator?: Mutator;
-			hidden?: boolean;
-			imports?: `${string}@${string}`[];
-	  }
-	| {
-			label: true;
-			text: string;
-	  } |
-	{
-		kind: "button";
-		text: string;
-		callbackKey: string;
-		callback: (p1: FlyoutButton) => void;
-	};
-
+	mutator?: Mutator;
+	hidden?: boolean;
+	imports?: `${string}@${string}`[];
+}
+export interface LabelBlockDefinition {
+	label: true;
+	text: string;
+} 
+export interface ButtonBlockDefinition {
+	kind: "button";
+	text: string;
+	callbackKey: string;
+	callback: (p1: FlyoutButton) => void;
+}
 export interface MutatorBlock {
 	// What inputs it adds to the block
 	adds: Argument[];
