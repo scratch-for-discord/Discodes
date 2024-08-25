@@ -1,6 +1,6 @@
 import BaseInput from "./BaseInput";
 
-interface TextInputObject {
+export interface TextIDef {
 	type: "field_input";
 	name: string;
 	text: string;
@@ -8,7 +8,7 @@ interface TextInputObject {
 	spellcheck: false;
 }
 
-export default class TextInput extends BaseInput {
+export default class TextInput extends BaseInput<TextIDef> {
 	private readonly _text: string;
 
 	constructor(name: string, defaultValue: string) {
@@ -19,7 +19,7 @@ export default class TextInput extends BaseInput {
 		this._text = defaultValue;
 	}
 
-	private getDefinition(): TextInputObject {
+	private getDefinition(): TextIDef {
 		return {
 			type: "field_input",
 			name: super.name,
@@ -27,5 +27,4 @@ export default class TextInput extends BaseInput {
 			spellcheck: false
 		};
 	}
-
 }

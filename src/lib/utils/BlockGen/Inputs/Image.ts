@@ -1,6 +1,15 @@
 import BaseInput from "./BaseInput";
 
-export default class Image extends BaseInput {
+export interface ImageIDef {
+	name: string;
+	type: "field_image";
+	src: string;
+	alt: string;
+	width: number;
+	height: number;
+}
+
+export default class Image extends BaseInput<ImageIDef> {
 	private readonly _src: string;
 	private readonly _settings: {
 		alt: string;
@@ -15,30 +24,19 @@ export default class Image extends BaseInput {
 	 * @memberof NumberInput
 	 */
 	constructor(src: string, settings: { alt: string; width: number; height: number }) {
-		super();
+		super(settings.alt);
 
 		this.setMethod(this.getDefinition);
 		this._src = src;
 		this._settings = settings;
 	}
 
-	private getDefinition(): {
-		name: string;
-		type: "field_image";
-		src: string;
-		alt: string;
-		width: number;
-		height: number;
-	} {
+	private getDefinition(): ImageIDef {
 		return {
 			name: this._settings.alt,
 			type: "field_image",
 			src: this._src,
 			...this._settings
 		};
-	}
-
-	get name(): string {
-		return this._settings.alt;
 	}
 }

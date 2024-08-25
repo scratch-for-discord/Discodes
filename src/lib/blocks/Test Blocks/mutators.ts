@@ -1,4 +1,4 @@
-import { BlockShape, BlockType } from "$lib/enums/BlockTypes";
+import { BlockShape, BlockType, WarningType } from "$lib/enums/BlockTypes";
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
 import StatementInput from "$lib/utils/BlockGen/Inputs/StatementInput";
@@ -6,6 +6,7 @@ import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
 import CheckboxMutator from "$lib/utils/BlockGen/Mutators/CheckboxMutator";
+import Warning from "$lib/utils/BlockGen/Warnings/Warning";
 
 const blocks: BlockDefinition[] = [
 	{
@@ -84,36 +85,45 @@ const blocks: BlockDefinition[] = [
 	// },
 
 	{
-
 		id: "checkbox_mutator",
 		text: "checkbox mutator\n",
 		shape: BlockShape.Action,
 		inline: true,
 		colour: rgbToHex(91, 128, 165),
+		warnings: [
+			new Warning(WarningType.Input, { fieldName: "if_input"})
+		],
+
 		tooltip: "Returns the opposite of the input",
 		helpUrl:
-			`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT`,
-		code: () => {
-			return "${args}";
+			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT",
+		code: (args) => {
+			return `${args}`;
 		},
-		mutator: new CheckboxMutator("hello", [
+		mutator: new CheckboxMutator(
+			"hello",
+			[
+				{
+					text: "input 1",
+					inputName: "if_test",
+					adds: [
+						new ValueInput("if_input", BlockType.Boolean).setField("else if"),
+						new StatementInput("if_statement").setField("do")
+					],
+					defaultValue: true
+				},
+				{
+					text: "input 2",
+					inputName: "else_test",
+					adds: [new StatementInput("else_input").setField("else")],
+					defaultValue: false
+				}
+			],
 			{
-				text: "input 1",
-				inputName: "if_test",
-				adds: [new ValueInput("if_input", BlockType.Boolean).setField("else if"), new StatementInput("if_statement").setField("do")],
-				defaultValue: true,
-			},
-			{
-				text: "input 2",
-				inputName: "else_test",
-				adds: [new StatementInput("else_input").setField("else")],
-				defaultValue: false,
-
+				color: rgbToHex(91, 128, 165)
 			}
-		], {
-			color: rgbToHex(91, 128, 165)
-		})
-	},
+		)
+	}
 ];
 
 const category: CategoryDefinition = {

@@ -34,5 +34,5 @@ export enum PlaceholderType {
 }
 export enum MutatorType {
 	Assembler = "assembler",
-	Checkbox = "checkbox",
+	Checkbox = "checkbox"
 }

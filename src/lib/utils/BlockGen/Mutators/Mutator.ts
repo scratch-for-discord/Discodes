@@ -1,9 +1,9 @@
 import Blockly from "blockly/core";
 import { dev } from "$app/environment";
-import type {MutatorBlock} from "$lib/types/BlockDefinition";
-import {MutatorType} from "$lib/enums/BlockTypes";
+import type { MutatorBlock } from "$lib/types/BlockDefinition";
+import { MutatorType } from "$lib/enums/BlockTypes";
 export interface AdditionalSettings {
-	color: number | string | undefined
+	color: number | string | undefined;
 }
 export class Mutator {
 	private _properties: MutatorBlock[];
@@ -12,6 +12,7 @@ export class Mutator {
 	private _blocks: string[] | undefined;
 	private _helperFunction: (() => void) | undefined;
 	private mutatorType: MutatorType;
+
 	constructor(properties: MutatorBlock[], containerBlockText: string, mutatorType: MutatorType) {
 		this._properties = properties;
 		this._containerBlockText = containerBlockText;
@@ -52,7 +53,7 @@ export class Mutator {
 			default:
 				throw new Error(`Unsupported input type: ${inputType}`);
 		}
-}
+	}
 
 	registerMutator(name: string): void {
 		// Unregister the mutator if it's already registered. Without this blockly crashes.
