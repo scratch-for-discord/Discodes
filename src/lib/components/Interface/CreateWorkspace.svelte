@@ -75,12 +75,22 @@
 						lastEditedAt: new Date(),
 						id: db.workspaces.length.toString(),
 						owner: JSON.parse(user).global_name,
-						files: [],
+						files: [{
+                            name: "index.discodes",
+                            createdAt: new Date(),
+                            lastEditedAt: new Date(),
+                            blocklyWorkspaceSave: {
+                                blockLength: 0,
+                                workspaceSave: {}
+                            },
+                            thumbnail: "/src/lib/static/favicon.png",
+                            timeWasted: 0
+                        }],
 						description: "A Discodes workspace",
 						editors: [JSON.parse(user).username],
 						viewers: [],
 						timeWasted: 0,
-						lastOpened: new Date().toISOString()
+						lastOpened: "index.discodes"
 					})
 
                     window.dispatchEvent(new StorageEvent("storage", {

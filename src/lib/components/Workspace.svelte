@@ -11,6 +11,7 @@
 	import loadBlocks from "$lib/utils/helpers/loadBlocks";
 	import { warnings } from "$lib/utils/BlockGen/Warnings/WarningsList";
 	import { imports, wipeImports } from "$lib/utils/BlockGen/Blocks/importsList";
+	import getLocalDB from "$lib/utils/localDB/manager"
 
 	import { createEventDispatcher } from "svelte";
 	import "../utils/custom_category.js"
@@ -21,6 +22,8 @@
 	// export let toolbox: Toolbox;
 	export let toolboxJson: Blockly.utils.toolbox.ToolboxDefinition
 
+	const db = getLocalDB()
+
 	const dispatch = createEventDispatcher();
 
 	Blockly.setLocale({
@@ -28,8 +31,21 @@
 	});
 
 	onMount(async () => {
+		const query = new URLSearchParams(window.location.search)
+		const id = query.get("id")
+
+		if(!id) return window.location.replace("/interface")
+
+		const workspaceByID = db.getWorkspaceByID(id)
+		if(!workspaceByID) return window.location.replace("/interface")
+
+		// HARD CODED VALUE, CHANGE LATER FOR MULTI FILE SUPPORT
+		const file = workspaceByID.files[0].blocklyWorkspaceSave.workspaceSave
+
 		await loadBlocks();
 		workspace = Blockly.inject("blocklyDiv", { ...options, toolbox: toolboxJson });
+		// load the existing blocks
+		Blockly.serialization.workspaces.load(file, workspace)
 		// toolbox.registerCallbacks(workspace)
 		dispatch("workspaceInject"); // May be useful in the future
 		dispatch("updateNavbarPadding"); // Updates the padding-left property of the navbar (look at /routes/editor/+page.svelte)
@@ -57,6 +73,9 @@
 				console.info("Warnings", warnings);
 			}
 		}
+
+
+
 		workspace.addChangeListener(updateCode);
 
 		workspace.addChangeListener((event: Abstract) => {

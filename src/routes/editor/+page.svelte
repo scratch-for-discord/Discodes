@@ -36,11 +36,11 @@
 		toolboxJson = await toolbox.generate();
 
 		discodesWorkspaceID = $page.url.searchParams.get("id") || "1";
-		const discodesWorksapce = localDB.getWorkspaceByID(discodesWorkspaceID);
+		const discodesWorkspace = localDB.getWorkspaceByID(discodesWorkspaceID);
 
-		if (!discodesWorksapce) return;
+		if (!discodesWorkspace) return;
 
-		currentFile = discodesWorksapce.lastOpened;
+		currentFile = discodesWorkspace.lastOpened;
 	});
 
 	function updateNavbarPadding() {
