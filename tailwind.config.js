@@ -59,7 +59,7 @@ const config = {
 				varela: ["Varela Round", ...fontFamily.serif]
 			}
 		}
-	},
+	}
 };
 
 export default config;

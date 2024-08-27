@@ -3,6 +3,7 @@
 	import ChevronLeft from "lucide-svelte/icons/chevron-left";
 
 	export let toolBoxWidth;
+	/* eslint-disable-next-line */
 	export let workspace: any; // Im just too lazy for this
 
 	import Warnings from "$lib/components/Warnings.svelte";
@@ -27,13 +28,13 @@
 >
 	<div
 		class={cn(
-			!isShowing && `w-[56px]`,
+			!isShowing && "w-[56px]",
 			isShowing && "w-full",
 			"bg-background flex p-1 px-2 rounded-md shadow-xl border-gray-200 dark:border-neutral-700 py-2 transition-all"
 		)}
 	>
 		{#if isShowing}
-			{#await wait(50) then _}
+			{#await wait(50) then}
 				<Button
 					variant="outline"
 					class="h-8 mx-1"

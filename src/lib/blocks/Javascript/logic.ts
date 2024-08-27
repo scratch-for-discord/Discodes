@@ -2,8 +2,6 @@ import { BlockShape, BlockType, DropdownType, WarningType } from "$lib/enums/Blo
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
 import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
-import NumberInput from "$lib/utils/BlockGen/Inputs/NumberInput";
-import TextInput from "$lib/utils/BlockGen/Inputs/TextInput";
 import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
@@ -18,9 +16,7 @@ const blocks: BlockDefinition[] = [
 		text: "if {if_input} {if}",
 		args: [new ValueInput("if_input", BlockType.Boolean), new StatementInput("if")],
 		warnings: [
-
 			new Warning(WarningType.Input, {
-
 				fieldName: "if_input"
 			})
 		],
@@ -34,12 +30,12 @@ const blocks: BlockDefinition[] = [
 			let code = `if(${args.if_input === "" ? "false" : args.if_input}) {\n${args.if}\n}`;
 			const ifInputs = args.if_input_list as string[];
 			const ifStatementInputs = args.if_statement_list as string[];
-			const else_input = args.else_input_list as string[]
+			const else_input = args.else_input_list as string[];
 			for (let i = 0; i < ifInputs.length; i++) {
 				const ifInp = ifInputs[i];
 				code += ` else if(${ifInp === "" ? "false" : ifInp}) {\n${ifStatementInputs[i]}\n}`;
 			}
-			if(else_input.length !== 0) code += ` else {\n${else_input}\n}`
+			if (else_input.length !== 0) code += ` else {\n${else_input}\n}`;
 			return code;
 		},
 		mutator: new AssemblerMutatorV2(
@@ -70,7 +66,7 @@ const blocks: BlockDefinition[] = [
 		args: [
 			new ValueInput("A", BlockType.Any),
 			new Dropdown("CONDITION", DropdownType.Auto, {
-				"=": "===",//Based on research better to use "===", but it can always be changed
+				"=": "===", //Based on research better to use "===", but it can always be changed
 				"≠": "!=",
 				"<": "<",
 				"≤": "<=",
@@ -94,9 +90,10 @@ const blocks: BlockDefinition[] = [
 		//  if(args.A === "" || args.B === "") return "false";
 		//  return `${args.A} ${args.CONDITION} ${args.B}`;
 
-		code: (args, block) => {
-
-			return (args.A == '' || args.B == '')? `false ${args.CONDITION} false` : `${args.A} ${args.CONDITION} ${args.B}`;
+		code: (args) => {
+			return args.A == "" || args.B == ""
+				? `false ${args.CONDITION} false`
+				: `${args.A} ${args.CONDITION} ${args.B}`;
 		}
 	},
 	{
@@ -147,7 +144,7 @@ const blocks: BlockDefinition[] = [
 		args: [
 			new Dropdown("INPUT", DropdownType.Auto, {
 				true: "true",
-				false: "false",
+				false: "false"
 				//undefined: "undefined"
 			})
 		],
@@ -171,8 +168,8 @@ const blocks: BlockDefinition[] = [
 		colour: rgbToHex(91, 128, 165),
 		tooltip: "Null values used to check null conditions.",
 		helpUrl: "",
-		code: (args) => {
-			return `null`;
+		code: () => {
+			return "null";
 		}
 	},
 	{

@@ -1,9 +1,9 @@
-<script lang='ts'>
+<script lang="ts">
 	import "../app.pcss";
 	import Navbar from "$lib/components/Navbar.svelte";
 	import { page } from "$app/stores";
 	import { ModeWatcher, setMode } from "mode-watcher";
-	setMode("dark")
+	setMode("dark");
 </script>
 
 <ModeWatcher />

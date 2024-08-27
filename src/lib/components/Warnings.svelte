@@ -58,7 +58,9 @@
 					Cannot export, your code has <span class="text-orange-400">warnings!</span>
 				{/if}
 			</Dialog.Title>
-			<Dialog.Description>You can click on the block name to reveal it in the workspace</Dialog.Description>
+			<Dialog.Description
+				>You can click on the block name to reveal it in the workspace</Dialog.Description
+			>
 			<Accordion.Root>
 				<div class="overflow-y-auto overflow-x-hidden max-h-[82vh]">
 					{#each Object.keys(displayWarnings) as id, index}
@@ -71,7 +73,7 @@
 									<p><span class="font-bold text-orange-400">Warning:</span> {warning.message}</p>
 								{/each}<Button
 									class="mt-3"
-									on:click={async () => {
+									on:click={async() => {
 										await gotoBlock(id);
 									}}>Go to block</Button
 								></Accordion.Content

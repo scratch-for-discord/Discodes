@@ -57,6 +57,6 @@
 <Workspace
 	bind:workspace
 	options={OPTIONS}
-	bind:toolboxJson={toolboxJson}
+	bind:toolboxJson
 	on:updateNavbarPadding={updateNavbarPadding}
 />

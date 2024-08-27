@@ -90,9 +90,7 @@ const blocks: BlockDefinition[] = [
 		shape: BlockShape.Action,
 		inline: true,
 		colour: rgbToHex(91, 128, 165),
-		warnings: [
-			new Warning(WarningType.Input, { fieldName: "if_input"})
-		],
+		warnings: [new Warning(WarningType.Input, { fieldName: "if_input" })],
 
 		tooltip: "Returns the opposite of the input",
 		helpUrl:

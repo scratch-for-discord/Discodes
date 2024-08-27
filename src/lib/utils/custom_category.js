@@ -1,4 +1,5 @@
-//@ts-nocheck Idk why it's checking on a js file
+/* eslint-disable-next-line */
+// @ts-nocheck Idk why it's checking on a js file
 import Blockly from "blockly";
 
 const dom = {

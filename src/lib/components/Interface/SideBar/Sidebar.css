@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 @layer components {
-    .sidebar-buttons {
-        @apply text-white my-1 font-varela text-base hover:bg-slate-900 transition-all py-2 w-[90%] rounded-md mx-auto items-center
-    }
-    .icons {
-        @apply w-4 flex items-center my-auto mx-2
-    }
+	.sidebar-buttons {
+		@apply text-white my-1 font-varela text-base hover:bg-slate-900 transition-all py-2 w-[90%] rounded-md mx-auto items-center;
+	}
+	.icons {
+		@apply w-4 flex items-center my-auto mx-2;
+	}
 }

@@ -6,12 +6,9 @@ import type Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import type Placeholder from "$lib/utils/ToolboxGen/Placeholder";
 import type { FlyoutButton } from "blockly";
 
-export type Argument = BaseInput<any>;
+export type Argument = BaseInput<unknown>;
 
-export type BlockDefinition =
-	| BlockBlockDefinition
-	| LabelBlockDefinition 
-	| ButtonBlockDefinition;
+export type BlockDefinition = BlockBlockDefinition | LabelBlockDefinition | ButtonBlockDefinition;
 export interface BlockBlockDefinition {
 	id: string; // This is the "type" of the block
 	kind?: null;
@@ -35,7 +32,7 @@ export interface BlockBlockDefinition {
 export interface LabelBlockDefinition {
 	label: true;
 	text: string;
-} 
+}
 export interface ButtonBlockDefinition {
 	kind: "button";
 	text: string;
