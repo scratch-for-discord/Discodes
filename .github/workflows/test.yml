@@ -4,7 +4,7 @@ name: Pull Request Test
 
 on:
   pull_request:
-    types: [opened, reopened]
+    branches: [master]
 
 jobs:
   lint:
@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 20
       - run: yarn
-      - run: yarn lint --fix
+      - run: yarn lint
   # tests are not testing 😭
   # test:
   #   name: Run test
