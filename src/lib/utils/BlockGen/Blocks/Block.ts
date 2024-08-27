@@ -7,6 +7,7 @@ import pkg from "blockly/javascript";
 import type {
 	Argument,
 	AssemblerMutator,
+	BlockBlockDefinition,
 	BlockDefinition,
 	CheckBoxMutatorBlock,
 	MutatorBlock
@@ -65,26 +66,65 @@ export default class Block {
 	}
 
 	public addWarning(warning: Warning): void {
-		if (this._blockDefinition.label) throw new Error("Cannot add a warning to a label");
+		const blockDefinition = this._blockDefinition as BlockBlockDefinition;
+		if (blockDefinition.label) throw new Error("Cannot add a warning to a label");
 		if (warningsObj[this._block.id] && warningsObj[this._block.id][warning.data.fieldName]) return;
-		this._blockDefinition.warnings = this._blockDefinition.warnings
-			? [...this._blockDefinition.warnings, warning]
+		blockDefinition.warnings = blockDefinition.warnings
+			? [...blockDefinition.warnings, warning]
 			: [warning];
 	}
 
 	public removeWarning(fieldName: string): void {
-		if (this._blockDefinition.label) throw new Error("Cannot remove a warning form a label");
+		const blockDefinition = this._blockDefinition as BlockBlockDefinition;
+
+		if (blockDefinition.kind) throw new Error("Cannot remove a warning from a input/button");
+		if (blockDefinition.label) throw new Error("Cannot remove a warning from a label");
 		if (
 			(!warningsObj[this._block.id] || !warningsObj[this._block.id][fieldName]) &&
-			this._blockDefinition.warnings !== undefined
+			blockDefinition.warnings !== undefined
 		) {
 			return;
 		}
-		this._blockDefinition.warnings = this._blockDefinition.warnings?.filter(
+		blockDefinition.warnings = blockDefinition.warnings?.filter(
 			(warning) => warning.data.fieldName !== fieldName
 		);
 	}
-
+	public handleWarning(data: { message: string; warningType: WarningType; fieldName: string }, resultMessage: string, topParent: Blockly.Block): string {
+		const {message, warningType, fieldName} = data
+		
+		switch (warningType) {
+			case WarningType.Parent:  
+				if (topParent.type != fieldName) {
+					resultMessage += `${message}\n`;
+					addWarning(this._block.id, fieldName, message);
+					break;
+				}
+				removeWarning(this._block.id, fieldName);
+				break;
+	
+			case WarningType.Input:
+				if (this._block.getInput(fieldName)?.connection?.targetConnection === null) {
+					resultMessage += `${message}\n`;
+					addWarning(this._block.id, fieldName, message);
+					break;
+				}
+				
+				removeWarning(this._block.id, fieldName);
+				break;
+	
+			case WarningType.Deprec:
+				resultMessage += `${message}\n`;
+				addWarning(this._block.id, fieldName, message);
+				break;
+	
+			case WarningType.Permanent:
+				resultMessage += `${message}\n`;
+				addWarning(this._block.id, fieldName, message);
+				break;
+		}
+		return resultMessage
+	}
+	
 	public addText(text: string, fieldName: string): void {
 		this._block.appendDummyInput(fieldName).appendField(text);
 	}
@@ -173,26 +213,28 @@ export default class Block {
 	}
 
 	generate(): void {
-		if (this._blockDefinition.label) return;
+		const blockDefinition = this._blockDefinition as BlockBlockDefinition;
+
+		if (blockDefinition.label || blockDefinition.kind) return;
 
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const blockClass = this; // Used because `this` is overwritten in the blockly functions.
+		
 
-
-		const code = this._blockDefinition.code;
-		const shape = this._blockDefinition.shape;
-		const output = this._blockDefinition.output;
-		const importName = this._blockDefinition.imports;
-		const mutatorName: string = this._blockDefinition.mutator
-			? this._blockDefinition.id + salt(5)
+		const code = blockDefinition.code;
+		const shape = blockDefinition.shape;
+		const output = blockDefinition.output;
+		const importName = blockDefinition.imports;
+		const mutatorName: string = blockDefinition.mutator
+			? blockDefinition.id + salt(5)
 			: "";
 
 		const blockDef: BlocklyBlockDefinition = {
-			type: this._blockDefinition.id,
-			colour: this._blockDefinition.colour,
-			tooltip: this._blockDefinition.tooltip,
-			helpUrl: this._blockDefinition.helpUrl,
-			inputsInline: this._blockDefinition.inline,
+			type: blockDefinition.id,
+			colour: blockDefinition.colour,
+			tooltip: blockDefinition.tooltip,
+			helpUrl: blockDefinition.helpUrl,
+			inputsInline: blockDefinition.inline,
 			args0: [],
 			message0: "",
 			mutator: mutatorName == "" ? undefined : mutatorName
@@ -200,23 +242,24 @@ export default class Block {
 
 		blockClass._blocklyDefinition = blockDef;
 
-		if (this._blockDefinition.mutator) {
-			this._blockDefinition.mutator.registerMutator(mutatorName);
+		if (blockDefinition.mutator) {
+			blockDefinition.mutator.registerMutator(mutatorName);
 		}
 
 		// Converts the classes into usable objects for the block definition
-		this._blockDefinition.args?.forEach((arg: Argument) => {
+		blockDefinition.args?.forEach((arg: Argument) => {
 			blockDef.args0.push(arg.generate() as Record<string, string>);
 		});
 
 		// Converts the raw text into a blockly valid "message0" with this format: "text %1 other text %2"
 		let counter: number = 1;
-		blockDef.message0 = this._blockDefinition.text.replace(/\{.*?\}/g, () => `%${counter++}`);
+		blockDef.message0 = blockDefinition.text.replace(/\{.*?\}/g, () => `%${counter++}`);
 
 		if (Blockly.Blocks[blockDef.type] !== undefined && !dev) {
 			throw Error(`Block "${blockDef.type}" is defined twice.`);
 		}
-		//const blockDefinition = this._blockDefinition;
+		//const blockDefinition = blockDefinition;
+		const BlockClass = this;
 		// Add The block to the blocks list
 		Blockly.Blocks[blockDef.type] = {
 			init: function(this: Blockly.Block) {
@@ -272,45 +315,44 @@ export default class Block {
 						!this.isInFlyout &&
 						block.id == this.id
 					) {
-						const warnings = blockClass._blockDefinition.label
+						const warnings = blockDefinition.label
 							? undefined
-							: blockClass._blockDefinition.warnings;
+							: blockDefinition.warnings;
 						if (!warnings) return;
 
 						const topParent = this.getRootBlock();
 						let resultMessage: string = "";
 
+						/*
+						make check warning function
+						check if input + "1" exists if exists go to mutator detecting
+						where it goes in a loop unitl input + "n" doesn't exist	
+						*/
 						for (const warning of warnings) {
 							const { warningType, message, fieldName } = warning.data;
-							switch (warningType) {
-								case WarningType.Parent:
-									if (topParent.type != fieldName) {
-										resultMessage += `${message}\n`;
-										addWarning(this.id, fieldName, message);
-										break;
-									}
-									removeWarning(this.id, fieldName);
-									break;
-
-								case WarningType.Input:
-									if (this.getInput(fieldName)?.connection?.targetConnection === null) {
-										resultMessage += `${message}\n`;
-										addWarning(this.id, fieldName, message);
-										break;
-									}
-									removeWarning(this.id, fieldName);
-									break;
-
-								case WarningType.Deprec:
-									resultMessage += `${message}\n`;
-									addWarning(this.id, fieldName, message);
-									break;
-
-								case WarningType.Permanent:
-									resultMessage += `${message}\n`;
-									addWarning(this.id, fieldName, message);
-									break;
+							if(this.getInput(fieldName)) {
+							console.log(BlockClass.handleWarning(warning.data, resultMessage, topParent))
+								resultMessage = BlockClass.handleWarning(warning.data, resultMessage, topParent)
 							}
+							let input = this.getInput(fieldName + "1")
+							//handles mutator input warnings
+							if(input) {
+							const warningObject = {
+								message: message,
+								fieldName: fieldName,
+								warningType: warningType
+							}
+								let i = 1;
+								while(input) {
+									warningObject.fieldName = warning.data.fieldName+ i
+									resultMessage = BlockClass.handleWarning(warningObject, resultMessage, topParent)
+									i++
+									input = this.getInput(`${fieldName}${i}`)
+								}
+							}
+
+							
+				
 						}
 						if (warningsObj[this.id] && Object.keys(warningsObj[this.id]).length === 0) {
 							delete warningsObj[this.id];
@@ -320,13 +362,13 @@ export default class Block {
 				});
 			}
 		};
-		const properties = this._blockDefinition.mutator?.properties;
+		const properties = blockDefinition.mutator?.properties;
 		const propertyMap: Record<string, MutatorBlock> = {};
 		if (properties) {
 			for (const property of properties) {
-				if (this._blockDefinition.mutator?.type === MutatorType.Assembler) {
+				if (blockDefinition.mutator?.type === MutatorType.Assembler) {
 					propertyMap[(property as AssemblerMutator).block] = property;
-				} else if (this._blockDefinition.mutator?.type === MutatorType.Checkbox) {
+				} else if (blockDefinition.mutator?.type === MutatorType.Checkbox) {
 					propertyMap[(property as CheckBoxMutatorBlock).inputName] = property;
 				}
 			}
@@ -362,7 +404,12 @@ export default class Block {
 						i++;
 						input = block.getInput(add.name + i);
 					}
-					args[add.name] = valueList;
+					/*
+					_list is added that so basic inputs and mutator inputs can have the same names and it creates better block warnings
+					*/
+						args[add.name + "_list"] = valueList;
+
+
 				}
 			}
 			return output ? [code(args, blockClass), Order.NONE] : code(args, blockClass);

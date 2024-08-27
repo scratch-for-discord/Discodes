@@ -1,10 +1,10 @@
 import { BlockShape, BlockType, DropdownType, PlaceholderType } from "$lib/enums/BlockTypes";
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
+import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
 import NumberInput from "$lib/utils/BlockGen/Inputs/NumberInput";
 import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import Placeholder from "$lib/utils/ToolboxGen/Placeholder";
-import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
 
 const blocks: BlockDefinition[] = [
 	{

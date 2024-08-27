@@ -1,4 +1,4 @@
-import { BlockShape, BlockType } from "$lib/enums/BlockTypes";
+import { BlockShape, BlockType, WarningType } from "$lib/enums/BlockTypes";
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
 import StatementInput from "$lib/utils/BlockGen/Inputs/StatementInput";
@@ -6,6 +6,7 @@ import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
 import CheckboxMutator from "$lib/utils/BlockGen/Mutators/CheckboxMutator";
+import Warning from "$lib/utils/BlockGen/Warnings/Warning";
 
 const blocks: BlockDefinition[] = [
 	{
@@ -89,11 +90,15 @@ const blocks: BlockDefinition[] = [
 		shape: BlockShape.Action,
 		inline: true,
 		colour: rgbToHex(91, 128, 165),
+		warnings: [
+			new Warning(WarningType.Input, { fieldName: "if_input"})
+		],
+
 		tooltip: "Returns the opposite of the input",
 		helpUrl:
-			`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT`,
-		code: () => {
-			return "${args}";
+			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT",
+		code: (args) => {
+			return `${args}`;
 		},
 		mutator: new CheckboxMutator(
 			"hello",

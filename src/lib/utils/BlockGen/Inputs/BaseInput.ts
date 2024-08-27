@@ -1,4 +1,4 @@
-export default class BaseInput<Definition = unknown> {
+export default class BaseInput<Definition> {
 	//! Replace unknown by an enum with all the types of inputs!
 	private _method!: () => Definition;
 	private _fieldText: string;

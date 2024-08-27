@@ -4,11 +4,17 @@ import type BaseInput from "$lib/utils/BlockGen/Inputs/BaseInput";
 import type { Mutator } from "$lib/utils/BlockGen/Mutators/Mutator";
 import type Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import type Placeholder from "$lib/utils/ToolboxGen/Placeholder";
+import type { FlyoutButton } from "blockly";
 
-export type Argument = BaseInput;
+export type Argument = BaseInput<any>;
 
-export type BlockDefinitionBlock = {
+export type BlockDefinition =
+	| BlockBlockDefinition
+	| LabelBlockDefinition 
+	| ButtonBlockDefinition;
+export interface BlockBlockDefinition {
 	id: string; // This is the "type" of the block
+	kind?: null;
 	label?: false; // To see if the definition is a label or not
 	text: string; // This is "message0"
 	output?: BlockType;
@@ -26,14 +32,16 @@ export type BlockDefinitionBlock = {
 	hidden?: boolean;
 	imports?: `${string}@${string}`[];
 }
-
-export type BlockDefinitionLabel = {
+export interface LabelBlockDefinition {
 	label: true;
 	text: string;
+} 
+export interface ButtonBlockDefinition {
+	kind: "button";
+	text: string;
+	callbackKey: string;
+	callback: (p1: FlyoutButton) => void;
 }
-
-export type BlockDefinition = BlockDefinitionBlock | BlockDefinitionLabel
-
 export interface MutatorBlock {
 	// What inputs it adds to the block
 	adds: Argument[];
