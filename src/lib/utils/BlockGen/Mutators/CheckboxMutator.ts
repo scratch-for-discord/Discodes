@@ -53,7 +53,7 @@ export default class CheckboxMutator extends Mutator {
 			inputData.push(!!prop.defaultValue);
 		}
 		Blockly.Blocks[containerBlockName] = {
-			init: function(this: Blockly.Block) {
+			init: function (this: Blockly.Block) {
 				this.jsonInit({
 					type: containerBlockName,
 					message0: `${containerBlockText}`,
@@ -64,7 +64,7 @@ export default class CheckboxMutator extends Mutator {
 				});
 			}
 		};
-		javascriptGenerator.forBlock[containerBlockName] = function() {
+		javascriptGenerator.forBlock[containerBlockName] = function () {
 			return "";
 		};
 		const mixin = {
@@ -134,7 +134,7 @@ export default class CheckboxMutator extends Mutator {
 					}
 				}
 			},
-			reconnectChildBlocks_: function(this: Blockly.Block, connections: ConnectionMap) {
+			reconnectChildBlocks_: function (this: Blockly.Block, connections: ConnectionMap) {
 				for (const connectionKey in connections) {
 					const conn = connections[connectionKey];
 					if (!conn) continue;
@@ -155,7 +155,7 @@ export default class CheckboxMutator extends Mutator {
 				}
 			},
 
-			appendInput_: function(this: Blockly.Block, input, name, fieldText) {
+			appendInput_: function (this: Blockly.Block, input, name, fieldText) {
 				const inputType = input.type || "input_value"; // Default to input_value if type is not specified
 				const inputCheck = input.check; // Check for input type if specified
 

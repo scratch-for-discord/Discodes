@@ -30,7 +30,7 @@
 		...En
 	});
 
-	onMount(async() => {
+	onMount(async () => {
 		const query = new URLSearchParams(window.location.search);
 		const id = query.get("id");
 
