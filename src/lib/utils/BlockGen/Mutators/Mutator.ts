@@ -2,8 +2,10 @@ import Blockly from "blockly/core";
 import { dev } from "$app/environment";
 import type { MutatorBlock } from "$lib/types/BlockDefinition";
 import { MutatorType } from "$lib/enums/BlockTypes";
+import type { Align } from "blockly/core/inputs";
 export interface AdditionalSettings {
-	color: number | string | undefined;
+	alignInputs?: Align | null;
+	color?: number | string | undefined;
 }
 export class Mutator {
 	private _properties: MutatorBlock[];
@@ -36,7 +38,7 @@ export class Mutator {
 	setHelperFunction(helperFn: () => void) {
 		this._helperFunction = helperFn;
 	}
-	appendInput_(this: Blockly.Block, input, name, fieldText) {
+	appendInput_(this: Blockly.Block, input: any, name: string, fieldText: string) {
 		const inputType = input.type || "input_value"; // Default to input_value if type is not specified
 		const inputCheck = input.check; // Check for input type if specified
 

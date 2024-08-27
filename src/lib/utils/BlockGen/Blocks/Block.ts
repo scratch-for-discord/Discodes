@@ -6,7 +6,6 @@ import pkg from "blockly/javascript";
 
 import type {
 	Argument,
-	AssemblerMutator,
 	BlockBlockDefinition,
 	BlockDefinition,
 	CheckBoxMutatorBlock,
@@ -103,6 +102,7 @@ export default class Block {
 				break;
 	
 			case WarningType.Input:
+
 				if (this._block.getInput(fieldName)?.connection?.targetConnection === null) {
 					resultMessage += `${message}\n`;
 					addWarning(this._block.id, fieldName, message);
@@ -331,7 +331,6 @@ export default class Block {
 						for (const warning of warnings) {
 							const { warningType, message, fieldName } = warning.data;
 							if(this.getInput(fieldName)) {
-							console.log(BlockClass.handleWarning(warning.data, resultMessage, topParent))
 								resultMessage = BlockClass.handleWarning(warning.data, resultMessage, topParent)
 							}
 							let input = this.getInput(fieldName + "1")

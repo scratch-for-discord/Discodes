@@ -8,7 +8,7 @@ interface VariableInputObject {
     defaultType?: string;
 }
 
-export default class VariableInput extends BaseInput {
+export default class VariableInput extends BaseInput<any> {
 	private readonly _variable: string;
 	private readonly _opt_defaultType?: string;
 	private readonly _opt_variableTypes?: string[];
@@ -30,7 +30,6 @@ export default class VariableInput extends BaseInput {
 			variable: this._variable === ""? "%{BKY_VARIABLES_DEFAULT_NAME}" : this._variable,
             variableTypes: this._opt_variableTypes,
             defaultType: this._opt_defaultType,
-
 		};
 	}
 

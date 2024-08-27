@@ -43,7 +43,7 @@ export interface ButtonBlockDefinition {
 	callback: (p1: FlyoutButton) => void;
 }
 export interface MutatorBlock {
-	// What inputs it adds to the block
+	// What inputs it adds to the block\
 	adds: Argument[];
 }
 export interface CheckBoxMutatorBlock extends MutatorBlock {
@@ -62,9 +62,14 @@ export interface CheckBoxMutatorBlock extends MutatorBlock {
 	 * */
 	inputName: string;
 }
-export interface AssemblerMutator extends MutatorBlock {
+
+export interface AssemblerMutatorBlock extends MutatorBlock {
 	// Name of the block that appears in the block list in the UI
 	block: string;
 	// Can it only be added once in the UI
 	once: boolean;
+}
+
+export interface DynamicListBlockMutatorBlock extends AssemblerMutatorBlock {
+	
 }

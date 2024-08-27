@@ -2,64 +2,106 @@ import { BlockShape, BlockType, DropdownType, WarningType } from "$lib/enums/Blo
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
 import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
-import NumberInput from "$lib/utils/BlockGen/Inputs/NumberInput";
-import TextInput from "$lib/utils/BlockGen/Inputs/TextInput";
 import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
-import StatementInput from "$lib/utils/BlockGen/Inputs/StatementInput";
-import AssemblerMutatorV2 from "$lib/utils/BlockGen/Mutators/AssemblerMutator";
+import CheckboxMutator from "$lib/utils/BlockGen/Mutators/CheckboxMutator";
+import Blockly from "blockly"
 /*
 Logic category is finished.
 */
 const blocks: BlockDefinition[] = [
 	{
-		id: "if_block",
-		text: "if {if_input} {if}",
-		args: [new ValueInput("if_input", BlockType.Boolean), new StatementInput("if")],
-		warnings: [
-
-			new Warning(WarningType.Input, {
-
-				fieldName: "if_input"
-			})
-		],
-		shape: BlockShape.Action,
-		inline: true,
+		id: "create_embed",
+		text: "Create embed\n",
+		shape: BlockShape.Value,
+		inline: false,
 		colour: rgbToHex(91, 128, 165),
-		tooltip: "Runs the code inside if the condition is met!",
-		helpUrl:
-			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT",
+		tooltip: "Creates an embed",
+        output: BlockType.DiscordEmbed,
+		helpUrl: "",
 		code: (args) => {
-			let code = `if(${args.if_input === "" ? "false" : args.if_input}) {\n${args.if}\n}`;
-			const ifInputs = args.if_input_list as string[];
-			const ifStatementInputs = args.if_statement_list as string[];
-			const else_input = args.else_input_list as string[]
-			for (let i = 0; i < ifInputs.length; i++) {
-				const ifInp = ifInputs[i];
-				code += ` else if(${ifInp === "" ? "false" : ifInp}) {\n${ifStatementInputs[i]}\n}`;
-			}
-			if(else_input.length !== 0) code += ` else {\n${else_input}\n}`
-			return code;
+			return "";
 		},
-		mutator: new AssemblerMutatorV2(
-			"If",
+        mutator: new CheckboxMutator(
+			"Create embed",
 			[
-				{
-					block: "if_test",
-					adds: [
-						new ValueInput("if_input", BlockType.Boolean).setField("else if"),
-						new StatementInput("if_statement").setField("do")
-					],
-					once: true
-				},
-				{
-					block: "else_test",
-					adds: [new StatementInput("else_input").setField("else")],
-					once: true
-				}
-			],
+                {
+                    "text": "Title",
+                    "inputName": "title",
+                    "adds": [new ValueInput("title", BlockType.String).setField("Title")],
+                    "defaultValue": true
+                },
+                {
+                    "text": "Description",
+                    "inputName": "description",
+                    "adds": [new ValueInput("description", BlockType.String).setField("Description")],
+                    "defaultValue": true
+                },
+                {
+                    "text": "Fields",
+                    "inputName": "fields",
+                    "adds": [new ValueInput("fields", [BlockType.Array, BlockType.DiscordAPIEmbedField]).setField("Fields")],
+                    "defaultValue": false
+                },
+                {
+                    "text": "Color",
+                    "inputName": "color",
+                    "adds": [new ValueInput("color", BlockType.Number).setField("Color")],
+                    "defaultValue": false
+                },
+                {
+                    "text": "Author",
+                    "inputName": "author",
+                    "adds": [new ValueInput("author", BlockType.DiscordEmbedAuthorData).setField("Author")],
+                    "defaultValue": false
+                },
+                {
+                    "text": "Footer",
+                    "inputName": "footer",
+                    "adds": [new ValueInput("footer", BlockType.DiscordEmbedFooterData).setField("Footer")],
+                    "defaultValue": false
+                },
+                {
+                    "text": "Thumbnail",
+                    "inputName": "thumbnail",
+                    "adds": [new ValueInput("thumbnail", BlockType.DiscordAssetData).setField("Thumbnail")],
+                    "defaultValue": false
+                },
+                {
+                    "text": "Image",
+                    "inputName": "image",
+                    "adds": [new ValueInput("image", BlockType.Any).setField("Image")],
+                    "defaultValue": false
+                },
+                {
+                    "text": "Timestamp",
+                    "inputName": "timestamp",
+                    "adds": [new ValueInput("timestamp", [BlockType.String, BlockType.Number, BlockType.Date]).setField("Timestamp")],
+                    "defaultValue": false
+                },
+                {
+                    "text": "URL",
+                    "inputName": "url",
+                    "adds": [new ValueInput("url", BlockType.String).setField("URL")],
+                    "defaultValue": false
+                },
+                {
+                    "text": "Video",
+                    "inputName": "video",
+                    "adds": [new ValueInput("video", BlockType.DiscordAssetData).setField("Video")],
+                    "defaultValue": false
+                },
+                {
+                    "text": "Provider",
+                    "inputName": "provider",
+                    "adds": [new ValueInput("provider", BlockType.DiscordAPIEmbedProvider).setField("Provider")],
+                    "defaultValue": false
+                }
+            ],
+            
 			{
+				alignInputs: Blockly.inputs.Align.RIGHT,
 				color: rgbToHex(91, 128, 165)
 			}
 		)
@@ -96,7 +138,7 @@ const blocks: BlockDefinition[] = [
 
 		code: (args, block) => {
 
-			return (args.A == '' || args.B == '')? `false` : `${args.A} ${args.CONDITION} ${args.B}`;
+			return (args.A == '' || args.B == '')? `false ${args.CONDITION} false` : `${args.A} ${args.CONDITION} ${args.B}`;
 		}
 	},
 	{
@@ -243,23 +285,11 @@ const blocks: BlockDefinition[] = [
 		code: (args) => {
 			return `"${args.TYPE}"`;
 		}
-	},
-	{
-		id: "stop_script",
-		text: "Stop script",
-		shape: BlockShape.Bottom,
-		inline: true,
-		colour: rgbToHex(165, 91, 153),
-		tooltip: "Stops the script, cannot have any blocks under it.",
-		helpUrl: "",
-		code: () => {
-			return "return;";
-		}
 	}
 ];
 
 const category: CategoryDefinition = {
-	name: "Logic",
+	name: "Embed",
 	colour: rgbToHex(91, 128, 165)
 };
 

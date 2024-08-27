@@ -3,7 +3,15 @@ export enum BlockType {
 	String = "String",
 	Boolean = "Boolean",
 	Number = "Number",
-	Array = "Array"
+	Array = "Array",
+	Date = "Date",
+	DiscordEmbed = "DiscordEmbed",
+	DiscordEmbedAuthorData = "DiscordEmbedAuthorData",
+	DiscordAPIEmbedField = "DiscordAPIEmbedField",
+	DiscordEmbedFooterData = "DiscordEmbedFooterData",
+	DiscordAssetData = "DiscordAssetData",
+	DiscordAPIEmbedProvider = "DiscordAPIEmbedProvider",
+
 }
 
 export enum DropdownType {

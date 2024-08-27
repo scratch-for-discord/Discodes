@@ -4,7 +4,7 @@ import type { AdditionalSettings } from "./Mutator";
 import type { CheckBoxMutatorBlock } from "$lib/types/BlockDefinition";
 import salt from "$lib/utils/helpers/salt";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import Blockly, { Connection } from "blockly/core";
+import Blockly, { Connection, } from "blockly/core";
 import pkg from "blockly/javascript";
 import { MutatorType } from "$lib/enums/BlockTypes";
 const { javascriptGenerator } = pkg;
@@ -85,9 +85,10 @@ export default class CheckboxMutator extends Mutator {
 			//! Disable eslint cuz the state variable is of type any until they fully migrate to typescript
 			// eslint-disable-next-line
 			loadExtraState: function (this: any, state: any): void {
-				for (let i = 0; i < this.inputs_.length; i++) {
-					this.inputs_[i] = state[this.fields_[i]] ?? false;
-				}
+					for (let i = 0; i < this.inputs_.length; i++) {
+						this.inputs_[i] = state[this.fields_[i]] ?? false;
+					}
+
 				this.updateShape_();
 			},
 			// eslint-disable-next-line
@@ -110,10 +111,11 @@ export default class CheckboxMutator extends Mutator {
 			// eslint-disable-next-line
 			compose: function (this: any, containerBlock: Blockly.Block) {
 				const connections: ConnectionMap = containerBlock.connections_;
+					for (let i = 0; i < this.inputs_.length; i++) {
+						this.inputs_[i] = containerBlock.getFieldValue(this.fields_[i]) == "TRUE";
+					}
 
-				for (let i = 0; i < this.inputs_.length; i++) {
-					this.inputs_[i] = containerBlock.getFieldValue(this.fields_[i]) == "TRUE";
-				}
+
 				this.updateShape_();
 				this.reconnectChildBlocks_(connections);
 			},
@@ -154,22 +156,25 @@ export default class CheckboxMutator extends Mutator {
 				}
 			},
 
-			appendInput_: function(this: Blockly.Block, input, name, fieldText) {
+			appendInput_: function(this: Blockly.Block, input: any, name: string, fieldText: string) {
 				const inputType = input.type || "input_value"; // Default to input_value if type is not specified
 				const inputCheck = input.check; // Check for input type if specified
-
+				let inputNew: Blockly.Input | undefined;
 				switch (inputType) {
 					case "input_value":
-						this.appendValueInput(name).setCheck(inputCheck).appendField(fieldText);
+						inputNew = this.appendValueInput(name).setCheck(inputCheck).appendField(fieldText);
 						break;
 					case "input_statement":
-						this.appendStatementInput(name).setCheck(inputCheck).appendField(fieldText);
+						inputNew = this.appendStatementInput(name).setCheck(inputCheck).appendField(fieldText);
 						break;
 					case "input_dummy":
-						this.appendDummyInput(name).appendField(fieldText);
+						inputNew = this.appendDummyInput(name).appendField(fieldText);
 						break;
 					default:
 						throw new Error(`Unsupported input type: ${inputType}`);
+				}
+				if(inputNew) {
+					if(settings?.alignInputs !== null) inputNew.setAlign(settings?.alignInputs ?? Blockly.inputs.Align.RIGHT)
 				}
 			}
 		};

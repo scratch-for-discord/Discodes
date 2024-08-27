@@ -1,4 +1,4 @@
-import type { AssemblerMutatorBlock } from "$lib/types/BlockDefinition";
+import type { DynamicListBlockMutatorBlock } from "$lib/types/BlockDefinition";
 import salt from "$lib/utils/helpers/salt";
 import pkg from "blockly/javascript";
 import type { AdditionalSettings } from "./Mutator";
@@ -27,13 +27,13 @@ interface ConnectionMapConnection {
 	connection: Connection;
 	input_name: string;
 }
-export default class AssemblerMutator extends Mutator {
+export default class DynamicListBlockMutator extends Mutator {
 	//will store each properties name
 	private order: string[];
 	private settings: AdditionalSettings | undefined;
 	constructor(
 		containerBlockText: string,
-		properties: AssemblerMutatorBlock[],
+		properties: DynamicListBlockMutatorBlock[],
 		settings?: AdditionalSettings
 	) {
 		super(properties, containerBlockText, MutatorType.Assembler);
@@ -45,7 +45,7 @@ export default class AssemblerMutator extends Mutator {
 
 	get blocks(): string[] {
 		const arr: string[] = [];
-		for (const prop of super.properties as AssemblerMutatorBlock[]) {
+		for (const prop of super.properties as DynamicListBlockMutatorBlock[]) {
 			arr.push(prop.block);
 		}
 		return arr;
@@ -53,7 +53,7 @@ export default class AssemblerMutator extends Mutator {
 
 	getMixin(settings?: AdditionalSettings): object {
 		this.order = [];
-		const properties = super.properties as AssemblerMutatorBlock[];
+		const properties = super.properties as DynamicListBlockMutatorBlock[];
 		const propertieMap = Object.create(null);
 		const containerBlockName = salt(10);
 		const containerBlockText = super.containerBlockText;
@@ -234,7 +234,7 @@ export default class AssemblerMutator extends Mutator {
 						throw new Error(`Unsupported input type: ${inputType}`);
 				}
 				if(inputNew) {
-					if(settings?.alignInputs) inputNew.setAlign(settings?.alignInputs)
+					if(settings?.alignInputs !== null) inputNew.setAlign(settings?.alignInputs ?? Blockly.inputs.Align.RIGHT)
 				}
 			}
 		};
