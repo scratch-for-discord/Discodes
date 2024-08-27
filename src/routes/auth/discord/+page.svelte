@@ -1,7 +1,6 @@
 <script lang="ts">
 	import getDB from "$lib/utils/localDB/manager";
-
-    export const ssr = false
+    
     const fragment = new URLSearchParams(window.location.hash.slice(1));
     const [accessToken, tokenType] = [fragment.get('access_token'), fragment.get('token_type')];
 

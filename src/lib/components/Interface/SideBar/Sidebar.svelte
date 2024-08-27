@@ -4,8 +4,10 @@
     import FaHome from 'svelte-icons/fa/FaHome.svelte'
     // @ts-expect-error
     import GoFileDirectory from 'svelte-icons/go/GoFileDirectory.svelte'
+    // @ts-expect-error
+    import FaUserAlt from 'svelte-icons/fa/FaUserAlt.svelte'
 
-    type PageType = "home"|"workspace"
+    type PageType = "home"|"workspace"|"account"
 
     export let currentPage: PageType = "home"
 
@@ -31,5 +33,11 @@
             <GoFileDirectory />
         </div>
         Workspaces
+    </button>
+    <button class={`sidebar-buttons lg:flex ${isShowing ? "flex" : "hidden"} md:flex`} on:click={getSetPageFunction("account")}>
+        <div class="icons">
+            <FaUserAlt />
+        </div>
+        Your Account
     </button>
 </div>

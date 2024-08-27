@@ -1,16 +1,11 @@
 <script lang="ts">
 	import * as Dialog from "$lib/components/ui/dialog";
-	import { encrypt } from "$lib/crypto/encrypt";
-	import { decrypt } from "$lib/crypto/decrypt";
     import getLocalDB from "$lib/utils/localDB/manager"
 
     const db = getLocalDB()
 
     let wpName = ""
     let botToken = ""
-    let password = ""
-
-    let passwordMessage = "This Field is required"
 
     let isOpen = false
 </script>
@@ -19,7 +14,6 @@
     if(isOpened) {
         wpName = ""
         botToken = ""
-        password = ""
     }
 }}>
 	<Dialog.Trigger>
@@ -47,13 +41,6 @@
                 <p class="text-sm text-red-500 mt-2">This Field is required</p>
             {/if}
         </div>
-        <div class="w-full flex flex-col">
-            <label for="wpc-bot-password" class="mb-2 outline-none">Password</label>
-            <input type="text" id="wpc-bot-password" class="py-2 px-3 rounded-md" bind:value={password}>
-            {#if !password}
-                <p class="text-sm text-red-500 mt-2">{passwordMessage}</p>
-            {/if}
-        </div>
         <Dialog.Footer>
             <div class="w-full flex justify-end">
                 <Dialog.Close>
@@ -61,21 +48,10 @@
                         Close
                     </button>
                 </Dialog.Close>
-                <button class="px-3 py-2 rounded-lg ml-2 bg-green-600 disabled:bg-green-700 disabled:text-gray-400" disabled={!wpName || !botToken || !password} on:click={async() => {
-                    if(password.length < 8) {
-                        passwordMessage = "Password must be at least 8 characters in length"
-                        password = ""
-                        return
-                    }
-
+                <button class="px-3 py-2 rounded-lg ml-2 bg-green-600 disabled:bg-green-700 disabled:text-gray-400" disabled={!wpName || !botToken} on:click={async() => {
                     const user = localStorage.getItem("user")
 
                     if(!user) return window.location.replace("/")
-
-                    const encrypted = await encrypt(botToken, password)
-
-                    console.log(encrypted)
-                    console.log(await decrypt(encrypted, password))
 
                     db.addWorkspace({
 						token: botToken,

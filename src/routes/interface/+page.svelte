@@ -6,8 +6,9 @@
     import "./interface.css"
     import { Button } from "$lib/components/ui/button";
     import ChevronLeft from "lucide-svelte/icons/chevron-left";
+	import Account from "$lib/components/Interface/SideBar/SidebarComponents/Account.svelte";
 
-    let currentPage: "home"|"workspace" = "home"
+    let currentPage: "home"|"workspace"|"account" = "home"
     let isShowing = false
 
     const db = getLocalDB()
@@ -33,6 +34,8 @@
             <Home />
         {:else if currentPage === "workspace"}
             <Workspaces />
+        {:else if currentPage === "account"}
+            <Account />
         {/if}
     </div>
 </main>
