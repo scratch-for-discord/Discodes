@@ -12,7 +12,7 @@ export default class Toolbox {
 
 		return {
 			kind: "categoryToolbox",
-			contents: contents as ToolboxItemInfo[]
+			contents: contents as ToolboxItemInfo[],
 		};
 	}
 
@@ -33,7 +33,7 @@ export default class Toolbox {
 					contents: [],
 					kind: "category",
 					name: mainParent,
-					colour: "#2facf5"
+					colour: "#2facf5",
 				};
 			}
 
@@ -76,8 +76,8 @@ export default class Toolbox {
 							inputs[data.argName] = {
 								block: {
 									type: data.type,
-									fields: {}
-								}
+									fields: {},
+								},
 							};
 							// @ts-expect-error Accessing unknown type
 							inputs[data.argName]["block"]["fields"][key] = value;
@@ -90,7 +90,7 @@ export default class Toolbox {
 							: {
 									kind: "block",
 									type: blockDef.id,
-									inputs: inputs
+									inputs: inputs,
 								}
 					);
 				}
@@ -99,7 +99,7 @@ export default class Toolbox {
 					kind: "category",
 					name: definitions.default.category.name,
 					contents: blockContents,
-					colour: definitions.default.category.colour
+					colour: definitions.default.category.colour,
 				});
 			}
 			return;
@@ -111,7 +111,7 @@ export default class Toolbox {
 			kind: "category",
 			name: element,
 			contents: [],
-			colour: "#2facf5"
+			colour: "#2facf5",
 		});
 
 		await this.setStruct(

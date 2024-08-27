@@ -11,8 +11,8 @@
 
 		fetch("https://discord.com/api/users/@me", {
 			headers: {
-				Authorization: `${tokenType} ${accessToken}`
-			}
+				Authorization: `${tokenType} ${accessToken}`,
+			},
 		})
 			.then((r) => r.json())
 			.then((v) => {

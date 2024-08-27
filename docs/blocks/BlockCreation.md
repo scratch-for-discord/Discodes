@@ -124,8 +124,8 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "https://wiki.discodes.xyz/",
 		code: (args) => {
 			return `console.log("Hello World")`;
-		}
-	}
+		},
+	},
 ];
 ```
 
@@ -185,7 +185,7 @@ import TextInput from "$lib/utils/BlockGen/Inputs/TextInput";
 
 const blocks: BlockDefinition[] = {
 	// All the properties
-	args: [new TextInput("TEXT", "Hello World")]
+	args: [new TextInput("TEXT", "Hello World")],
 };
 ```
 
@@ -228,8 +228,8 @@ const blocks: BlockDefinition[] = [
 		inline: true,
 		colour: "#5ba58c",
 		tooltip: "This block prints Hello World.",
-		helpUrl: "https://wiki.discodes.xyz/"
-	}
+		helpUrl: "https://wiki.discodes.xyz/",
+	},
 ];
 ```
 

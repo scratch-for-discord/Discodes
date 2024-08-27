@@ -52,7 +52,7 @@
 				<button
 					class="px-3 py-2 rounded-lg ml-2 bg-green-600 disabled:bg-green-700 disabled:text-gray-400"
 					disabled={!wpName || !botToken}
-					on:click={async() => {
+					on:click={async () => {
 						const user = localStorage.getItem("user");
 
 						if (!user) return window.location.replace("/");
@@ -71,23 +71,23 @@
 									lastEditedAt: new Date(),
 									blocklyWorkspaceSave: {
 										blockLength: 0,
-										workspaceSave: {}
+										workspaceSave: {},
 									},
 									thumbnail: "/src/lib/static/favicon.png",
-									timeWasted: 0
-								}
+									timeWasted: 0,
+								},
 							],
 							description: "A Discodes workspace",
 							editors: [JSON.parse(user).username],
 							viewers: [],
 							timeWasted: 0,
-							lastOpened: "index.discodes"
+							lastOpened: "index.discodes",
 						});
 
 						window.dispatchEvent(
 							new StorageEvent("storage", {
 								key: "workspaces",
-								newValue: localStorage.getItem("workspaces")
+								newValue: localStorage.getItem("workspaces"),
 							})
 						);
 

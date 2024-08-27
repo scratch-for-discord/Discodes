@@ -24,7 +24,7 @@ class LocalDBManager extends Dexie {
 		this.version(1).stores({
 			plugins: "id",
 			workspaces: "id",
-			examples: "id"
+			examples: "id",
 		});
 	}
 }

@@ -1,9 +1,9 @@
 {
 	"useTabs": true,
 	"singleQuote": false,
-	"trailingComma": "none",
+	"trailingComma": "es5",
 	"printWidth": 100,
 	"semi": true,
-	"plugins": ["prettier-plugin-svelte"],
+	"plugins": ["prettier-plugin-svelte", "eslint-plugin-prettier"],
 	"overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }]
 }

@@ -19,7 +19,7 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "",
 		code: (args) => {
 			return `for (let i = 0; i < ${args.VALUE === "" ? "0" : args.VALUE}; i++) {\n${args.INPUT === "" ? "" : args.INPUT}\n}`;
-		}
+		},
 	},
 	{
 		id: "repeat_while",
@@ -27,10 +27,10 @@ const blocks: BlockDefinition[] = [
 		args: [
 			new Dropdown("WHILE", DropdownType.Auto, {
 				while: "while",
-				until: "until"
+				until: "until",
 			}),
 			new ValueInput("CONDITION", BlockType.Boolean),
-			new StatementInput("INPUT")
+			new StatementInput("INPUT"),
 		],
 		shape: BlockShape.Action,
 		inline: true,
@@ -39,7 +39,7 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "",
 		code: (args) => {
 			return `while (${args.WHILE === "while" ? "" : "!"}( ${args.CONDITION === "" ? "false" : args.CONDITION} )) {\n${args.INPUT === "" ? "" : args.INPUT}\n}`;
-		}
+		},
 	},
 	{
 		/**
@@ -52,7 +52,7 @@ const blocks: BlockDefinition[] = [
 			new ValueInput("START", BlockType.Number),
 			new ValueInput("END", BlockType.Number),
 			new ValueInput("STEP", BlockType.Number),
-			new StatementInput("INPUT")
+			new StatementInput("INPUT"),
 		],
 		shape: BlockShape.Action,
 		inline: true,
@@ -69,7 +69,7 @@ const blocks: BlockDefinition[] = [
 				return `for(let vk${varName} = 0; false; vk${varName}+= 0) {}`;
 			}
 			return `for (${variable}; ${condition}; ${step}) {\n${args.INPUT}\n}`;
-		}
+		},
 	},
 	{
 		id: "array_iteration",
@@ -77,7 +77,7 @@ const blocks: BlockDefinition[] = [
 		args: [
 			new ValueInput("ITEM", BlockType.Any),
 			new ValueInput("ARRAY", BlockType.Array),
-			new StatementInput("INPUT")
+			new StatementInput("INPUT"),
 		],
 		shape: BlockShape.Action,
 		inline: true,
@@ -86,7 +86,7 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "",
 		code: (args) => {
 			return `for (let ${args.ITEM} of ${args.ARRAY}) {\n${args.INPUT}\n}`;
-		}
+		},
 	},
 	{
 		id: "break",
@@ -94,8 +94,8 @@ const blocks: BlockDefinition[] = [
 		args: [
 			new Dropdown("ACTION", DropdownType.Auto, {
 				break: "break",
-				continue: "continue"
-			})
+				continue: "continue",
+			}),
 		],
 		shape: BlockShape.Action,
 		inline: true,
@@ -104,12 +104,12 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "",
 		code: (args) => {
 			return `${args.ACTION};`;
-		}
-	}
+		},
+	},
 ];
 
 const category: CategoryDefinition = {
 	name: "Loops",
-	colour: rgbToHex(91, 165, 91)
+	colour: rgbToHex(91, 165, 91),
 };
 export default { blocks, category };

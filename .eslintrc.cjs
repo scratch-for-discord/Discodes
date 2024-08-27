@@ -4,37 +4,37 @@ module.exports = {
 		"eslint:recommended",
 		"plugin:@typescript-eslint/recommended",
 		"plugin:svelte/recommended",
-		"prettier"
+		"prettier",
 	],
 	parser: "@typescript-eslint/parser",
 	plugins: ["@typescript-eslint"],
 	parserOptions: {
 		sourceType: "module",
 		ecmaVersion: 2020,
-		extraFileExtensions: [".svelte"]
+		extraFileExtensions: [".svelte"],
 	},
 	env: {
 		browser: true,
 		es2017: true,
-		node: true
+		node: true,
 	},
 	overrides: [
 		{
 			files: ["*.svelte"],
 			parser: "svelte-eslint-parser",
 			parserOptions: {
-				parser: "@typescript-eslint/parser"
-			}
-		}
+				parser: "@typescript-eslint/parser",
+			},
+		},
 	],
 	rules: {
 		semi: [1, "always"],
 		quotes: [1, "double", "avoid-escape"],
 		curly: [1, "multi-line"],
-		"space-before-function-paren": [2, "never"],
+		"space-before-function-paren": "off",
 		"@typescript-eslint/semi": [1, "always"],
 		"@typescript-eslint/quotes": [1, "double", "avoid-escape"],
-		"@typescript-eslint/space-before-function-paren": [2, "never"],
+		"@typescript-eslint/space-before-function-paren": "off",
 		"no-use-before-define": 0,
 		"no-unused-vars": 0,
 		"@typescript-eslint/no-use-before-define": 2,
@@ -47,6 +47,6 @@ module.exports = {
 		"@typescript-eslint/no-non-null-assertion": 0,
 		"@typescript-eslint/no-unsafe-argument": 0,
 		"spaced-comment": 0,
-		"eol-last": ["error", "always"]
-	}
+		"eol-last": ["error", "always"],
+	},
 };

@@ -64,7 +64,7 @@ export default class AssemblerMutator extends Mutator {
 		}
 
 		Blockly.Blocks[containerBlockName] = {
-			init: function(this: Blockly.Block) {
+			init: function (this: Blockly.Block) {
 				this.jsonInit({
 					type: containerBlockName,
 					message0: `${containerBlockText}`,
@@ -72,11 +72,11 @@ export default class AssemblerMutator extends Mutator {
 
 					colour: settings?.color ?? 230,
 					tooltip: "Put blocks under the container block to modify the original block",
-					helpUrl: ""
+					helpUrl: "",
 				});
-			}
+			},
 		};
-		javascriptGenerator.forBlock[containerBlockName] = function() {
+		javascriptGenerator.forBlock[containerBlockName] = function () {
 			return "";
 		};
 		const mixin = {
@@ -95,7 +95,7 @@ export default class AssemblerMutator extends Mutator {
 				/*if(orderListChanged(oldOrder, this.order)) */
 				this.updateShape_();
 			},
-			decompose: function(this: Blockly.Block, workspace: Blockly.WorkspaceSvg) {
+			decompose: function (this: Blockly.Block, workspace: Blockly.WorkspaceSvg) {
 				const containerBlock = workspace.newBlock(containerBlockName);
 				containerBlock.initSvg();
 				// eslint-disable-next-line
@@ -129,7 +129,7 @@ export default class AssemblerMutator extends Mutator {
 						for (const conStr of Object.keys(itemBlock.connections_)) {
 							connections[conStr] = {
 								connection: itemBlock.connections_[conStr],
-								input_name: itemBlock.type
+								input_name: itemBlock.type,
 							};
 						}
 					}
@@ -170,7 +170,7 @@ export default class AssemblerMutator extends Mutator {
 					}
 				}
 			},
-			reconnectChildBlocks_: function(this: Blockly.Block, connections: ConnectionMap) {
+			reconnectChildBlocks_: function (this: Blockly.Block, connections: ConnectionMap) {
 				const count = new Map<string, number>();
 				for (const connectionKey in connections) {
 					const ConMap = connections[connectionKey];
@@ -216,7 +216,7 @@ export default class AssemblerMutator extends Mutator {
 					clauseBlock = clauseBlock.getNextBlock() as ClauseBlock | null;
 				}
 			},
-			appendInput_: function(this: Blockly.Block, input, name, fieldText) {
+			appendInput_: function (this: Blockly.Block, input, name, fieldText) {
 				const inputType = input.type || "input_value"; // Default to input_value if type is not specified
 				const inputCheck = input.check; // Check for input type if specified
 
@@ -233,7 +233,7 @@ export default class AssemblerMutator extends Mutator {
 					default:
 						throw new Error(`Unsupported input type: ${inputType}`);
 				}
-			}
+			},
 		};
 
 		return mixin;

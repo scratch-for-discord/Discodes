@@ -35,7 +35,7 @@ export default class NumberInput extends BaseInput<NumberIDef> {
 			type: "field_number",
 			name: super.name,
 			value: this._value,
-			...this._settings
+			...this._settings,
 		};
 	}
 }

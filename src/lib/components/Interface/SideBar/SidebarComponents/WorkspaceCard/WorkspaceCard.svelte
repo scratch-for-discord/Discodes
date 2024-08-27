@@ -23,7 +23,7 @@
 				window.dispatchEvent(
 					new StorageEvent("storage", {
 						newValue: localStorage.getItem("workspaces"),
-						key: "workspaces"
+						key: "workspaces",
 					})
 				);
 			}}>Delete</button

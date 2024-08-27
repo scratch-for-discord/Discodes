@@ -2,7 +2,7 @@ export enum WSOPCodes {
 	CommitFile = 0,
 	TerminalUpdate = 1,
 	InstallationComplete = 2,
-	BotStarted = 3
+	BotStarted = 3,
 }
 
 export interface WebSocketData<T> {
@@ -11,7 +11,7 @@ export interface WebSocketData<T> {
 }
 
 export const WEBSOCKET_ERRORS = {
-	NotConnected: "WEBSOCKET ERROR: NOT CONNECTED"
+	NotConnected: "WEBSOCKET ERROR: NOT CONNECTED",
 };
 
 export interface WebSocketInitOptions {
@@ -72,8 +72,8 @@ export class WebSocketManager {
 				op: WSOPCodes.CommitFile,
 				d: {
 					app: appId,
-					files: this.files
-				}
+					files: this.files,
+				},
 			})
 		);
 	}

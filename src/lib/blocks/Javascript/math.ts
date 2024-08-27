@@ -20,7 +20,7 @@ const blocks: BlockDefinition[] = [
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
 		code: (args) => {
 			return `${args.NUMBER}`;
-		}
+		},
 	},
 	{
 		id: "operations",
@@ -33,13 +33,13 @@ const blocks: BlockDefinition[] = [
 				"*": "*",
 				"/": "/",
 				"%": "%",
-				"^": "pow"
+				"^": "pow",
 			}),
-			new ValueInput("OPERAND2", BlockType.Number)
+			new ValueInput("OPERAND2", BlockType.Number),
 		],
 		placeholders: [
 			new Placeholder(PlaceholderType.Block, "OPERAND1", "number", { NUMBER: 1 }),
-			new Placeholder(PlaceholderType.Block, "OPERAND2", "number", { NUMBER: 2 })
+			new Placeholder(PlaceholderType.Block, "OPERAND2", "number", { NUMBER: 2 }),
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Number,
@@ -51,7 +51,7 @@ const blocks: BlockDefinition[] = [
 		code: (args) => {
 			if (args.OPERATOR === "pow") return `Math.pow(${args.OPERAND1}, ${args.OPERAND2})`;
 			return `${args.OPERAND1} ${args.OPERATOR} ${args.OPERAND2}`;
-		}
+		},
 	},
 	{
 		id: "operations2",
@@ -73,9 +73,9 @@ const blocks: BlockDefinition[] = [
 				atan: "atan",
 				round: "round",
 				"round up": "ceil",
-				"round down": "floor"
+				"round down": "floor",
 			}),
-			new ValueInput("NUMBER", BlockType.Number)
+			new ValueInput("NUMBER", BlockType.Number),
 		],
 		placeholders: [new Placeholder(PlaceholderType.Block, "NUMBER", "number", { NUMBER: 1 })],
 		shape: BlockShape.Floating,
@@ -104,7 +104,7 @@ const blocks: BlockDefinition[] = [
 				default:
 					return `Math.${args.OPERATION}(${args.NUMBER})`;
 			}
-		}
+		},
 	},
 	{
 		id: "constants",
@@ -117,8 +117,8 @@ const blocks: BlockDefinition[] = [
 				"√(2)": "Math.SQRT2",
 				"√(½)": "Math.Math.SQRT1_2",
 				"∞": "Infinity",
-				NaN: "NaN"
-			})
+				NaN: "NaN",
+			}),
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Number,
@@ -129,7 +129,7 @@ const blocks: BlockDefinition[] = [
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
 		code: (args) => {
 			return `${args.CONSTANT}`;
-		}
+		},
 	},
 	{
 		id: "is",
@@ -144,8 +144,8 @@ const blocks: BlockDefinition[] = [
 				whole: "whole",
 				positive: "positive",
 				negative: "negative",
-				"divisible by": "divisible"
-			})
+				"divisible by": "divisible",
+			}),
 		],
 		placeholders: [new Placeholder(PlaceholderType.Block, "NUMBER", "number", { NUMBER: 1 })],
 		shape: BlockShape.Floating,
@@ -174,7 +174,7 @@ const blocks: BlockDefinition[] = [
 				default:
 					return `${args.NUMBER} % ${args.VALUE} === 0`; // fix when added mutator
 			}
-		}
+		},
 	},
 	{
 		id: "array_math",
@@ -189,9 +189,9 @@ const blocks: BlockDefinition[] = [
 				mode: "mode",
 				range: "range",
 				random: "random",
-				"standard deviation": "standard deviation"
+				"standard deviation": "standard deviation",
 			}),
-			new ValueInput("ARRAY", BlockType.Array)
+			new ValueInput("ARRAY", BlockType.Array),
 		],
 		// placeholders: [
 		//     new Placeholder(PlaceholderType.Block, "ARRAY", "array", {ARRAY: [1, 2, 3]})
@@ -226,7 +226,7 @@ const blocks: BlockDefinition[] = [
 				default:
 					return `Math.${args.OPERATION}(${args.ARRAY})`;
 			}
-		}
+		},
 	},
 	{
 		id: "random_int",
@@ -234,7 +234,7 @@ const blocks: BlockDefinition[] = [
 		args: [new ValueInput("MIN", BlockType.Number), new ValueInput("MAX", BlockType.Number)],
 		placeholders: [
 			new Placeholder(PlaceholderType.Block, "MIN", "number", { NUMBER: 1 }),
-			new Placeholder(PlaceholderType.Block, "MAX", "number", { NUMBER: 10 })
+			new Placeholder(PlaceholderType.Block, "MAX", "number", { NUMBER: 10 }),
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Number,
@@ -245,7 +245,7 @@ const blocks: BlockDefinition[] = [
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
 		code: (args) => {
 			return `Math.floor(Math.random() * (${args.MAX} - ${args.MIN}) + ${args.MIN})`;
-		}
+		},
 	},
 	{
 		//Todo: Delete/Remake completely this block.
@@ -261,7 +261,7 @@ const blocks: BlockDefinition[] = [
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
 		code: () => {
 			return "Math.random()";
-		}
+		},
 	},
 	{
 		id: "toNumber",
@@ -277,7 +277,7 @@ const blocks: BlockDefinition[] = [
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
 		code: (args) => {
 			return `parseInt(${args.TEXT})`;
-		}
+		},
 	},
 	{
 		id: "constrain {VALUE} between {MIN} and {MAX}",
@@ -285,12 +285,12 @@ const blocks: BlockDefinition[] = [
 		args: [
 			new ValueInput("VALUE", BlockType.Number),
 			new ValueInput("MIN", BlockType.Number),
-			new ValueInput("MAX", BlockType.Number)
+			new ValueInput("MAX", BlockType.Number),
 		],
 		placeholders: [
 			new Placeholder(PlaceholderType.Block, "VALUE", "number", { NUMBER: 50 }),
 			new Placeholder(PlaceholderType.Block, "MIN", "number", { NUMBER: 1 }),
-			new Placeholder(PlaceholderType.Block, "MAX", "number", { NUMBER: 100 })
+			new Placeholder(PlaceholderType.Block, "MAX", "number", { NUMBER: 100 }),
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Number,
@@ -301,8 +301,8 @@ const blocks: BlockDefinition[] = [
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
 		code: (args) => {
 			return `Math.min(Math.max(${args.VALUE}, ${args.MIN}), ${args.MAX})`;
-		}
-	}
+		},
+	},
 	// {
 	//     id: "chance {CHANCE} %",
 	//     text: "{CHANCE} % chance of true",
@@ -327,7 +327,7 @@ const blocks: BlockDefinition[] = [
 
 const category: CategoryDefinition = {
 	name: "Math",
-	colour: "#5b67a5"
+	colour: "#5b67a5",
 };
 
 export default { blocks, category };

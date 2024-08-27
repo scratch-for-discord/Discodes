@@ -19,11 +19,11 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "",
 		code: () => {
 			return "";
-		}
+		},
 	},
 	{
 		label: true,
-		text: "Hello I am a label"
+		text: "Hello I am a label",
 	},
 	{
 		id: "parent_for_warning_test",
@@ -37,7 +37,7 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "",
 		code: () => {
 			return "";
-		}
+		},
 	},
 	{
 		id: "parent_warning_test",
@@ -51,14 +51,14 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "",
 		code: () => {
 			return "";
-		}
+		},
 	},
 	{
 		id: "permanent_warning_test",
 		text: "This block has a permanent warning",
 		warnings: [
 			//! This kinda sucks :/ Need to fix it I guess
-			new Warning(WarningType.Permanent, { message: "This is a permanent message." })
+			new Warning(WarningType.Permanent, { message: "This is a permanent message." }),
 		],
 		shape: BlockShape.Floating,
 		inline: true,
@@ -68,7 +68,7 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "",
 		code: () => {
 			return "";
-		}
+		},
 	},
 	{
 		id: "deprecated_warning_test",
@@ -82,13 +82,13 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "",
 		code: () => {
 			return "";
-		}
-	}
+		},
+	},
 ];
 
 const category: CategoryDefinition = {
 	name: "Warnings",
-	colour: "#db5c53"
+	colour: "#db5c53",
 };
 
 export default { blocks, category };

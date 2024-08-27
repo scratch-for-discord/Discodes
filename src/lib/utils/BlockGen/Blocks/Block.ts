@@ -10,14 +10,14 @@ import type {
 	BlockBlockDefinition,
 	BlockDefinition,
 	CheckBoxMutatorBlock,
-	MutatorBlock
+	MutatorBlock,
 } from "$lib/types/BlockDefinition";
 import {
 	BlockShape,
 	BlockType,
 	DropdownType,
 	MutatorType,
-	WarningType
+	WarningType,
 } from "$lib/enums/BlockTypes";
 import type { Abstract } from "blockly/core/events/events_abstract";
 import type { DiscodesInput } from "$lib/types/DiscodesInput";
@@ -203,7 +203,7 @@ export default class Block {
 			case "field_input":
 				this._block.appendDummyInput(generated.name).appendField(
 					new Blockly.FieldTextInput(generated.text, undefined, {
-						spellcheck: generated.spellcheck
+						spellcheck: generated.spellcheck,
 					})
 				);
 				break;
@@ -238,7 +238,7 @@ export default class Block {
 			inputsInline: blockDefinition.inline,
 			args0: [],
 			message0: "",
-			mutator: mutatorName == "" ? undefined : mutatorName
+			mutator: mutatorName == "" ? undefined : mutatorName,
 		};
 
 		blockClass._blocklyDefinition = blockDef;
@@ -264,7 +264,7 @@ export default class Block {
 		const BlockClass = this;
 		// Add The block to the blocks list
 		Blockly.Blocks[blockDef.type] = {
-			init: function(this: Blockly.Block) {
+			init: function (this: Blockly.Block) {
 				this.jsonInit(blockDef);
 
 				// We will pass the block in different functions of the class so we need it stored.
@@ -301,7 +301,7 @@ export default class Block {
 				// eslint-disable-next-line @typescript-eslint/no-this-alias
 				const block = this;
 				// Warnings Code
-				this.setOnChange(function(this: Blockly.Block, changeEvent: Abstract) {
+				this.setOnChange(function (this: Blockly.Block, changeEvent: Abstract) {
 					if (
 						importName &&
 						!this.isInFlyout &&
@@ -341,7 +341,7 @@ export default class Block {
 								const warningObject = {
 									message: message,
 									fieldName: fieldName,
-									warningType: warningType
+									warningType: warningType,
 								};
 								let i = 1;
 								while (input) {
@@ -358,7 +358,7 @@ export default class Block {
 						this.setWarningText(resultMessage);
 					}
 				});
-			}
+			},
 		};
 		const properties = blockDefinition.mutator?.properties;
 		const propertyMap: Record<string, MutatorBlock> = {};
@@ -373,7 +373,7 @@ export default class Block {
 		}
 
 		// Generating the export code
-		javascriptGenerator.forBlock[blockDef.type] = function(block: Blockly.Block) {
+		javascriptGenerator.forBlock[blockDef.type] = function (block: Blockly.Block) {
 			const args: Record<string, string | string[]> = {}; //? Object we will pass as argument for the custom code to run properly
 
 			for (const arg of blockDef.args0) {

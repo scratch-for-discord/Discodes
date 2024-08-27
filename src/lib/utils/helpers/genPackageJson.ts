@@ -10,7 +10,7 @@ interface PackageVersions {
  */
 export function generatePackageJson(packageVersions: PackageVersions): string {
 	const packageJson = {
-		dependencies: {} as Record<string, string>
+		dependencies: {} as Record<string, string>,
 	};
 
 	for (const packageName in packageVersions) {

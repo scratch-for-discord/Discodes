@@ -22,7 +22,7 @@ const blocks: BlockDefinition[] = [
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
 		code: (args) => {
 			return `"${args.TEXT}"`;
-		}
+		},
 	},
 	{
 		id: "create_text_with_x",
@@ -42,9 +42,9 @@ const blocks: BlockDefinition[] = [
 			{
 				block: "text_content",
 				adds: [new ValueInput("text_content", BlockType.String)],
-				once: true
-			}
-		])
+				once: true,
+			},
+		]),
 	},
 	{
 		id: "text_content",
@@ -59,7 +59,7 @@ const blocks: BlockDefinition[] = [
 		code: (args) => {
 			return `${args.TEXT_CONTENT}`;
 		},
-		hidden: true
+		hidden: true,
 	},
 	{
 		id: "text_count",
@@ -67,7 +67,7 @@ const blocks: BlockDefinition[] = [
 		args: [new ValueInput("INPUT", BlockType.String), new ValueInput("TEXT", BlockType.String)],
 		placeholders: [
 			new Placeholder(PlaceholderType.Block, "INPUT", "text", { TEXT: "o" }),
-			new Placeholder(PlaceholderType.Block, "TEXT", "text", { INPUT: "Hello World" })
+			new Placeholder(PlaceholderType.Block, "TEXT", "text", { INPUT: "Hello World" }),
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Number,
@@ -78,7 +78,7 @@ const blocks: BlockDefinition[] = [
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
 		code: (args) => {
 			return `String(${args.TEXT}).split(${args.INPUT}).length - 1`;
-		}
+		},
 	},
 	{
 		id: "text_trim",
@@ -87,12 +87,12 @@ const blocks: BlockDefinition[] = [
 			new Dropdown("SIDE", DropdownType.Auto, {
 				"both sides": "trim",
 				"left side": "trimLeft",
-				"right side": "trimRight"
+				"right side": "trimRight",
 			}),
-			new ValueInput("TEXT", BlockType.String)
+			new ValueInput("TEXT", BlockType.String),
 		],
 		placeholders: [
-			new Placeholder(PlaceholderType.Block, "TEXT", "text", { SIDE: " Hello World " })
+			new Placeholder(PlaceholderType.Block, "TEXT", "text", { SIDE: " Hello World " }),
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.String,
@@ -103,7 +103,7 @@ const blocks: BlockDefinition[] = [
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim",
 		code: (args) => {
 			return `String(${args.TEXT}).${args.SIDE}()`;
-		}
+		},
 	},
 	{
 		id: "text_case",
@@ -112,9 +112,9 @@ const blocks: BlockDefinition[] = [
 			new Dropdown("CASE", DropdownType.Auto, {
 				upper: "toUpperCase",
 				lower: "toLowerCase",
-				title: "toTitleCase"
+				title: "toTitleCase",
 			}),
-			new ValueInput("TEXT", BlockType.String)
+			new ValueInput("TEXT", BlockType.String),
 		],
 		placeholders: [new Placeholder(PlaceholderType.Block, "TEXT", "text", { CASE: "abc" })],
 		shape: BlockShape.Floating,
@@ -129,7 +129,7 @@ const blocks: BlockDefinition[] = [
 				return `String(${args.TEXT}).replace(/\\w\\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})`;
 			}
 			return `String(${args.TEXT}).${args.CASE}()`;
-		}
+		},
 	},
 	{
 		id: "text_substring",
@@ -140,21 +140,21 @@ const blocks: BlockDefinition[] = [
 				letter: "charAt",
 				"first letter": "start",
 				"last letter": "charEndAt",
-				"from end": "end"
+				"from end": "end",
 			}),
 			new ValueInput("INPUT1", BlockType.Number),
 			new Dropdown("TO", DropdownType.Auto, {
 				letter: "charAt",
 				last: "last",
 				"from start letter": "substring",
-				"x from end": "slice"
+				"x from end": "slice",
 			}),
-			new ValueInput("INPUT2", BlockType.Number)
+			new ValueInput("INPUT2", BlockType.Number),
 		],
 		placeholders: [
 			new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "hey" }),
 			new Placeholder(PlaceholderType.Block, "INPUT1", "number", { NUMBER: 1 }),
-			new Placeholder(PlaceholderType.Block, "INPUT2", "number", { NUMBER: 2 })
+			new Placeholder(PlaceholderType.Block, "INPUT2", "number", { NUMBER: 2 }),
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.String,
@@ -165,7 +165,7 @@ const blocks: BlockDefinition[] = [
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
 		code: (args) => {
 			return `String(${args.TEXT}).${args.FROM}(${args.INPUT1}, ${args.INPUT2})`; // No idea how to make this
-		}
+		},
 	},
 	{
 		id: "text_get_letter",
@@ -177,13 +177,13 @@ const blocks: BlockDefinition[] = [
 				"letter from end": "chatEndAt",
 				first: "charStart",
 				last: "charEnd",
-				random: "random"
+				random: "random",
 			}),
-			new ValueInput("INPUT", BlockType.Number)
+			new ValueInput("INPUT", BlockType.Number),
 		],
 		placeholders: [
 			new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "hey" }),
-			new Placeholder(PlaceholderType.Block, "INPUT", "number", { NUMBER: 1 })
+			new Placeholder(PlaceholderType.Block, "INPUT", "number", { NUMBER: 1 }),
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.String,
@@ -208,7 +208,7 @@ const blocks: BlockDefinition[] = [
 				default:
 					return "";
 			}
-		}
+		},
 	},
 	{
 		id: "text_find_occurrence",
@@ -217,13 +217,13 @@ const blocks: BlockDefinition[] = [
 			new ValueInput("TEXT", BlockType.String),
 			new Dropdown("FIRST_LAST", DropdownType.Auto, {
 				first: "indexOf",
-				last: "lastIndexOf"
+				last: "lastIndexOf",
 			}),
-			new ValueInput("ITEM", BlockType.String)
+			new ValueInput("ITEM", BlockType.String),
 		],
 		placeholders: [
 			new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "hey hey" }),
-			new Placeholder(PlaceholderType.Block, "ITEM", "text", { TEXT: "hey" })
+			new Placeholder(PlaceholderType.Block, "ITEM", "text", { TEXT: "hey" }),
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Number,
@@ -235,7 +235,7 @@ const blocks: BlockDefinition[] = [
 		code: (args) => {
 			const text = `String(${args.TEXT})`;
 			return `${text}.${args.FIRST_LAST}(${args.ITEM})`;
-		}
+		},
 	},
 	{
 		id: "text_reverse",
@@ -251,7 +251,7 @@ const blocks: BlockDefinition[] = [
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
 		code: (args) => {
 			return `String(${args.TEXT}).split('').reverse().join('')`;
-		}
+		},
 	},
 	{
 		id: "text_is_empty",
@@ -267,7 +267,7 @@ const blocks: BlockDefinition[] = [
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
 		code: (args) => {
 			return `String(${args.TEXT}).length === 0`;
-		}
+		},
 	},
 	{
 		id: "text_replace",
@@ -275,12 +275,12 @@ const blocks: BlockDefinition[] = [
 		args: [
 			new ValueInput("INPUT", BlockType.String),
 			new ValueInput("REPLACE", BlockType.String),
-			new ValueInput("TEXT", BlockType.String)
+			new ValueInput("TEXT", BlockType.String),
 		],
 		placeholders: [
 			new Placeholder(PlaceholderType.Block, "INPUT", "text", { TEXT: "Hello" }),
 			new Placeholder(PlaceholderType.Block, "REPLACE", "text", { TEXT: "Bye" }),
-			new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "Hello World" })
+			new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "Hello World" }),
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.String,
@@ -291,7 +291,7 @@ const blocks: BlockDefinition[] = [
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
 		code: (args) => {
 			return `String(${args.TEXT}).replace(new RegExp(${args.INPUT}, 'g'), ${args.REPLACE})`;
-		}
+		},
 	},
 	{
 		id: "text_length",
@@ -307,7 +307,7 @@ const blocks: BlockDefinition[] = [
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/length",
 		code: (args) => {
 			return `String(${args.TEXT}).length`;
-		}
+		},
 	},
 	{
 		id: "text_starts_ends",
@@ -317,13 +317,13 @@ const blocks: BlockDefinition[] = [
 			new Dropdown("OPTION", DropdownType.Auto, {
 				"starts with": "startsWith",
 				"ends with": "endsWith",
-				includes: "includes"
+				includes: "includes",
 			}),
-			new ValueInput("OTHERTEXT", BlockType.String)
+			new ValueInput("OTHERTEXT", BlockType.String),
 		],
 		placeholders: [
 			new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "abcdefg" }),
-			new Placeholder(PlaceholderType.Block, "OTHERTEXT", "text", { TEXT: "abc" })
+			new Placeholder(PlaceholderType.Block, "OTHERTEXT", "text", { TEXT: "abc" }),
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Boolean,
@@ -334,7 +334,7 @@ const blocks: BlockDefinition[] = [
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
 		code: (args) => {
 			return `String(${args.TEXT}).${args.OPTION}(${args.OTHERTEXT})`;
-		}
+		},
 	},
 	{
 		id: "text_newline",
@@ -348,7 +348,7 @@ const blocks: BlockDefinition[] = [
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
 		code: () => {
 			return "\\n";
-		}
+		},
 	},
 	{
 		id: "text_contains_number",
@@ -364,7 +364,7 @@ const blocks: BlockDefinition[] = [
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
 		code: (args) => {
 			return `String(${args.TEXT}).match(/\\d+/g) !== null`;
-		}
+		},
 	},
 	{
 		id: "text_for_each",
@@ -372,10 +372,10 @@ const blocks: BlockDefinition[] = [
 		args: [
 			new Dropdown("SELECT", DropdownType.Auto, {
 				character: "char",
-				word: "word"
+				word: "word",
 			}),
 			new ValueInput("TEXT", BlockType.String),
-			new StatementInput("INPUT")
+			new StatementInput("INPUT"),
 		],
 		placeholders: [new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "abc" })],
 		shape: BlockShape.Action,
@@ -393,7 +393,7 @@ const blocks: BlockDefinition[] = [
 				default:
 					return "";
 			}
-		}
+		},
 	},
 	{
 		id: "text_character",
@@ -401,8 +401,8 @@ const blocks: BlockDefinition[] = [
 		args: [
 			new Dropdown("SELECT", DropdownType.Auto, {
 				character: "char",
-				word: "word"
-			})
+				word: "word",
+			}),
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.String,
@@ -420,13 +420,13 @@ const blocks: BlockDefinition[] = [
 				default:
 					return "";
 			}
-		}
-	}
+		},
+	},
 ];
 
 const category: CategoryDefinition = {
 	name: "Text",
-	colour: "#5ba58c"
+	colour: "#5ba58c",
 };
 
 export default { blocks, category };

@@ -10,7 +10,7 @@ const dom = {
 		}
 		element.classList.add(...classNames);
 		return true;
-	}
+	},
 };
 
 class CustomCategory extends Blockly.ToolboxCategory {

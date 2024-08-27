@@ -30,7 +30,7 @@ export default class StatementInput extends BaseInput<StatementIDef> {
 	getDefinition(): StatementIDef {
 		return {
 			type: "input_statement",
-			name: super.name
+			name: super.name,
 		};
 	}
 }

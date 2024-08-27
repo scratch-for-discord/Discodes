@@ -24,7 +24,7 @@ export default class TextInput extends BaseInput<TextIDef> {
 			type: "field_input",
 			name: super.name,
 			text: this._text,
-			spellcheck: false
+			spellcheck: false,
 		};
 	}
 }

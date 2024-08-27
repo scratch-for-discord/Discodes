@@ -27,10 +27,10 @@
 	const dispatch = createEventDispatcher();
 
 	Blockly.setLocale({
-		...En
+		...En,
 	});
 
-	onMount(async() => {
+	onMount(async () => {
 		const query = new URLSearchParams(window.location.search);
 		const id = query.get("id");
 
@@ -54,7 +54,7 @@
 			Blockly.Events.BLOCK_CHANGE,
 			Blockly.Events.BLOCK_CREATE,
 			Blockly.Events.BLOCK_DELETE,
-			Blockly.Events.BLOCK_MOVE
+			Blockly.Events.BLOCK_MOVE,
 		]);
 
 		function updateCode(event: Abstract) {
