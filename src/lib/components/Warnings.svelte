@@ -73,7 +73,7 @@
 									<p><span class="font-bold text-orange-400">Warning:</span> {warning.message}</p>
 								{/each}<Button
 									class="mt-3"
-									on:click={async () => {
+									on:click={async() => {
 										await gotoBlock(id);
 									}}>Go to block</Button
 								></Accordion.Content

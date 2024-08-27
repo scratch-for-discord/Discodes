@@ -31,7 +31,7 @@
 		localDB.loadBlocklyFromFile(currentFile, discodesWorkspaceID, workspace);
 	};
 
-	onMount(async () => {
+	onMount(async() => {
 		toolbox = new Toolbox();
 		toolboxJson = await toolbox.generate();
 

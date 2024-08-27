@@ -52,7 +52,7 @@
 				<button
 					class="px-3 py-2 rounded-lg ml-2 bg-green-600 disabled:bg-green-700 disabled:text-gray-400"
 					disabled={!wpName || !botToken}
-					on:click={async () => {
+					on:click={async() => {
 						const user = localStorage.getItem("user");
 
 						if (!user) return window.location.replace("/");
