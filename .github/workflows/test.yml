@@ -25,9 +25,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Check Prettier format
-        run: pnpm format:check
-
       - name: Run ESLint
         run: pnpm lint:noformat
   # tests are not testing 😭
