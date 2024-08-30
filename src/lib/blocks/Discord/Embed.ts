@@ -12,6 +12,18 @@ Logic category is finished.
 */
 const blocks: BlockDefinition[] = [
 	{
+		id: "field_test",
+		text: "field",
+		shape: BlockShape.Value,
+		colour: rgbToHex(91, 128, 165),
+		tooltip: "",
+		output: BlockType.DiscordAPIEmbedField,
+		helpUrl: "",
+		code: (args) => {
+			return "";
+		},
+	},
+	{
 		id: "create_embed",
 		text: "Create embed\n",
 		shape: BlockShape.Value,
@@ -22,6 +34,10 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "",
 		code: (args) => {
 			return "";
+		},
+		extraState: {
+			title: true,
+			description: true
 		},
         mutator: new CheckboxMutator(
 			"Create embed",

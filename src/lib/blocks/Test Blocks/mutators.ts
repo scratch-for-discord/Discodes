@@ -89,10 +89,14 @@ const blocks: BlockDefinition[] = [
 		id: "checkbox_mutator",
 		text: "checkbox mutator\n",
 		shape: BlockShape.Action,
-		inline: true,
+		inline: false,
 		colour: rgbToHex(91, 128, 165),
 		warnings: [
-			new Warning(WarningType.Input, { fieldName: "if_input"})
+			new Warning(WarningType.Input, { fieldName: "if_input"}),
+			new Warning(WarningType.Input, { fieldName: "if_inpu"}),
+			new Warning(WarningType.Input, { fieldName: "if_inp"})
+
+
 		],
 
 		tooltip: "Returns the opposite of the input",
@@ -109,16 +113,26 @@ const blocks: BlockDefinition[] = [
 					inputName: "if_test",
 					adds: [
 						new ValueInput("if_input", BlockType.Boolean).setField("else if"),
-						new StatementInput("if_statement").setField("do")
 					],
 					defaultValue: true
 				},
 				{
 					text: "input 2",
-					inputName: "else_test",
-					adds: [new StatementInput("else_input").setField("else")],
-					defaultValue: false
-				}
+					inputName: "if_teest1",
+					adds: [
+						new ValueInput("if_inpu", BlockType.Boolean).setField("else if"),
+					],
+					defaultValue: true
+				},
+				{
+					text: "input 2",
+					inputName: "if_teeest2",
+					adds: [
+						new ValueInput("if_inp", BlockType.Boolean).setField("else if"),
+					],
+					defaultValue: true
+				},
+
 			],
 			{
 				color: rgbToHex(91, 128, 165)

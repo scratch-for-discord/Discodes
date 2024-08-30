@@ -1,4 +1,4 @@
-import type { BlockDefinition } from "$lib/types/BlockDefinition";
+import type { BlockBlockDefinition, BlockDefinition } from "$lib/types/BlockDefinition";
 import type { FlyoutDefinition, ToolboxDefinition, ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import Blockly from "blockly/core";
 
@@ -132,6 +132,7 @@ export default class Toolbox {
 							: {
 									kind: "block",
 									type: blockDef.id,
+									extraState: (blockDef as BlockBlockDefinition).extraState ?? {},
 									inputs: inputs
 								}
 					);

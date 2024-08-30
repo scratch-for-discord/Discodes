@@ -117,6 +117,7 @@ export default class CheckboxMutator extends Mutator {
 
 
 				this.updateShape_();
+				console.log(connections)
 				this.reconnectChildBlocks_(connections);
 			},
 			//! Disable eslint cuz the state variable is of type any until they fully migrate to typescript
@@ -125,14 +126,15 @@ export default class CheckboxMutator extends Mutator {
 				for (let i = 1; i <= this.inputs_.length; i++) {
 					const property = propertieMap[this.fields_[i - 1]];
 					for (const add of property.adds) {
-						this.removeInput(add.name + i, true);
+						
+						this.removeInput(add.name + "1", true);
 					}
 				}
 				for (let i = 1; i <= this.inputs_.length; i++) {
 					const property = propertieMap[this.fields_[i - 1]];
 					if (!this.inputs_[i - 1]) continue;
 					for (const add of property.adds) {
-						this.appendInput_(add.generate(), add.name + i, add.getField());
+						this.appendInput_(add.generate(), add.name + "1", add.getField());
 					}
 				}
 			},
@@ -150,8 +152,8 @@ export default class CheckboxMutator extends Mutator {
 					const property = propertieMap[this.fields_[i]];
 					if (!this.inputs_[i]) continue;
 					for (const add of property.adds) {
-						const input = this.getInput(add.name + i);
-						containerBlock.connections_[add.name + i] = input && input.connection!.targetConnection;
+						const input = this.getInput(add.name + "1");
+						containerBlock.connections_[add.name + "1"] = input && input.connection!.targetConnection;
 					}
 				}
 			},

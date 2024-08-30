@@ -4,38 +4,55 @@ import type BaseInput from "$lib/utils/BlockGen/Inputs/BaseInput";
 import type { Mutator } from "$lib/utils/BlockGen/Mutators/Mutator";
 import type Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import type Placeholder from "$lib/utils/ToolboxGen/Placeholder";
-import {FlyoutButton} from "blockly";
+import { FlyoutButton } from "blockly";
 
 export type Argument = BaseInput<any>;
 
 export type BlockDefinition =
 	| BlockBlockDefinition
-	| LabelBlockDefinition 
+	| CustomBlockDefinition
+	| LabelBlockDefinition
 	| ButtonBlockDefinition;
-export interface BlockBlockDefinition {
-	id: string; // This is the "type" of the block
-	kind?: null;
-	label?: false; // To see if the definition is a label or not
+	//interface that is default for all block types in order to make it central to edit custom and non custom blocks
+	interface BlockDefaults {
+		id: string; // This is the "type" of the block
+		extraState?: Record<string, any>;
+		
+	}
+export interface BlockBlockDefinition  extends BlockDefaults {
+	//required
 	text: string; // This is "message0"
-	output?: BlockType;
 	shape: BlockShape; // The block shape
-	args?: Argument[]; // This is "args0"
-	warnings?: Warning[];
-	placeholders?: Placeholder<unknown>[];
-	inline: boolean; // This is "inputsInline"
 	colour: string;
 	tooltip: string;
 	helpUrl: string;
+	//optional
+	output?: BlockType;
+	args?: Argument[]; // This is "args0"
+	warnings?: Warning[];
+	placeholders?: Placeholder<unknown>[];
+	inline?: boolean; // This is "inputsInline"
+	kind?: null;
+	label?: false; // To see if the definition is a label or not
+
 	code: (args: Record<string, string | string[]>, block: Block) => string;
 
 	mutator?: Mutator;
+	mutatorInit?: boolean;
 	hidden?: boolean;
 	imports?: `${string}@${string}`[];
 }
+/*
+used for blocks that design or stylewise exist as one block for example create_list block.
+*/
+export interface CustomBlockDefinition extends BlockDefaults {
+	kind: "custom_block";
+}
+
 export interface LabelBlockDefinition {
 	label: true;
 	text: string;
-} 
+}
 export interface ButtonBlockDefinition {
 	kind: "button";
 	text: string;
@@ -71,5 +88,5 @@ export interface AssemblerMutatorBlock extends MutatorBlock {
 }
 
 export interface DynamicListBlockMutatorBlock extends AssemblerMutatorBlock {
-	
+
 }

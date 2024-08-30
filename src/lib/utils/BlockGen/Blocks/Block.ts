@@ -6,6 +6,7 @@ import pkg from "blockly/javascript";
 
 import type {
 	Argument,
+	AssemblerMutatorBlock,
 	BlockBlockDefinition,
 	BlockDefinition,
 	CheckBoxMutatorBlock,
@@ -234,7 +235,7 @@ export default class Block {
 			colour: blockDefinition.colour,
 			tooltip: blockDefinition.tooltip,
 			helpUrl: blockDefinition.helpUrl,
-			inputsInline: blockDefinition.inline,
+			inputsInline: blockDefinition.inline ?? false,
 			args0: [],
 			message0: "",
 			mutator: mutatorName == "" ? undefined : mutatorName
@@ -248,12 +249,13 @@ export default class Block {
 
 		// Converts the classes into usable objects for the block definition
 		blockDefinition.args?.forEach((arg: Argument) => {
+			console.log(arg.generate())
 			blockDef.args0.push(arg.generate() as Record<string, string>);
 		});
 
 		// Converts the raw text into a blockly valid "message0" with this format: "text %1 other text %2"
 		let counter: number = 1;
-		blockDef.message0 = blockDefinition.text.replace(/\{.*?\}/g, () => `%${counter++}`);
+		if(blockDefinition.text !== "") blockDef.message0 = blockDefinition.text.replace(/\{.*?\}/g, () => `%${counter++}`);
 
 		if (Blockly.Blocks[blockDef.type] !== undefined && !dev) {
 			throw Error(`Block "${blockDef.type}" is defined twice.`);
@@ -366,7 +368,7 @@ export default class Block {
 		if (properties) {
 			for (const property of properties) {
 				if (blockDefinition.mutator?.type === MutatorType.Assembler) {
-					propertyMap[(property as AssemblerMutator).block] = property;
+					propertyMap[(property as AssemblerMutatorBlock).block] = property;
 				} else if (blockDefinition.mutator?.type === MutatorType.Checkbox) {
 					propertyMap[(property as CheckBoxMutatorBlock).inputName] = property;
 				}

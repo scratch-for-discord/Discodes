@@ -8,7 +8,7 @@ interface VariableInputObject {
     defaultType?: string;
 }
 
-export default class VariableInput extends BaseInput<any> {
+export default class VariableInput extends BaseInput<VariableInputObject> {
 	private readonly _variable: string;
 	private readonly _opt_defaultType?: string;
 	private readonly _opt_variableTypes?: string[];

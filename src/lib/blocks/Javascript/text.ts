@@ -9,42 +9,17 @@ import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
 import AssemblerMutatorV2 from "$lib/utils/BlockGen/Mutators/AssemblerMutator";
 
 const blocks: BlockDefinition[] = [
+
 	{
+		kind: "custom_block",
 		id: "text",
-		text: "⟪{TEXT}⟫",
-		args: [new TextInput("TEXT", "Hello World")],
-		shape: BlockShape.Floating,
-		output: BlockType.String,
-		inline: true,
-		colour: "#5ba58c",
-		tooltip: "Allows you to make a text input.",
-		helpUrl:
-			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
-		code: (args) => {
-			return `"${args.TEXT}"`;
-		}
 	},
 	{
-		id: "create_text_with_x",
-		text: "create text with {CONTENT}",
-		args: [new ValueInput("CONTENT", BlockType.String)],
-		shape: BlockShape.Floating,
-		output: BlockType.String,
-		inline: true,
-		colour: "%{BKY_TEXTS_HUE}",
-		tooltip: "Creates text with dynamic content",
-		helpUrl:
-			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
-		code: (args) => {
-			return `new Text("${args.CONTENT}")`;
-		},
-		mutator: new AssemblerMutatorV2("Add Content", [
-			{
-				block: "text_content",
-				adds: [new ValueInput("text_content", BlockType.String)],
-				once: true
-			}
-		])
+		kind: "custom_block",
+		id: "text_join",
+		extraState: {
+			itemCount: 3
+		}
 	},
 	{
 		id: "text_content",

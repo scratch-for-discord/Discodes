@@ -6,6 +6,7 @@ export interface ValueIDef {
 	name: string;
 	type: "input_value";
 	check?: BlockType | BlockType[];
+	// checkDynamic?: BlockType[];
 }
 /**
  * Creates a new value input
@@ -20,7 +21,7 @@ export default class ValueInput extends BaseInput<ValueIDef> {
 
 	constructor(name: string, type: BlockType | BlockType[]) {
 		super(name);
-
+		
 		this.setMethod(this.getDefinition);
 		super.setName(name);
 
@@ -42,7 +43,11 @@ export default class ValueInput extends BaseInput<ValueIDef> {
 		const filtered = argFilter(this._type);
 		// We return without the "check" if we have no types :)
 		if (filtered.length === 0) return result;
-
+		if(filtered.length > 1 && filtered[0] === BlockType.Array) {
+			// result.checkDynamic = filtered;
+			(result as any).check = [BlockType.Array, filtered];
+			return result
+		}
 		result.check = [...filtered];
 		return result;
 	}
