@@ -14,6 +14,7 @@
 	// import Page from "../../routes/editor/+page.svelte";
 
 	let isShowing = true;
+	let isFilesShowing = false;
 
 	const dispatch = createEventDispatcher();
 
@@ -23,7 +24,7 @@
 </script>
 
 <div
-	class="absolute top-4 w-full z-20 pr-5 flex justify-end overflow-hidden"
+	class="absolute top-4 w-full z-20 pr-5 flex justify-end"
 	style={`padding-left: ${toolBoxWidth + 20}px`}
 >
 	<div
@@ -35,23 +36,20 @@
 	>
 		{#if isShowing}
 			{#await wait(50) then}
-				<Button
-					variant="outline"
-					class="h-8 mx-1"
-					on:click={() => {
-						dispatch("save");
-					}}>SAVE</Button
-				>
-				<Button
-					variant="outline"
-					class="h-8 mx-1"
-					on:click={() => {
-						dispatch("load");
-					}}
-				>
-					LOAD
-				</Button>
 				<Button variant="link" class="h-8 mx-1" href="/">Home</Button>
+				<div>
+					<Button class="h-8 mx-1" on:click={() => {
+						isFilesShowing = !isFilesShowing
+					}}>
+						Files
+					</Button>
+					<div class={`${isFilesShowing ? "flex" : "hidden"} transition-all absolute w-40 pt-2`}>
+						<div class="w-full mt-auto bg-white text-gray-800 rounded-md py-2">
+							<button class="w-full py-1 text-xs hover:bg-gray-200 transition-all">Export to code</button>
+							<button class="w-full py-1 text-xs hover:bg-gray-200 transition-all" on:click={() => dispatch("save")}>Save</button>
+						</div>
+					</div>
+				</div>
 				<Warnings bind:workspace />
 			{/await}
 		{/if}
