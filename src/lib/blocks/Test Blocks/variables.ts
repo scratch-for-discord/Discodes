@@ -36,7 +36,6 @@ const blocks: BlockDefinition[] = [
         code(args) {
 
             const varName = fixVariableName(args.VAR as string)
-            console.log(varName, args.VAR)
             return varName
         
         },
@@ -83,7 +82,6 @@ const blocks: BlockDefinition[] = [
         ],
         code(args) {
             const varName = fixVariableName(args.VAR as string)
-            console.log(varName)
             return `${varName}${args.INPUT !== ""? " "+ args.DROPDOWN + "=" : ";"} ${args.INPUT !== ""? args.INPUT+";": ""}\n`
 
         },

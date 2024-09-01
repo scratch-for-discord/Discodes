@@ -117,7 +117,6 @@ export default class CheckboxMutator extends Mutator {
 
 
 				this.updateShape_();
-				console.log(connections)
 				this.reconnectChildBlocks_(connections);
 			},
 			//! Disable eslint cuz the state variable is of type any until they fully migrate to typescript

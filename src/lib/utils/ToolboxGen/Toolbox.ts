@@ -7,7 +7,7 @@ export default class Toolbox {
 	private callbackCategory: Record<string, (workspace: Blockly.WorkspaceSvg) => FlyoutDefinition>;
 	private callbackOther: Record<string, (p1: Blockly.FlyoutButton) => void>;
 
-	constructor() {	
+	constructor() {
 		this.callbackCategory = {};
 		this.callbackOther = {};
 
@@ -30,7 +30,6 @@ export default class Toolbox {
 			workspace.registerToolboxCategoryCallback(catKey, this.callbackCategory[catKey])
 		}
 		for (const otherKey of Object.keys(this.callbackOther)) {
-			console.log(otherKey)
 			workspace.registerButtonCallback(otherKey, this.callbackOther[otherKey])
 		}
 	}
@@ -79,7 +78,7 @@ export default class Toolbox {
 				//! FIX THE TYPE OR ELSE ITS GONNA BREAK LMFAO (Memory leak also?)
 
 				const definitions = await import(/* @vite-ignore */ `${topPath}/${directory}`);
-				if(definitions.default.category.custom) {
+				if (definitions.default.category.custom) {
 					// if(!definitions.default.category.customFunction && definitions.default.category.custom !== "VARIABLE_DYNAMIC") throw new Error("'customFunction' is required for a custom category!")
 					contents.push({
 						kind: "category",
@@ -88,10 +87,10 @@ export default class Toolbox {
 						contents: [],
 						custom: definitions.default.category.custom
 					});
-					if(!definitions.default.category.customFunction) return
+					if (!definitions.default.category.customFunction) return
 					this.callbackCategory[definitions.default.category.custom] = definitions.default.category.customFunction
 					for (const blockDef of definitions.default.blocks as BlockDefinition[]) {
-						if(blockDef.kind === "button") {
+						if (blockDef.kind === "button") {
 							this.callbackOther[blockDef.callbackKey] = blockDef.callback;
 							continue;
 						}
@@ -102,7 +101,7 @@ export default class Toolbox {
 				for (const blockDef of definitions.default.blocks as BlockDefinition[]) {
 					if (!blockDef.label && blockDef.hidden === true) continue;
 					const inputs: Record<string, unknown> = {};
-					if(blockDef.kind === "button") {
+					if (blockDef.kind === "button") {
 						this.callbackOther[blockDef.callbackKey] = blockDef.callback;
 
 						// this.workspace.registerButtonCallback(blockDef.callbackKey, blockDef.callback);
@@ -112,17 +111,28 @@ export default class Toolbox {
 					if (!blockDef.label && blockDef.placeholders) {
 						for (const placeholder of blockDef.placeholders) {
 							const data = placeholder.values;
+							const shadow = placeholder.isShadow
 							const key = Object.keys(data.argValue)[0];
 							const value = data.argValue[key];
+							if (shadow) {
+								inputs[data.argName] = {
+									shadow: {
+										type: data.type,
+										fields: {}
+									}
+								};
+							} else {
+								inputs[data.argName] = {
+									block: {
+										type: data.type,
+										fields: {}
+									}
+								};
+							}
 
-							inputs[data.argName] = {
-								block: {
-									type: data.type,
-									fields: {}
-								}
-							};
 							// @ts-expect-error Accessing unknown type
-							inputs[data.argName]["block"]["fields"][key] = value;
+
+							inputs[data.argName][shadow ? "shadow" : "block"]["fields"][key] = value;
 						}
 					}
 
@@ -130,14 +140,14 @@ export default class Toolbox {
 						blockDef.label
 							? { kind: "label", text: blockDef.text }
 							: {
-									kind: "block",
-									type: blockDef.id,
-									extraState: (blockDef as BlockBlockDefinition).extraState ?? {},
-									inputs: inputs
-								}
+								kind: "block",
+								type: blockDef.id,
+								extraState: (blockDef as BlockBlockDefinition).extraState ?? {},
+								inputs: inputs
+							}
 					);
 				}
-				if(!definitions.default.category.custom) {
+				if (!definitions.default.category.custom) {
 					contents.push({
 						kind: "category",
 						name: definitions.default.category.name,

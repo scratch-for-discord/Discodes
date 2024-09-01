@@ -4,6 +4,7 @@ import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
 import { javascriptGenerator } from "blockly/javascript";
+import { getInputValue } from "$lib/utils/helpers/getInputValue";
 /*
 Logic category is finished.
 */
@@ -97,10 +98,9 @@ const LISTS_CREATE_WITH = {
 				if (input.connection && input.connection.targetBlock() === this) {
 
 					let acceptedTypes = input.connection.check || []; // If no types are specified, assume any type
-					console.log(input.connection)
-					if(acceptedTypes.length == 0) return;
-					if(acceptedTypes[0] !== BlockType.Array) return; 
-					if(acceptedTypes[0] === BlockType.Array && acceptedTypes.length === 1) return;
+					if (acceptedTypes.length == 0) return;
+					if (acceptedTypes[0] !== BlockType.Array) return;
+					if (acceptedTypes[0] === BlockType.Array && acceptedTypes.length === 1) return;
 					acceptedTypes = acceptedTypes[1]
 					this.updateShape_((acceptedTypes as string[]).slice(1, acceptedTypes.length))
 					break;
@@ -191,14 +191,13 @@ const LISTS_CREATE_WITH = {
 				Blockly.Msg['LISTS_CREATE_EMPTY_TITLE'],
 			);
 		}
-		if(inputTypeChange) {
-			
-			for(let i = 0; i<this.itemCount_; i++) {
+		if (inputTypeChange) {
+
+			for (let i = 0; i < this.itemCount_; i++) {
 				this.getInput("ADD" + i)?.setCheck(inputTypeChange)
 			}
 		}
 		for (let i = 0; i < this.itemCount_; i++) {
-			console.log()
 			if (!this.getInput('ADD' + i)) {
 				const input = this.appendValueInput('ADD' + i).setAlign(Blockly.inputs.Align.RIGHT);
 				if (i === 0) {
@@ -212,8 +211,21 @@ const LISTS_CREATE_WITH = {
 	},
 };
 Blockly.Blocks[createListCustom] = LISTS_CREATE_WITH;
-javascriptGenerator[createListCustom] = function (this: any) {
-	return "";
+javascriptGenerator[createListCustom] = function (this: CreateWithBlock) {
+	let inputCode: string[] = []
+	let i = 0;
+	let input = this.getInput("ADD" + i);
+
+	while (input) {
+		const value = getInputValue(this, input!)
+		if(value === "") inputCode.push("null")
+		else inputCode.push(value)
+
+		i++
+		input = this.getInput("ADD" + i)
+
+	}
+	return `[${inputCode.join(", ")}]`;
 }
 //CUSTOM CREATE LIST BLOCK END
 export default { blocks, category };

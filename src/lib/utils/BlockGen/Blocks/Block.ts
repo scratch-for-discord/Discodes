@@ -249,7 +249,6 @@ export default class Block {
 
 		// Converts the classes into usable objects for the block definition
 		blockDefinition.args?.forEach((arg: Argument) => {
-			console.log(arg.generate())
 			blockDef.args0.push(arg.generate() as Record<string, string>);
 		});
 
@@ -388,7 +387,9 @@ export default class Block {
 					args[arg.name] = block.getInput(arg.name)?.fieldRow[0].value_;
 					continue;
 				}
-				args[arg.name] = getInputValue(block, arg.name, arg.type);
+				console.log(block)
+
+				args[arg.name] = getInputValue(block, block.getInput(arg.name)!, arg.type);
 			}
 			//parse mutator values
 			for (const propertyKey of Object.keys(propertyMap)) {
@@ -400,7 +401,7 @@ export default class Block {
 					while (input) {
 						const definition = add.generate() as Record<string, unknown>;
 						valueList.push(
-							getInputValue(block, (definition.name as string) + i, definition.type as string)
+							getInputValue(block, block.getInput((definition.name as string) + i)!, definition.type as string)
 						);
 						i++;
 						input = block.getInput(add.name + i);

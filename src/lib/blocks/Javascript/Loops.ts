@@ -1,4 +1,4 @@
-import { BlockShape, BlockType, DropdownType } from "$lib/enums/BlockTypes";
+import { BlockShape, BlockType, DropdownType, PlaceholderType } from "$lib/enums/BlockTypes";
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
 import DropdownInput from "$lib/utils/BlockGen/Inputs/Dropdown";
@@ -6,12 +6,14 @@ import StatementInput from "$lib/utils/BlockGen/Inputs/StatementInput";
 import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
 import salt from "$lib/utils/helpers/salt";
+import Placeholder from "$lib/utils/ToolboxGen/Placeholder";
 
 const blocks: BlockDefinition[] = [
 	{
 		id: "repeat_x_times",
 		text: "Repeat {VALUE} times \n {INPUT}",
 		args: [new ValueInput("VALUE", BlockType.Number), new StatementInput("INPUT")],
+		placeholders: [new Placeholder(PlaceholderType.Block, "VALUE", "number", {NUMBER: 1}, true)],
 		shape: BlockShape.Action,
 		inline: true,
 		colour: rgbToHex(91, 165, 91),
