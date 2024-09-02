@@ -1,4 +1,4 @@
-import { BlockShape, BlockType, DropdownType, WarningType } from "$lib/enums/BlockTypes";
+import { BlockShape, BlockType, DropdownType, PlaceholderType, WarningType } from "$lib/enums/BlockTypes";
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
 import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
@@ -7,6 +7,7 @@ import Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
 import CheckboxMutator from "$lib/utils/BlockGen/Mutators/CheckboxMutator";
 import Blockly from "blockly"
+import Placeholder from "$lib/utils/ToolboxGen/Placeholder";
 /*
 Logic category is finished.
 */
@@ -35,6 +36,7 @@ const blocks: BlockDefinition[] = [
 		code: (args) => {
 			return "";
 		},
+
 		extraState: {
 			title: true,
 			description: true

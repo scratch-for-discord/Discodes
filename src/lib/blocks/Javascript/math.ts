@@ -7,6 +7,7 @@ import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import Placeholder from "$lib/utils/ToolboxGen/Placeholder";
 
 const blocks: BlockDefinition[] = [
+
 	{
 		id: "number",
 		text: "{NUMBER}",

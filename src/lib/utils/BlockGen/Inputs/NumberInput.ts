@@ -25,7 +25,6 @@ export default class NumberInput extends BaseInput<NumberIDef> {
 		super(name);
 
 		this.setMethod(this.getDefinition);
-		super.setName(name);
 		this._value = defaultValue;
 		this._settings = settings || {};
 	}

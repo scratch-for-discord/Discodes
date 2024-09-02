@@ -2,23 +2,37 @@ import Blockly from "blockly/core";
 import pkg from "blockly/javascript";
 const { javascriptGenerator } = pkg;
 
-export function getInputValue(block: Blockly.Block, input: Blockly.Input, fieldName?: string): string {
-   if(!input) return "";
-    const inputName = input.name; // Correct way to access the input name
-    if(fieldName === "field_variable") return Blockly.Variables.getVariable(block.workspace, block.getFieldValue(inputName))?.name ?? "null";
+export function getInputValue(
+    block: Blockly.Block,
+    inputName: string,
+    inputType?: string
+  ): string {
+    console.log(inputName, inputType)
+    switch (inputType) {
+      case "input_value":
 
-    switch (input.type) {
-        case Blockly.inputTypes.VALUE:
-            return javascriptGenerator.valueToCode(
-                block,
-                inputName,
-                javascriptGenerator.ORDER_ATOMIC
-            );
-
-        case Blockly.inputTypes.STATEMENT:
-            return javascriptGenerator.statementToCode(block, inputName);
-
-        default:
-            return block.getFieldValue(inputName) || "";
+      return javascriptGenerator.valueToCode(
+          block,
+          inputName,
+          javascriptGenerator.ORDER_ATOMIC
+        ) // Ensure a fallback value is provided
+  
+      case "field_variable":
+        const fieldValue = block.getFieldValue(inputName);
+        if (fieldValue) {
+          return (
+            Blockly.Variables.getVariable(block.workspace, fieldValue)?.name ?? ""
+          );
+        } else {
+          return "";
+        }
+  
+      case "input_statement":
+        return javascriptGenerator.statementToCode(block, inputName) // Ensure a fallback value is provided
+  
+      default:
+        // Handle other cases or return field values as default
+        return block.getFieldValue(inputName) // Ensure a fallback value is provided
     }
-}
+  }
+  

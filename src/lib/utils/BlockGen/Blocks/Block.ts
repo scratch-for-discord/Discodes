@@ -387,9 +387,7 @@ export default class Block {
 					args[arg.name] = block.getInput(arg.name)?.fieldRow[0].value_;
 					continue;
 				}
-				console.log(block)
-
-				args[arg.name] = getInputValue(block, block.getInput(arg.name)!, arg.type);
+				args[arg.name] = getInputValue(block, arg.name, arg.type);
 			}
 			//parse mutator values
 			for (const propertyKey of Object.keys(propertyMap)) {
@@ -401,7 +399,7 @@ export default class Block {
 					while (input) {
 						const definition = add.generate() as Record<string, unknown>;
 						valueList.push(
-							getInputValue(block, block.getInput((definition.name as string) + i)!, definition.type as string)
+							getInputValue(block, (definition.name as string) + i, definition.type as string)
 						);
 						i++;
 						input = block.getInput(add.name + i);

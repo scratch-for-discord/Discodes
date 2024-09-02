@@ -3,7 +3,7 @@ import Blockly from "blockly"
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
-import { javascriptGenerator } from "blockly/javascript";
+import { javascriptGenerator, Order } from "blockly/javascript";
 import { getInputValue } from "$lib/utils/helpers/getInputValue";
 /*
 Logic category is finished.
@@ -85,29 +85,39 @@ const LISTS_CREATE_WITH = {
 	onchange: function (this: CreateWithBlock, e: Blockly.Events.Abstract) {
 		if (e.type === Blockly.Events.BLOCK_MOVE && this.id == e.blockId) {
 			const parentBlock = this.getParent();
-			if (!parentBlock) return; // No parent block, so do nothing
-
+	
+			if (!parentBlock) {
+				// If no parent, set input types to accept any block type
+				this.updateShape_([]);  // Use an empty array to accept any type
+				return; // Exit early since there's no parent to check against
+			}
+	
 			// Find which input the block is connected to
 			const currentConnection = this.outputConnection || this.previousConnection;
 			if (!currentConnection) return; // No connection to check
-
+	
 			// Iterate through the inputs of the parent block to find the one this block is connected to
 			const parentInputs = parentBlock.inputList;
 			for (let i = 0; i < parentInputs.length; i++) {
 				const input = parentInputs[i];
 				if (input.connection && input.connection.targetBlock() === this) {
-
+	
 					let acceptedTypes = input.connection.check || []; // If no types are specified, assume any type
-					if (acceptedTypes.length == 0) return;
-					if (acceptedTypes[0] !== BlockType.Array) return;
-					if (acceptedTypes[0] === BlockType.Array && acceptedTypes.length === 1) return;
-					acceptedTypes = acceptedTypes[1]
-					this.updateShape_((acceptedTypes as string[]).slice(1, acceptedTypes.length))
+					console.log(acceptedTypes);
+	
+					if (acceptedTypes.length == 0) return; // Accepts any type, so no need to change
+					if (acceptedTypes[0] !== BlockType.Array) return; // Not an array, do nothing
+					if (acceptedTypes[0] === BlockType.Array && acceptedTypes.length === 1) return; // Only array, do nothing
+					
+					// Change the input types to match the accepted types of the parent
+					acceptedTypes = acceptedTypes[1];
+					this.updateShape_((acceptedTypes as string[]).slice(1, acceptedTypes.length));
 					break;
 				}
 			}
 		}
 	},
+	
 
 	saveExtraState: function (this: CreateWithBlock): { itemCount: number } {
 		return {
@@ -191,12 +201,15 @@ const LISTS_CREATE_WITH = {
 				Blockly.Msg['LISTS_CREATE_EMPTY_TITLE'],
 			);
 		}
+	
+		// Change input types if provided
 		if (inputTypeChange) {
-
 			for (let i = 0; i < this.itemCount_; i++) {
-				this.getInput("ADD" + i)?.setCheck(inputTypeChange)
+				this.getInput("ADD" + i)?.setCheck(inputTypeChange.length ? inputTypeChange : null);
 			}
 		}
+	
+		// Add inputs as needed
 		for (let i = 0; i < this.itemCount_; i++) {
 			if (!this.getInput('ADD' + i)) {
 				const input = this.appendValueInput('ADD' + i).setAlign(Blockly.inputs.Align.RIGHT);
@@ -205,10 +218,13 @@ const LISTS_CREATE_WITH = {
 				}
 			}
 		}
+	
+		// Remove extra inputs
 		for (let i = this.itemCount_; this.getInput('ADD' + i); i++) {
 			this.removeInput('ADD' + i);
 		}
 	},
+	
 };
 Blockly.Blocks[createListCustom] = LISTS_CREATE_WITH;
 javascriptGenerator[createListCustom] = function (this: CreateWithBlock) {
@@ -217,7 +233,11 @@ javascriptGenerator[createListCustom] = function (this: CreateWithBlock) {
 	let input = this.getInput("ADD" + i);
 
 	while (input) {
-		const value = getInputValue(this, input!)
+		const value = javascriptGenerator.valueToCode(
+			this,
+			"ADD" + i,
+			javascriptGenerator.ORDER_ATOMIC
+		  )
 		if(value === "") inputCode.push("null")
 		else inputCode.push(value)
 
@@ -225,7 +245,7 @@ javascriptGenerator[createListCustom] = function (this: CreateWithBlock) {
 		input = this.getInput("ADD" + i)
 
 	}
-	return `[${inputCode.join(", ")}]`;
+	return [`[${inputCode.join(", ")}]`, Order.NONE];
 }
 //CUSTOM CREATE LIST BLOCK END
 export default { blocks, category };
