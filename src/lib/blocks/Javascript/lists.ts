@@ -83,7 +83,7 @@ const LISTS_CREATE_WITH = {
 		this.setTooltip("");
 	},
 	onchange: function (this: CreateWithBlock, e: Blockly.Events.Abstract) {
-		if (e.type === Blockly.Events.BLOCK_MOVE && this.id == e.blockId) {
+		if (e.type === Blockly.Events.BLOCK_MOVE && this.id == e.blockId || e.type === Blockly.Events.CREATE) {
 			const parentBlock = this.getParent();
 	
 			if (!parentBlock) {

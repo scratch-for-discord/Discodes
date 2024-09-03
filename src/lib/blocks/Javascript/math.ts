@@ -39,8 +39,8 @@ const blocks: BlockDefinition[] = [
 			new ValueInput("OPERAND2", BlockType.Number)
 		],
 		placeholders: [
-			new Placeholder(PlaceholderType.Block, "OPERAND1", "number", { NUMBER: 1 }),
-			new Placeholder(PlaceholderType.Block, "OPERAND2", "number", { NUMBER: 2 })
+			new Placeholder(PlaceholderType.Block, "OPERAND1", "number", { NUMBER: 1 }, true),
+			new Placeholder(PlaceholderType.Block, "OPERAND2", "number", { NUMBER: 2 }, true)
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Number,
@@ -78,7 +78,7 @@ const blocks: BlockDefinition[] = [
 			}),
 			new ValueInput("NUMBER", BlockType.Number)
 		],
-		placeholders: [new Placeholder(PlaceholderType.Block, "NUMBER", "number", { NUMBER: 1 })],
+		placeholders: [new Placeholder(PlaceholderType.Block, "NUMBER", "number", { NUMBER: 1 }, true)],
 		shape: BlockShape.Floating,
 		output: BlockType.Number,
 		inline: true,
@@ -145,10 +145,10 @@ const blocks: BlockDefinition[] = [
 				whole: "whole",
 				positive: "positive",
 				negative: "negative",
-				"divisible by": "divisible"
+				// "divisible by": "divisible" useless since modulo operator already exists
 			})
 		],
-		placeholders: [new Placeholder(PlaceholderType.Block, "NUMBER", "number", { NUMBER: 1 })],
+		placeholders: [new Placeholder(PlaceholderType.Block, "NUMBER", "number", { NUMBER: 1 }, true)],
 		shape: BlockShape.Floating,
 		output: BlockType.Boolean,
 		inline: true,
@@ -156,7 +156,8 @@ const blocks: BlockDefinition[] = [
 		tooltip: "Checks if a number is even, odd, prime, whole, positive, negative, or div",
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
-		code: (args) => {
+		code: (args, block) => {
+
 			switch (`${args.VALUE}`) {
 				case "number":
 					return `typeof ${args.NUMBER} === "number" && ${args.NUMBER} % 1 === 0`;
@@ -173,7 +174,7 @@ const blocks: BlockDefinition[] = [
 				case "negative":
 					return `${args.NUMBER} < 0`;
 				default:
-					return `${args.NUMBER} % ${args.VALUE} === 0`; // fix when added mutator
+					return `false`; // fix when added mutator
 			}
 		}
 	},
@@ -192,11 +193,11 @@ const blocks: BlockDefinition[] = [
 				random: "random",
 				"standard deviation": "standard deviation"
 			}),
-			new ValueInput("ARRAY", BlockType.Array)
+			new ValueInput("ARRAY", [BlockType.Array, BlockType.Number])
 		],
-		// placeholders: [
-		//     new Placeholder(PlaceholderType.Block, "ARRAY", "array", {ARRAY: [1, 2, 3]})
-		// ],
+		placeholders: [
+		    new Placeholder(PlaceholderType.Block, "ARRAY", "create_list_custom", {})
+		],
 		shape: BlockShape.Floating,
 		output: BlockType.Number,
 		inline: true,
@@ -234,8 +235,8 @@ const blocks: BlockDefinition[] = [
 		text: "random integer between {MIN} to {MAX}",
 		args: [new ValueInput("MIN", BlockType.Number), new ValueInput("MAX", BlockType.Number)],
 		placeholders: [
-			new Placeholder(PlaceholderType.Block, "MIN", "number", { NUMBER: 1 }),
-			new Placeholder(PlaceholderType.Block, "MAX", "number", { NUMBER: 10 })
+			new Placeholder(PlaceholderType.Block, "MIN", "number", { NUMBER: 1 }, true),
+			new Placeholder(PlaceholderType.Block, "MAX", "number", { NUMBER: 10 }, true)
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Number,
@@ -266,7 +267,7 @@ const blocks: BlockDefinition[] = [
 		id: "toNumber",
 		text: "convert text {TEXT} to number",
 		args: [new ValueInput("TEXT", BlockType.String)],
-		placeholders: [new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "123" })],
+		placeholders: [new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "123" }, true)],
 		shape: BlockShape.Floating,
 		output: BlockType.Number,
 		inline: true,
@@ -286,9 +287,9 @@ const blocks: BlockDefinition[] = [
 			new ValueInput("MAX", BlockType.Number)
 		],
 		placeholders: [
-			new Placeholder(PlaceholderType.Block, "VALUE", "number", { NUMBER: 50 }),
-			new Placeholder(PlaceholderType.Block, "MIN", "number", { NUMBER: 1 }),
-			new Placeholder(PlaceholderType.Block, "MAX", "number", { NUMBER: 100 })
+			new Placeholder(PlaceholderType.Block, "VALUE", "number", { NUMBER: 50 }, true),
+			new Placeholder(PlaceholderType.Block, "MIN", "number", { NUMBER: 1 }, true),
+			new Placeholder(PlaceholderType.Block, "MAX", "number", { NUMBER: 100 }, true)
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Number,
