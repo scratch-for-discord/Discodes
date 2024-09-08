@@ -7,7 +7,6 @@ export function getInputValue(
     inputName: string,
     inputType?: string
   ): string {
-    console.log(inputName, inputType)
     switch (inputType) {
       case "input_value":
 

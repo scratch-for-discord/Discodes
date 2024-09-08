@@ -1,13 +1,18 @@
-import { BlockShape, BlockType, DropdownType, WarningType } from "$lib/enums/BlockTypes";
+import { BlockShape, BlockType, DropdownType, PlaceholderType, WarningType } from "$lib/enums/BlockTypes";
 import Blockly from "blockly"
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
 import { javascriptGenerator, Order } from "blockly/javascript";
-import { getInputValue } from "$lib/utils/helpers/getInputValue";
+import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
+import Placeholder from "$lib/utils/ToolboxGen/Placeholder";
+import Warning from "$lib/utils/BlockGen/Warnings/Warning";
+import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
+import { list } from "postcss";
 /*
 Logic category is finished.
 */
+
 const blocks: BlockDefinition[] = [
 	{
 		kind: "custom_block",
@@ -23,6 +28,242 @@ const blocks: BlockDefinition[] = [
 			itemCount: 3
 		}
 	},
+
+// 	{
+// 		id: "create_list_repeated",
+// 		text: "create list with item {ITEM} repeated {TIMES} times",
+// 		args: [new ValueInput("ITEM", BlockType.Any), new ValueInput("TIMES", BlockType.Number)],
+// 		placeholders: [
+// 			new Placeholder(PlaceholderType.Shadow, "TIMES", "number", { NUMBER: 5 })
+// 		],
+// 		warnings: [
+// 			new Warning(WarningType.Input, { fieldName: "ITEM" })
+// 		],
+// 		shape: BlockShape.Floating,
+// 		output: BlockType.Array,
+// 		inline: true,
+// 		colour: "#745BA5",
+// 		tooltip: "",
+// 		helpUrl: "",
+// 		code: (args) => {
+// 			javascriptGenerator.provideFunction_(
+// 				'create_list_repeated',
+// 				[
+// 					`
+// function listsRepeat(value, n) {
+//   var array = [];
+//   for (var i = 0; i < n; i++) {
+//     array[i] = value;
+//   }
+//   return array;
+// }
+
+// 					`
+// 				]
+// 			)
+// 			return `listsRepeat(${args.ITEM === "" ? null : args.ITEM}, ${args.TIMES === "" ? "5" : args.TIMES})`;
+// 		}
+// 	},
+// 	{
+// 		id: "list_length_get",
+// 		text: "length of {LIST}",
+// 		args: [new ValueInput("LIST", BlockType.Array)],
+
+// 		warnings: [
+// 			new Warning(WarningType.Input, { fieldName: "LIST" })
+// 		],
+// 		shape: BlockShape.Floating,
+// 		output: BlockType.Number,
+// 		inline: true,
+// 		colour: "#745BA5",
+// 		tooltip: "",
+// 		helpUrl: "",
+// 		code: (args) => {
+
+// 			return `${args.LIST === "" ? "[]" : args.LIST}`;
+// 		}
+// 	},
+
+// 	{
+// 		id: "sort_list",
+// 		text: "sort {TYPE} {DIRECTION} {LIST}",
+// 		args: [
+// 			new Dropdown("TYPE", DropdownType.Auto, {
+// 				"numeric": "NUMERIC",
+// 				"alphabetic": "TEXT",
+// 				"alphabetic, ignore upper/lower case on text": "IGNORE_CASE",
+
+
+// 			}),
+// 			new Dropdown("DIRECTION", DropdownType.Auto, {
+// 				ascending: "1",
+// 				descending: "-1",
+
+// 			}),
+// 			new ValueInput("LIST", BlockType.Array)
+// 		],
+
+// 		warnings: [
+// 			new Warning(WarningType.Input, { fieldName: "LIST" })
+// 		],
+// 		shape: BlockShape.Floating,
+// 		output: BlockType.Array,
+// 		inline: true,
+// 		colour: "#745BA5",
+// 		tooltip: "",
+// 		helpUrl: "",
+// 		code: (args) => {
+// 			javascriptGenerator.provideFunction_(
+// 				'sort_list',
+// 				[
+// 					`
+//     function listsGetSortCompare(type, direction) {
+//         var compareFuncs = {
+//             'NUMERIC': function(a, b) {
+//                 return Number(a) - Number(b);
+//             },
+//             'TEXT': function(a, b) {
+//                 return a.toString() > b.toString() ? 1 : -1;
+//             },
+//             'IGNORE_CASE': function(a, b) {
+//                 return a.toString().toLowerCase() > b.toString().toLowerCase() ? 1 : -1;
+//             },
+//         };
+//         var compare = compareFuncs[type];
+//         return function(a, b) {
+//             return compare(a, b) * direction;
+//         };
+//     }
+// 					`
+// 				]
+// 			)
+// 			return `${args.LIST === "" ? "[]" : args.LIST}.slice().sort(listsGetSortCompare(${args.TYPE}, ${args.DIRECTION}))`;
+// 		}
+// 	},
+
+	{
+		kind: "custom_block",
+		id: "lists_repeat",
+		placeholders: [
+			new Placeholder(PlaceholderType.Shadow, "NUM", "number", { NUMBER:5})
+			
+		]
+	},
+	{
+		kind: "custom_block",
+		id: "lists_length",
+	},
+	{
+		kind: "custom_block",
+		id: "lists_isEmpty",
+	},
+	{
+		id: "reverse_list",
+		text: "reverse {LIST}",
+		args: [new ValueInput("LIST", BlockType.Array)],
+		shape: BlockShape.Floating,
+		output: BlockType.Boolean,
+		inline: true,
+		colour: "#745BA5",
+		tooltip: "",
+		helpUrl: "",
+		code: (args) => {
+
+			return `${args.LIST === "" ? "[]" : args.LIST}.slice().reverse()`;
+		}
+	},
+	{
+		id: "list contains",
+		text: "list {LIST} contains {VALUE}",
+		placeholders: [
+			new Placeholder(PlaceholderType.Block, "LIST", "variable_get_discodes", { VAR: {name: "list"}})
+
+		],
+		args: [new ValueInput("LIST", BlockType.Array),new ValueInput("VALUE", BlockType.Any)],
+		shape: BlockShape.Floating,
+		output: BlockType.Array,
+		inline: true,
+		colour: "#745BA5",
+		tooltip: "",
+		helpUrl: "",
+		code: (args) => {
+
+			return `${args.LIST === "" ? "[]" : args.LIST}.includes(${args.VALUE})`;
+		}
+	},
+	
+	{
+		kind: "custom_block",
+		id: "lists_indexOf",
+		placeholders: [
+			new Placeholder(PlaceholderType.Block, "VALUE", "variable_get_discodes", { VAR: {name: "list"}})
+			
+		]
+	},
+	{
+		kind: "custom_block",
+		id: "lists_getIndex",
+		placeholders: [
+			new Placeholder(PlaceholderType.Block, "VALUE", "variable_get_discodes", { VAR: {name: "list"}})
+			
+		]
+	},
+	{
+		kind: "custom_block",
+		id: "lists_setIndex",
+		placeholders: [
+			new Placeholder(PlaceholderType.Block, "LIST", "variable_get_discodes", { VAR: {name: "list"}})
+			
+		]
+	},
+	{
+		kind: "custom_block",
+		id: "lists_getSublist",
+		placeholders: [
+			new Placeholder(PlaceholderType.Block, "LIST", "variable_get_discodes", { VAR: {name: "list"}})
+			
+		]
+	},
+	{
+		id: "list_push",
+		text: "in list {LIST} push {VALUE}",
+		args: [new ValueInput("LIST", BlockType.Array),new ValueInput("VALUE", BlockType.Any)],
+		placeholders: [
+			new Placeholder(PlaceholderType.Block, "LIST", "variable_get_discodes", { VAR: {name: "list"}})
+
+		],
+		// warnings: [
+		// 	new Warning(WarningType.Input, { fieldName: "LIST" })
+		// ],
+		shape: BlockShape.Action,
+		inline: true,
+		colour: "#745BA5",
+		tooltip: "",
+		helpUrl: "",
+		code: (args) => {
+
+			return `${args.LIST === ""? "[]" : args.LIST}.push(${args.VALUE})`;
+		}
+	},
+	{
+		kind: "custom_block",
+		id: "lists_split",
+		placeholders: [
+			new Placeholder(PlaceholderType.Shadow, "DELIM", "text", { TEXT: ","})
+			
+		]
+	},
+	{
+		kind: "custom_block",
+		id: "lists_sort",
+	},
+
+
+
+
+
+
+	//hidden blocks
 	{
 		id: "create_list_custom_container_block",
 		text: "list",
@@ -51,6 +292,7 @@ const blocks: BlockDefinition[] = [
 		},
 		hidden: true
 	},
+	
 
 ];
 
@@ -85,30 +327,29 @@ const LISTS_CREATE_WITH = {
 	onchange: function (this: CreateWithBlock, e: Blockly.Events.Abstract) {
 		if (e.type === Blockly.Events.BLOCK_MOVE && this.id == e.blockId || e.type === Blockly.Events.CREATE) {
 			const parentBlock = this.getParent();
-	
+
 			if (!parentBlock) {
 				// If no parent, set input types to accept any block type
 				this.updateShape_([]);  // Use an empty array to accept any type
 				return; // Exit early since there's no parent to check against
 			}
-	
+
 			// Find which input the block is connected to
 			const currentConnection = this.outputConnection || this.previousConnection;
 			if (!currentConnection) return; // No connection to check
-	
+
 			// Iterate through the inputs of the parent block to find the one this block is connected to
 			const parentInputs = parentBlock.inputList;
 			for (let i = 0; i < parentInputs.length; i++) {
 				const input = parentInputs[i];
 				if (input.connection && input.connection.targetBlock() === this) {
-	
+
 					let acceptedTypes = input.connection.check || []; // If no types are specified, assume any type
-					console.log(acceptedTypes);
-	
+
 					if (acceptedTypes.length == 0) return; // Accepts any type, so no need to change
 					if (acceptedTypes[0] !== BlockType.Array) return; // Not an array, do nothing
 					if (acceptedTypes[0] === BlockType.Array && acceptedTypes.length === 1) return; // Only array, do nothing
-					
+
 					// Change the input types to match the accepted types of the parent
 					acceptedTypes = acceptedTypes[1];
 					this.updateShape_((acceptedTypes as string[]).slice(1, acceptedTypes.length));
@@ -117,7 +358,7 @@ const LISTS_CREATE_WITH = {
 			}
 		}
 	},
-	
+
 
 	saveExtraState: function (this: CreateWithBlock): { itemCount: number } {
 		return {
@@ -201,14 +442,14 @@ const LISTS_CREATE_WITH = {
 				Blockly.Msg['LISTS_CREATE_EMPTY_TITLE'],
 			);
 		}
-	
+
 		// Change input types if provided
 		if (inputTypeChange) {
 			for (let i = 0; i < this.itemCount_; i++) {
 				this.getInput("ADD" + i)?.setCheck(inputTypeChange.length ? inputTypeChange : null);
 			}
 		}
-	
+
 		// Add inputs as needed
 		for (let i = 0; i < this.itemCount_; i++) {
 			if (!this.getInput('ADD' + i)) {
@@ -218,16 +459,16 @@ const LISTS_CREATE_WITH = {
 				}
 			}
 		}
-	
+
 		// Remove extra inputs
 		for (let i = this.itemCount_; this.getInput('ADD' + i); i++) {
 			this.removeInput('ADD' + i);
 		}
 	},
-	
+
 };
 Blockly.Blocks[createListCustom] = LISTS_CREATE_WITH;
-javascriptGenerator[createListCustom] = function (this: CreateWithBlock) {
+javascriptGenerator.forBlock[createListCustom] = function (this: CreateWithBlock) {
 	let inputCode: string[] = []
 	let i = 0;
 	let input = this.getInput("ADD" + i);
@@ -237,8 +478,8 @@ javascriptGenerator[createListCustom] = function (this: CreateWithBlock) {
 			this,
 			"ADD" + i,
 			javascriptGenerator.ORDER_ATOMIC
-		  )
-		if(value === "") inputCode.push("null")
+		)
+		if (value === "") inputCode.push("null")
 		else inputCode.push(value)
 
 		i++

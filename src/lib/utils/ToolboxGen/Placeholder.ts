@@ -1,4 +1,4 @@
-import type { PlaceholderType } from "$lib/enums/BlockTypes";
+import { PlaceholderType } from "$lib/enums/BlockTypes";
 interface PlaceholderValues {
 	argValue: Record<string, unknown>;
 	argName: string;
@@ -9,26 +9,41 @@ interface PlaceholderValues {
 export default class Placeholder<ArgType> {
 	private readonly _argValue: Record<string, ArgType>;
 	private readonly _argName: string;
-	private readonly _kind: string;
+	private readonly _kind: PlaceholderType;
 	private readonly _type: string;
-	private readonly _shadow: boolean;
 
 	constructor(
 		type: PlaceholderType,
 		argName: string,
 		blockName: string,
 		argValue: Record<string, ArgType>,
-		shadow?: boolean
 	) {
 		this._argValue = argValue;
 		this._argName = argName;
 		//? type: "Block" is clearer than kind:"block", it creates this confusing code but type = blockName and kind = type
 		this._type = blockName;
 		this._kind = type;
-		this._shadow = shadow ?? false;
+	}
+	get toJson(): any {
+		const blockData = {
+			type: this._type,
+			fields: this._argValue,
+		}
+		if(this._type === PlaceholderType.Shadow) {
+			return {
+				shadow: blockData,
+			}
+		} else {
+			return {
+				block: blockData,
+			}
+		}
+	}
+	get type(): PlaceholderType {
+		return this._kind
 	}
 	get isShadow(): boolean {
-		return this._shadow;
+		return this.type === PlaceholderType.Shadow;
 	}
 	get values(): PlaceholderValues {
 		return {

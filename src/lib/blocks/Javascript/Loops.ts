@@ -14,7 +14,7 @@ const blocks: BlockDefinition[] = [
 		id: "repeat_x_times",
 		text: "Repeat {VALUE} times \n {INPUT}",
 		args: [new ValueInput("VALUE", BlockType.Number), new StatementInput("INPUT")],
-		placeholders: [new Placeholder(PlaceholderType.Block, "VALUE", "number", {NUMBER: 10}, true)],
+		placeholders: [new Placeholder(PlaceholderType.Shadow, "VALUE", "number", {NUMBER: 10})],
 		shape: BlockShape.Action,
 		inline: true,
 		colour: rgbToHex(91, 165, 91),

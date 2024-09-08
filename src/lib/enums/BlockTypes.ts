@@ -38,7 +38,9 @@ export enum BlockShape {
 
 // This is used for the toolbox generation, it translates to kind:"block" in the blockly shadows.
 export enum PlaceholderType {
-	Block = "block"
+	Block = "block",
+	Shadow = "shadow"
+	
 }
 export enum MutatorType {
 	Assembler = "assembler",

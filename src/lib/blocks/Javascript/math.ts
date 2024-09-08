@@ -39,8 +39,8 @@ const blocks: BlockDefinition[] = [
 			new ValueInput("OPERAND2", BlockType.Number)
 		],
 		placeholders: [
-			new Placeholder(PlaceholderType.Block, "OPERAND1", "number", { NUMBER: 1 }, true),
-			new Placeholder(PlaceholderType.Block, "OPERAND2", "number", { NUMBER: 2 }, true)
+			new Placeholder(PlaceholderType.Shadow, "OPERAND1", "number", { NUMBER: 1 }),
+			new Placeholder(PlaceholderType.Shadow, "OPERAND2", "number", { NUMBER: 2 })
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Number,
@@ -78,7 +78,7 @@ const blocks: BlockDefinition[] = [
 			}),
 			new ValueInput("NUMBER", BlockType.Number)
 		],
-		placeholders: [new Placeholder(PlaceholderType.Block, "NUMBER", "number", { NUMBER: 1 }, true)],
+		placeholders: [new Placeholder(PlaceholderType.Shadow, "NUMBER", "number", { NUMBER: 1 })],
 		shape: BlockShape.Floating,
 		output: BlockType.Number,
 		inline: true,
@@ -148,7 +148,7 @@ const blocks: BlockDefinition[] = [
 				// "divisible by": "divisible" useless since modulo operator already exists
 			})
 		],
-		placeholders: [new Placeholder(PlaceholderType.Block, "NUMBER", "number", { NUMBER: 1 }, true)],
+		placeholders: [new Placeholder(PlaceholderType.Shadow, "NUMBER", "number", { NUMBER: 1 })],
 		shape: BlockShape.Floating,
 		output: BlockType.Boolean,
 		inline: true,
@@ -235,8 +235,8 @@ const blocks: BlockDefinition[] = [
 		text: "random integer between {MIN} to {MAX}",
 		args: [new ValueInput("MIN", BlockType.Number), new ValueInput("MAX", BlockType.Number)],
 		placeholders: [
-			new Placeholder(PlaceholderType.Block, "MIN", "number", { NUMBER: 1 }, true),
-			new Placeholder(PlaceholderType.Block, "MAX", "number", { NUMBER: 10 }, true)
+			new Placeholder(PlaceholderType.Shadow, "MIN", "number", { NUMBER: 1 }),
+			new Placeholder(PlaceholderType.Shadow, "MAX", "number", { NUMBER: 10 })
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Number,
@@ -249,10 +249,8 @@ const blocks: BlockDefinition[] = [
 		}
 	},
 	{
-		//Todo: Delete/Remake completely this block.
 		id: "random_fraction",
 		text: "random fraction",
-		args: [],
 		shape: BlockShape.Floating,
 		output: BlockType.Number,
 		inline: true,
@@ -267,7 +265,7 @@ const blocks: BlockDefinition[] = [
 		id: "toNumber",
 		text: "convert text {TEXT} to number",
 		args: [new ValueInput("TEXT", BlockType.String)],
-		placeholders: [new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "123" }, true)],
+		placeholders: [new Placeholder(PlaceholderType.Shadow, "TEXT", "text", { TEXT: "123" })],
 		shape: BlockShape.Floating,
 		output: BlockType.Number,
 		inline: true,
@@ -287,9 +285,9 @@ const blocks: BlockDefinition[] = [
 			new ValueInput("MAX", BlockType.Number)
 		],
 		placeholders: [
-			new Placeholder(PlaceholderType.Block, "VALUE", "number", { NUMBER: 50 }, true),
-			new Placeholder(PlaceholderType.Block, "MIN", "number", { NUMBER: 1 }, true),
-			new Placeholder(PlaceholderType.Block, "MAX", "number", { NUMBER: 100 }, true)
+			new Placeholder(PlaceholderType.Shadow, "VALUE", "number", { NUMBER: 50 }),
+			new Placeholder(PlaceholderType.Shadow, "MIN", "number", { NUMBER: 1 }),
+			new Placeholder(PlaceholderType.Shadow, "MAX", "number", { NUMBER: 100 })
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Number,
@@ -309,7 +307,7 @@ const blocks: BlockDefinition[] = [
 	//         new ValueInput("CHANCE", BlockType.Number)
 	//     ],
 	//     placeholders: [
-	//         new Placeholder(PlaceholderType.Block, "CHANCE", "number", {NUMBER: 50})
+	//         new Placeholder(PlaceholderType.Shadow, "CHANCE", "number", {NUMBER: 50})
 	//     ],
 	//     shape: BlockShape.Floating,
 	//     output: BlockType.Boolean,

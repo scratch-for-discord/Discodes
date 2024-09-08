@@ -133,7 +133,31 @@ export default class Block {
 	public removeText(fieldName: string): void {
 		this._block.removeInput(fieldName);
 	}
+	public setOutputType(type: BlockType | BlockType[] ) {
+		this._block.setOutput(true, type)
+	}
+	public setShape(shape: BlockShape) {
+		switch (shape) {
+			case BlockShape.Action:
+				this._block.setPreviousStatement(true);
+				this._block.setNextStatement(true);
 
+				this._block.setOutput(false, [])
+				break;
+			case BlockShape.Bottom:
+				this._block.setPreviousStatement(true);
+				break;
+			case BlockShape.Top:
+				// opposite of terminal
+				this._block.setNextStatement(true);
+				break;
+			case BlockShape.Value:
+				this.setOutputType((this._blockDefinition as BlockBlockDefinition).output!)
+				this._block.setPreviousStatement(false);
+				this._block.setNextStatement(false);
+			break;
+		}
+	}
 	public addInput(input: DiscodesInput): void {
 		const generated = input.generate();
 		if (!this._block || this._block.getInput(generated.name) || this._block.isInFlyout) return;
@@ -210,6 +234,7 @@ export default class Block {
 
 	public removeInput(inputName: string): void {
 		if (!this._block.getInput(inputName)) return;
+		console.log(inputName)
 		this._block.removeInput(inputName);
 	}
 
@@ -242,9 +267,10 @@ export default class Block {
 		};
 
 		blockClass._blocklyDefinition = blockDef;
-
+		//mutator mixin, that will allow to run updateShape function at the start for placeholders on mutators to work
+		let mixin: any;
 		if (blockDefinition.mutator) {
-			blockDefinition.mutator.registerMutator(mutatorName);
+			mixin = blockDefinition.mutator.registerMutator(mutatorName);
 		}
 
 		// Converts the classes into usable objects for the block definition
@@ -291,10 +317,15 @@ export default class Block {
 				// Here we add an output if needed
 				if (output) {
 					if (output == BlockType.Any) {
+						
 						this.setOutput(true);
 					} else {
 						this.setOutput(true, output);
 					}
+				}
+				if(mixin) {
+					//fix this later once placeholders for mutators will be added or planned to be
+					//mixin.updateShape_()
 				}
 				// eslint-disable-next-line @typescript-eslint/no-this-alias
 				const block = this;
@@ -412,7 +443,8 @@ export default class Block {
 
 				}
 			}
-			return output ? [code(args, blockClass), Order.NONE] : code(args, blockClass);
+			let value = code(args, blockClass)
+			return block.outputConnection ? [value, Order.NONE] : value;
 		};
 	}
 }

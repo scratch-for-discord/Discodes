@@ -36,7 +36,9 @@ const blocks: BlockDefinition[] = [
 		code: (args) => {
 			return "";
 		},
-
+		// placeholders: [
+		// 	new Placeholder(PlaceholderType.Block, "title", "text", {TEXT: "lol"})
+		// ],
 		extraState: {
 			title: true,
 			description: true

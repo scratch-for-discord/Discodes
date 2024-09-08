@@ -57,7 +57,7 @@ export class Mutator {
 		}
 	}
 
-	registerMutator(name: string): void {
+	registerMutator(name: string): object {
 		// Unregister the mutator if it's already registered. Without this blockly crashes.
 		if (Blockly.Extensions.isRegistered(name)) {
 			if (dev) {
@@ -66,6 +66,7 @@ export class Mutator {
 			Blockly.Extensions.unregister(name);
 		}
 		Blockly.Extensions.registerMutator(name, this._mixin, this._helperFunction, this._blocks);
+		return this._mixin;
 	}
 	get type() {
 		return this.mutatorType;

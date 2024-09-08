@@ -17,7 +17,8 @@ export type BlockDefinition =
 	interface BlockDefaults {
 		id: string; // This is the "type" of the block
 		extraState?: Record<string, any>;
-		
+		placeholders?: Placeholder<unknown>[];
+
 	}
 export interface BlockBlockDefinition  extends BlockDefaults {
 	//required
@@ -30,7 +31,6 @@ export interface BlockBlockDefinition  extends BlockDefaults {
 	output?: BlockType;
 	args?: Argument[]; // This is "args0"
 	warnings?: Warning[];
-	placeholders?: Placeholder<unknown>[];
 	inline?: boolean; // This is "inputsInline"
 	kind?: null;
 	label?: false; // To see if the definition is a label or not
