@@ -22,21 +22,6 @@ const blocks: BlockDefinition[] = [
 		}
 	},
 	{
-		id: "text_content",
-		text: "text {TEXT_CONTENT}",
-		args: [new ValueInput("TEXT_CONTENT", BlockType.String)],
-		shape: BlockShape.Action,
-		inline: true,
-		colour: "%{BKY_TEXTS_HUE}",
-		tooltip: "Text content for creating text with x",
-		helpUrl:
-			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
-		code: (args) => {
-			return `${args.TEXT_CONTENT}`;
-		},
-		hidden: true
-	},
-	{
 		id: "text_count",
 		text: "count {INPUT} in {TEXT}",
 		args: [new ValueInput("INPUT", BlockType.String), new ValueInput("TEXT", BlockType.String)],
@@ -56,78 +41,44 @@ const blocks: BlockDefinition[] = [
 		}
 	},
 	{
+		kind: "custom_block",
 		id: "text_trim",
-		text: "trim spaces from {SIDE} of {TEXT}",
-		args: [
-			new Dropdown("SIDE", DropdownType.Auto, {
-				"both sides": "trim",
-				"left side": "trimLeft",
-				"right side": "trimRight"
-			}),
-			new ValueInput("TEXT", BlockType.String)
-		],
 		placeholders: [
-			new Placeholder(PlaceholderType.Block, "TEXT", "text", { SIDE: " Hello World " })
-		],
-		shape: BlockShape.Floating,
-		output: BlockType.String,
-		inline: true,
-		colour: "%{BKY_TEXTS_HUE}",
-		tooltip: "Removes leading and trailing whitespace from a string.",
-		helpUrl:
-			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim",
-		code: (args) => {
-			return `String(${args.TEXT}).${args.SIDE}()`;
-		}
+			new Placeholder(PlaceholderType.Shadow, "TEXT", "text", { TEXT: "abc"})
+		]
 	},
 	{
-		id: "text_case",
-		text: "tp {CASE} case of {TEXT}",
-		args: [
-			new Dropdown("CASE", DropdownType.Auto, {
-				upper: "toUpperCase",
-				lower: "toLowerCase",
-				title: "toTitleCase"
-			}),
-			new ValueInput("TEXT", BlockType.String)
-		],
-		placeholders: [new Placeholder(PlaceholderType.Block, "TEXT", "text", { CASE: "abc" })],
-		shape: BlockShape.Floating,
-		output: BlockType.String,
-		inline: true,
-		colour: "%{BKY_TEXTS_HUE}",
-		tooltip: "Converts the case of text.",
-		helpUrl:
-			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
-		code: (args) => {
-			if (args.CASE === "toTitleCase") {
-				return `String(${args.TEXT}).replace(/\\w\\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})`;
-			}
-			return `String(${args.TEXT}).${args.CASE}()`;
-		}
+		kind: "custom_block",
+		id: "text_changeCase",
+		placeholders: [
+			new Placeholder(PlaceholderType.Shadow, "TEXT", "text", {TEXT: "abc"})
+		]
 	},
+
+/*
+
+make subtring block in custom block since its too complex for discodes block api
+*/
 	{
 		id: "text_substring",
 		text: "in text {TEXT} get substring from {FROM} {INPUT1} to {TO} {INPUT2}",
 		args: [
 			new ValueInput("TEXT", BlockType.String),
 			new Dropdown("FROM", DropdownType.Auto, {
-				letter: "charAt",
-				"first letter": "start",
-				"last letter": "charEndAt",
-				"from end": "end"
+				"letter #": "FROM_START",
+				"letter # from end": "FROM_END",
+				"first letter": "LETTER_START",
 			}),
 			new ValueInput("INPUT1", BlockType.Number),
 			new Dropdown("TO", DropdownType.Auto, {
-				letter: "charAt",
-				last: "last",
-				"from start letter": "substring",
-				"x from end": "slice"
+				"letter #": "FROM_START",
+				"letter # from end": "FROM_END",
+				"last letter": "LETTER_END",
 			}),
 			new ValueInput("INPUT2", BlockType.Number)
 		],
 		placeholders: [
-			new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "hey" }),
+			new Placeholder(PlaceholderType.Block, "TEXT", "variable_get_discodes", { VAR: {name: "text"} }),
 			new Placeholder(PlaceholderType.Block, "INPUT1", "number", { NUMBER: 1 }),
 			new Placeholder(PlaceholderType.Block, "INPUT2", "number", { NUMBER: 2 })
 		],
@@ -138,7 +89,11 @@ const blocks: BlockDefinition[] = [
 		tooltip: "Gets a substring from a text.",
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
-		code: (args) => {
+		code: (args, block) => {
+			
+			if(args.FROM === "LETTER_START" && args.TO === "LETTER_END") return `${args.TEXT}`
+			
+			//not done
 			return `String(${args.TEXT}).${args.FROM}(${args.INPUT1}, ${args.INPUT2})`; // No idea how to make this
 		}
 	},
@@ -148,16 +103,17 @@ const blocks: BlockDefinition[] = [
 		args: [
 			new ValueInput("TEXT", BlockType.String),
 			new Dropdown("LETTER", DropdownType.Auto, {
-				letter: "charAt",
-				"letter from end": "chatEndAt",
-				first: "charStart",
-				last: "charEnd",
-				random: "random"
+				"letter #": "charAt",
+				"letter # from end": "chatEndAt",
+				"first letter": "charStart",
+				"last letter": "charEnd",
+				"random letter": "random"
 			}),
 			new ValueInput("INPUT", BlockType.Number)
 		],
 		placeholders: [
-			new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "hey" }),
+			new Placeholder(PlaceholderType.Block, "TEXT", "variable_get_discodes", { VAR: {name: "text"} }),
+
 			new Placeholder(PlaceholderType.Block, "INPUT", "number", { NUMBER: 1 })
 		],
 		shape: BlockShape.Floating,
