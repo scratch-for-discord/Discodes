@@ -95,7 +95,7 @@ type BlockDefinition = {
 };
 ```
 
-So considering that most of the paramters are not required, here is the minimum configuration for a block :
+So considering that most of the parameters are not required, here is the minimum configuration for a block :
 
 ```ts
 type BlockDefinition = {
