@@ -116,7 +116,7 @@ const blocks: BlockDefinition[] = [
 				e: "Math.E",
 				ϕ: "(1 + Math.sqrt(5)) / 2",
 				"√(2)": "Math.SQRT2",
-				"√(½)": "Math.Math.SQRT1_2",
+				"√(½)": "Math.SQRT1_2",
 				"∞": "Infinity",
 				NaN: "NaN"
 			})

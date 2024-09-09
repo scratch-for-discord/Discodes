@@ -83,7 +83,7 @@ const blocks: BlockDefinition[] = [
 		args: [
 			new VariableInput("ITEM", "i"),
 
-			new ValueInput("ARRAY", BlockType.Array),
+			new ValueInput("ARRAY", [/*BlockType.String,*/ BlockType.Array]),
 			new StatementInput("INPUT")
 		],
 		shape: BlockShape.Action,

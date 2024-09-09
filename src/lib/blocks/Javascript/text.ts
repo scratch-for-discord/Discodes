@@ -1,13 +1,12 @@
 import { BlockShape, BlockType, DropdownType, PlaceholderType } from "$lib/enums/BlockTypes";
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
-import TextInput from "$lib/utils/BlockGen/Inputs/TextInput";
 import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import Placeholder from "$lib/utils/ToolboxGen/Placeholder";
 import StatementInput from "$lib/utils/BlockGen/Inputs/StatementInput";
 import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
-import AssemblerMutatorV2 from "$lib/utils/BlockGen/Mutators/AssemblerMutator";
-
+import Blockly from "blockly"
+import { javascriptGenerator, Order } from "blockly/javascript";
 const blocks: BlockDefinition[] = [
 
 	{
@@ -18,7 +17,7 @@ const blocks: BlockDefinition[] = [
 		kind: "custom_block",
 		id: "text_join",
 		extraState: {
-			itemCount: 3
+			itemCount: 2
 		}
 	},
 	{
@@ -44,102 +43,36 @@ const blocks: BlockDefinition[] = [
 		kind: "custom_block",
 		id: "text_trim",
 		placeholders: [
-			new Placeholder(PlaceholderType.Shadow, "TEXT", "text", { TEXT: "abc"})
+			new Placeholder(PlaceholderType.Shadow, "TEXT", "text", { TEXT: "abc" })
 		]
 	},
 	{
 		kind: "custom_block",
 		id: "text_changeCase",
 		placeholders: [
-			new Placeholder(PlaceholderType.Shadow, "TEXT", "text", {TEXT: "abc"})
+			new Placeholder(PlaceholderType.Shadow, "TEXT", "text", { TEXT: "abc" })
 		]
 	},
-
-/*
-
-make subtring block in custom block since its too complex for discodes block api
-*/
 	{
-		id: "text_substring",
-		text: "in text {TEXT} get substring from {FROM} {INPUT1} to {TO} {INPUT2}",
-		args: [
-			new ValueInput("TEXT", BlockType.String),
-			new Dropdown("FROM", DropdownType.Auto, {
-				"letter #": "FROM_START",
-				"letter # from end": "FROM_END",
-				"first letter": "LETTER_START",
-			}),
-			new ValueInput("INPUT1", BlockType.Number),
-			new Dropdown("TO", DropdownType.Auto, {
-				"letter #": "FROM_START",
-				"letter # from end": "FROM_END",
-				"last letter": "LETTER_END",
-			}),
-			new ValueInput("INPUT2", BlockType.Number)
-		],
+		kind: "custom_block",
+		id: "text_charAt_custom",
 		placeholders: [
-			new Placeholder(PlaceholderType.Block, "TEXT", "variable_get_discodes", { VAR: {name: "text"} }),
-			new Placeholder(PlaceholderType.Block, "INPUT1", "number", { NUMBER: 1 }),
-			new Placeholder(PlaceholderType.Block, "INPUT2", "number", { NUMBER: 2 })
+			new Placeholder(PlaceholderType.Block, "VALUE", "variable_get_discodes", { VAR: { name: "text" } }),
+
+
 		],
-		shape: BlockShape.Floating,
-		output: BlockType.String,
-		inline: true,
-		colour: "%{BKY_TEXTS_HUE}",
-		tooltip: "Gets a substring from a text.",
-		helpUrl:
-			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
-		code: (args, block) => {
-			
-			if(args.FROM === "LETTER_START" && args.TO === "LETTER_END") return `${args.TEXT}`
-			
-			//not done
-			return `String(${args.TEXT}).${args.FROM}(${args.INPUT1}, ${args.INPUT2})`; // No idea how to make this
+		extraState: {
+			at: true
 		}
 	},
 	{
-		id: "text_get_letter",
-		text: "in text {TEXT} get {LETTER} {INPUT}",
-		args: [
-			new ValueInput("TEXT", BlockType.String),
-			new Dropdown("LETTER", DropdownType.Auto, {
-				"letter #": "charAt",
-				"letter # from end": "chatEndAt",
-				"first letter": "charStart",
-				"last letter": "charEnd",
-				"random letter": "random"
-			}),
-			new ValueInput("INPUT", BlockType.Number)
-		],
+		kind: "custom_block",
+		id: "text_getSubstring_custom",
 		placeholders: [
-			new Placeholder(PlaceholderType.Block, "TEXT", "variable_get_discodes", { VAR: {name: "text"} }),
+			new Placeholder(PlaceholderType.Block, "STRING", "variable_get_discodes", { VAR: { name: "text" } }),
 
-			new Placeholder(PlaceholderType.Block, "INPUT", "number", { NUMBER: 1 })
+
 		],
-		shape: BlockShape.Floating,
-		output: BlockType.String,
-		inline: true,
-		colour: "%{BKY_TEXTS_HUE}",
-		tooltip: "Gets a specific letter from a text.",
-		helpUrl:
-			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
-		code: (args) => {
-			const text = `String(${args.TEXT})`;
-			switch (args.LETTER) {
-				case "charAt":
-					return `${text}.charAt(${args.INPUT})`;
-				case "chatEndAt":
-					return `${text}.slice(-${args.INPUT}).charAt(0)`;
-				case "charStart":
-					return `${text}.charAt(0)`;
-				case "charEnd":
-					return `${text}.slice(-1)`;
-				case "random":
-					return `${text}.charAt(Math.floor(Math.random() * ${args.INPUT}))`;
-				default:
-					return "";
-			}
-		}
 	},
 	{
 		id: "text_find_occurrence",
@@ -153,7 +86,7 @@ make subtring block in custom block since its too complex for discodes block api
 			new ValueInput("ITEM", BlockType.String)
 		],
 		placeholders: [
-			new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "hey hey" }),
+			new Placeholder(PlaceholderType.Block, "TEXT", "variable_get_discodes", { VAR: { name: "text" } }),
 			new Placeholder(PlaceholderType.Block, "ITEM", "text", { TEXT: "hey" })
 		],
 		shape: BlockShape.Floating,
@@ -202,7 +135,7 @@ make subtring block in custom block since its too complex for discodes block api
 	},
 	{
 		id: "text_replace",
-		text: "replace {INPUT} with {REPLACE} in {TEXT}",
+		text: "in text {INPUT} replace {REPLACE} with {TEXT}",
 		args: [
 			new ValueInput("INPUT", BlockType.String),
 			new ValueInput("REPLACE", BlockType.String),
@@ -359,5 +292,372 @@ const category: CategoryDefinition = {
 	name: "Text",
 	colour: "#5ba58c"
 };
+
+//text_charAt Start 
+function textCharAt() {
+	const type = "text_charAt_custom"
+	Blockly.Blocks[type] = {
+		init: function (this: Blockly.Block) {
+			this.jsonInit({
+				'type': type,
+				'message0': '%{BKY_TEXT_CHARAT_TITLE}', // "in text %1 %2"
+				'args0': [
+					{
+						'type': 'input_value',
+						'name': 'VALUE',
+						'check': 'String',
+					},
+					{
+						'type': 'field_dropdown',
+						'name': 'WHERE',
+						'options': [
+							['%{BKY_TEXT_CHARAT_FROM_START}', 'FROM_START'],
+							['%{BKY_TEXT_CHARAT_FROM_END}', 'FROM_END'],
+							['%{BKY_TEXT_CHARAT_FIRST}', 'FIRST'],
+							['%{BKY_TEXT_CHARAT_LAST}', 'LAST'],
+							['%{BKY_TEXT_CHARAT_RANDOM}', 'RANDOM'],
+						],
+					},
+				],
+				'output': 'String',
+				'style': 'text_blocks',
+				'helpUrl': '%{BKY_TEXT_CHARAT_HELPURL}',
+				'inputsInline': true,
+				'mutator': 'text_charAt_custom_mutator',
+			},)
+		}
+	}
+	/** Type of a block that has TEXT_CHARAT_MUTATOR_MIXIN */
+	type CharAtBlock = Blockly.Block & CharAtMixin;
+	interface CharAtMixin extends CharAtMixinType { }
+	type CharAtMixinType = typeof CHARAT_MUTATOR_MIXIN;
+
+	/**
+	 * Mixin for mutator functions in the 'text_charAt_mutator' extension.
+	 */
+	const CHARAT_MUTATOR_MIXIN = {
+		isAt_: false,
+
+		saveExtraState: function (this: CharAtBlock): { at: boolean } {
+			return {
+				'at': this.isAt_,
+			};
+		},
+	
+		loadExtraState: function (this: CharAtBlock | any, state: any) {
+			this.isAt_ = state['at'];
+			this.updateAt_(this.isAt_);
+		},
+
+
+		
+		updateAt_: function (this: CharAtBlock, isAt: boolean) {
+			this.removeInput('AT', true);
+			this.removeInput('ORDINAL', true);
+			if (isAt) {
+				this.appendValueInput('AT').setCheck('Number');
+				if (Blockly.Msg['ORDINAL_NUMBER_SUFFIX']) {
+					this.appendDummyInput('ORDINAL').appendField(
+						Blockly.Msg['ORDINAL_NUMBER_SUFFIX'],
+					);
+				}
+			}
+			if (Blockly.Msg['TEXT_CHARAT_TAIL']) {
+				this.removeInput('TAIL', true);
+				this.appendDummyInput('TAIL').appendField(Blockly.Msg['TEXT_CHARAT_TAIL']);
+			}
+
+			this.isAt_ = isAt;
+		},
+	};
+
+	const CHARAT_EXTENSION = function (this: CharAtBlock) {
+		const dropdown = this.getField('WHERE') as Blockly.FieldDropdown;
+		dropdown.setValidator(function (this: Blockly.FieldDropdown, value: any) {
+			const newAt = value === 'FROM_START' || value === 'FROM_END';
+			const block = this.getSourceBlock() as CharAtBlock;
+			if (newAt !== block.isAt_) {
+				block.updateAt_(newAt);
+			}
+			return undefined; // FieldValidators can't be void.  Use option as-is.
+		});
+		this.updateAt_(true);
+		this.setTooltip(() => {
+			const where = this.getFieldValue('WHERE');
+			let tooltip = Blockly.Msg['TEXT_CHARAT_TOOLTIP'];
+			if (where === 'FROM_START' || where === 'FROM_END') {
+				const msg =
+					where === 'FROM_START'
+						? Blockly.Msg['LISTS_INDEX_FROM_START_TOOLTIP']
+						: Blockly.Msg['LISTS_INDEX_FROM_END_TOOLTIP'];
+				if (msg) {
+					tooltip +=
+						'  ' +
+						msg.replace('%1', this.workspace.options.oneBasedIndex ? '#1' : '#0');
+				}
+			}
+			return tooltip;
+		});
+	};
+	console.log()
+	if(Blockly.Extensions.isRegistered("text_charAt_custom_mutator")) Blockly.Extensions.unregister('text_charAt_custom_mutator')
+	Blockly.Extensions.registerMutator(
+		'text_charAt_custom_mutator',
+		CHARAT_MUTATOR_MIXIN,
+		CHARAT_EXTENSION,
+	);
+	javascriptGenerator.forBlock[type] = function(block: Blockly.Block) {
+		const where = block.getFieldValue('WHERE') || 'FROM_START';
+  const textOrder = where === 'RANDOM' ? Order.NONE : Order.MEMBER;
+  const text = javascriptGenerator.valueToCode(block, 'VALUE', textOrder) || "''";
+  switch (where) {
+    case 'FIRST': {
+      const code = text + '.charAt(0)';
+      return [code, Order.FUNCTION_CALL];
+    }
+    case 'LAST': {
+      const code = text + '.slice(-1)';
+      return [code, Order.FUNCTION_CALL];
+    }
+    case 'FROM_START': {
+      const at = javascriptGenerator.getAdjusted(block, 'AT');
+      // Adjust index if using one-based indices.
+      const code = text + '.charAt(' + at + ')';
+      return [code, Order.FUNCTION_CALL];
+    }
+    case 'FROM_END': {
+      const at = javascriptGenerator.getAdjusted(block, 'AT', 1, true);
+      const code = text + '.slice(' + at + ').charAt(0)';
+      return [code, Order.FUNCTION_CALL];
+    }
+    case 'RANDOM': {
+      const functionName = javascriptGenerator.provideFunction_(
+        'textRandomLetter',
+        `
+function ${javascriptGenerator.FUNCTION_NAME_PLACEHOLDER_}(text) {
+  var x = Math.floor(Math.random() * text.length);
+  return text[x];
+}
+`,
+      );
+      const code = functionName + '(' + text + ')';
+      return [code, Order.FUNCTION_CALL];
+    }
+  }
+  throw Error('Unhandled option (text_charAt).');
+	}
+}
+textCharAt()
+//text_charAt End
+
+//text_getSubstring Start
+function text_getSubstring() {
+/** Type of a 'text_get_substring' block. */
+type GetSubstringBlock = Blockly.Block & GetSubstringMixin;
+interface GetSubstringMixin extends GetSubstringType {
+  WHERE_OPTIONS_1: Array<[string, string]>;
+  WHERE_OPTIONS_2: Array<[string, string]>;
+}
+type GetSubstringType = typeof GET_SUBSTRING_BLOCK;
+
+const GET_SUBSTRING_BLOCK = {
+  /**
+   * Block for getting substring.
+   */
+  init: function (this: GetSubstringBlock) {
+    this['WHERE_OPTIONS_1'] = [
+      [Blockly.Msg['TEXT_GET_SUBSTRING_START_FROM_START'], 'FROM_START'],
+      [Blockly.Msg['TEXT_GET_SUBSTRING_START_FROM_END'], 'FROM_END'],
+      [Blockly.Msg['TEXT_GET_SUBSTRING_START_FIRST'], 'FIRST'],
+    ];
+    this['WHERE_OPTIONS_2'] = [
+      [Blockly.Msg['TEXT_GET_SUBSTRING_END_FROM_START'], 'FROM_START'],
+      [Blockly.Msg['TEXT_GET_SUBSTRING_END_FROM_END'], 'FROM_END'],
+      [Blockly.Msg['TEXT_GET_SUBSTRING_END_LAST'], 'LAST'],
+    ];
+    this.setHelpUrl(Blockly.Msg['TEXT_GET_SUBSTRING_HELPURL']);
+    this.setStyle('text_blocks');
+    this.appendValueInput('STRING')
+      .setCheck('String')
+      .appendField(Blockly.Msg['TEXT_GET_SUBSTRING_INPUT_IN_TEXT']);
+    this.appendDummyInput('AT1');
+    this.appendDummyInput('AT2');
+    if (Blockly.Msg['TEXT_GET_SUBSTRING_TAIL']) {
+      this.appendDummyInput('TAIL').appendField(Blockly.Msg['TEXT_GET_SUBSTRING_TAIL']);
+    }
+    this.setInputsInline(true);
+    this.setOutput(true, 'String');
+    this.updateAt_(1, true);
+    this.updateAt_(2, true);
+    this.setTooltip(Blockly.Msg['TEXT_GET_SUBSTRING_TOOLTIP']);
+  },
+
+  updateAt_: function (this: GetSubstringBlock, n: 1 | 2, isAt: boolean) {
+    // Create or delete an input for the numeric index.
+    // Destroy old 'AT' and 'ORDINAL' inputs.
+    this.removeInput('AT' + n);
+    this.removeInput('ORDINAL' + n, true);
+    // Create either a value 'AT' input or a dummy input.
+    if (isAt) {
+      this.appendValueInput('AT' + n).setCheck('Number');
+      if (Blockly.Msg['ORDINAL_NUMBER_SUFFIX']) {
+        this.appendDummyInput('ORDINAL' + n).appendField(
+          Blockly.Msg['ORDINAL_NUMBER_SUFFIX'],
+        );
+      }
+    } else {
+      this.appendDummyInput('AT' + n);
+    }
+    // Move tail, if present, to end of block.
+    if (n === 2 && Blockly.Msg['TEXT_GET_SUBSTRING_TAIL']) {
+      this.removeInput('TAIL', true);
+      this.appendDummyInput('TAIL').appendField(Blockly.Msg['TEXT_GET_SUBSTRING_TAIL']);
+    }
+    const menu: any = Blockly.fieldRegistry.fromJson({
+      type: 'field_dropdown',
+      options:
+        this[('WHERE_OPTIONS_' + n) as 'WHERE_OPTIONS_1' | 'WHERE_OPTIONS_2'],
+    }) as Blockly.FieldDropdown;
+    menu.setValidator(
+      /**
+       * @param value The input value.
+       * @returns Null if the field has been replaced; otherwise undefined.
+       */
+      function (this: Blockly.FieldDropdown, value: any): null | undefined {
+        const newAt = value === 'FROM_START' || value === 'FROM_END';
+        // The 'isAt' variable is available due to this function being a
+        // closure.
+        if (newAt !== isAt) {
+          const block = this.getSourceBlock() as GetSubstringBlock;
+          block.updateAt_(n, newAt);
+          // This menu has been destroyed and replaced.
+          // Update the replacement.
+          block.setFieldValue(value, 'WHERE' + n);
+          return null;
+        }
+        return undefined;
+      },
+    );
+
+    this.getInput('AT' + n)!.appendField(menu, 'WHERE' + n);
+    if (n === 1) {
+      this.moveInputBefore('AT1', 'AT2');
+      if (this.getInput('ORDINAL1')) {
+        this.moveInputBefore('ORDINAL1', 'AT2');
+      }
+    }
+  },
+};
+
+Blockly.Blocks['text_getSubstring_custom'] = GET_SUBSTRING_BLOCK;
+const getSubstringIndex = function (
+	stringName: string,
+	where: string,
+	opt_at?: string,
+  ): string | undefined {
+	if (where === 'FIRST') {
+	  return '0';
+	} else if (where === 'FROM_END') {
+	  return stringName + '.length - 1 - ' + opt_at;
+	} else if (where === 'LAST') {
+	  return stringName + '.length - 1';
+	} else {
+	  return opt_at;
+	}
+  };
+javascriptGenerator.forBlock["text_getSubstring_custom"] = function(block: Blockly.Block) {
+	  // Dictionary of WHEREn field choices and their CamelCase equivalents. */
+	  const wherePascalCase = {
+		'FIRST': 'First',
+		'LAST': 'Last',
+		'FROM_START': 'FromStart',
+		'FROM_END': 'FromEnd',
+	  };
+	  type WhereOption = keyof typeof wherePascalCase;
+	  // Get substring.
+	  const where1 = block.getFieldValue('WHERE1') as WhereOption;
+	  const where2 = block.getFieldValue('WHERE2') as WhereOption;
+	  const requiresLengthCall =
+		where1 !== 'FROM_END' &&
+		where1 !== 'LAST' &&
+		where2 !== 'FROM_END' &&
+		where2 !== 'LAST';
+	  const textOrder = requiresLengthCall ? Order.MEMBER : Order.NONE;
+	  const text = javascriptGenerator.valueToCode(block, 'STRING', textOrder) || "''";
+	  let code;
+	  if (where1 === 'FIRST' && where2 === 'LAST') {
+		code = text;
+		return [code, Order.NONE];
+	  } else if (text.match(/^'?\w+'?$/) || requiresLengthCall) {
+		// If the text is a variable or literal or doesn't require a call for
+		// length, don't generate a helper function.
+		let at1;
+		switch (where1) {
+		  case 'FROM_START':
+			at1 = javascriptGenerator.getAdjusted(block, 'AT1');
+			break;
+		  case 'FROM_END':
+			at1 = javascriptGenerator.getAdjusted(block, 'AT1', 1, false, Order.SUBTRACTION);
+			at1 = text + '.length - ' + at1;
+			break;
+		  case 'FIRST':
+			at1 = '0';
+			break;
+		  default:
+			throw Error('Unhandled option (text_getSubstring).');
+		}
+		let at2;
+		switch (where2) {
+		  case 'FROM_START':
+			at2 = javascriptGenerator.getAdjusted(block, 'AT2', 1);
+			break;
+		  case 'FROM_END':
+			at2 = javascriptGenerator.getAdjusted(block, 'AT2', 0, false, Order.SUBTRACTION);
+			at2 = text + '.length - ' + at2;
+			break;
+		  case 'LAST':
+			at2 = text + '.length';
+			break;
+		  default:
+			throw Error('Unhandled option (text_getSubstring).');
+		}
+		code = text + '.slice(' + at1 + ', ' + at2 + ')';
+	  } else {
+		const at1 = javascriptGenerator.getAdjusted(block, 'AT1');
+		const at2 = javascriptGenerator.getAdjusted(block, 'AT2');
+		// The value for 'FROM_END' and'FROM_START' depends on `at` so
+		// we add it as a parameter.
+		const at1Param =
+		  where1 === 'FROM_END' || where1 === 'FROM_START' ? ', at1' : '';
+		const at2Param =
+		  where2 === 'FROM_END' || where2 === 'FROM_START' ? ', at2' : '';
+		const functionName = javascriptGenerator.provideFunction_(
+		  'subsequence' + wherePascalCase[where1] + wherePascalCase[where2],
+		  `
+	function ${
+			javascriptGenerator.FUNCTION_NAME_PLACEHOLDER_
+		  }(sequence${at1Param}${at2Param}) {
+	  var start = ${getSubstringIndex('sequence', where1, 'at1')};
+	  var end = ${getSubstringIndex('sequence', where2, 'at2')} + 1;
+	  return sequence.slice(start, end);
+	}
+	`,
+		);
+		code =
+		  functionName +
+		  '(' +
+		  text +
+		  // The value for 'FROM_END' and 'FROM_START' depends on `at` so we
+		  // pass it.
+		  (where1 === 'FROM_END' || where1 === 'FROM_START' ? ', ' + at1 : '') +
+		  (where2 === 'FROM_END' || where2 === 'FROM_START' ? ', ' + at2 : '') +
+		  ')';
+	  }
+	  return [code, Order.FUNCTION_CALL];
+}
+}
+text_getSubstring()
+//text_getSubstring End
+
 
 export default { blocks, category };
