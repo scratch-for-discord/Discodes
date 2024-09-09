@@ -92,10 +92,17 @@ type BlockDefinition = {
 	helpUrl: string;
 	// The block's code, with all the arguments passed in the "args" param
 	code: (args: Record<string, unknown>) => unknown;
+	// The blocks mutator(the gear icon located at the left top corner in the block)
+	mutator?: Mutator;
+	// Hides the block from category, but still have it registered as a block.
+	// Mostly used for mutator blocks that are inside the mutator menu
+	hidden?: boolean;
+	// List of library imports that block requires.
+	imports?: `${string}@${string}`[];
 };
 ```
 
-So considering that most of the paramters are not required, here is the minimum configuration for a block :
+So considering that most of the parameters are not required, here is the minimum configuration for a block :
 
 ```ts
 type BlockDefinition = {
