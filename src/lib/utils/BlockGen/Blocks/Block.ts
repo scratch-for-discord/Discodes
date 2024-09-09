@@ -93,7 +93,16 @@ export default class Block {
 		const {message, warningType, fieldName} = data
 		
 		switch (warningType) {
-			case WarningType.Parent:  
+			case WarningType.Parent: 
+			// const noParentFieldName =  "no/#_defind@!_field%_name^*!(./1"
+			// 	if(fieldName === "" && topParent.getChildren(false).length !== 0) {
+			// 		resultMessage += `${message}\n`;
+			// 		addWarning(this._block.id, noParentFieldName, message);
+			// 		break;
+			// 	} else if(fieldName === "" && topParent.getChildren(false).length === 0) {
+			// 		removeWarning(this._block.id, noParentFieldName);
+					
+			// 	}
 				if (topParent.type != fieldName) {
 					resultMessage += `${message}\n`;
 					addWarning(this._block.id, fieldName, message);
@@ -125,7 +134,9 @@ export default class Block {
 		}
 		return resultMessage
 	}
-	
+	public hasParent(): boolean {
+		return this._block.getParent() !== null
+	}
 	public addText(text: string, fieldName: string): void {
 		this._block.appendDummyInput(fieldName).appendField(text);
 	}

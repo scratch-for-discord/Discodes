@@ -1,4 +1,4 @@
-import { BlockShape, BlockType, DropdownType, PlaceholderType } from "$lib/enums/BlockTypes";
+import { BlockShape, BlockType, DropdownType, PlaceholderType, WarningType } from "$lib/enums/BlockTypes";
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
 import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
@@ -7,6 +7,8 @@ import StatementInput from "$lib/utils/BlockGen/Inputs/StatementInput";
 import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
 import Blockly from "blockly"
 import { javascriptGenerator, Order } from "blockly/javascript";
+import Warning from "$lib/utils/BlockGen/Warnings/Warning";
+import VariableInput from "$lib/utils/BlockGen/Inputs/VariableInput";
 const blocks: BlockDefinition[] = [
 
 	{
@@ -36,7 +38,19 @@ const blocks: BlockDefinition[] = [
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
 		code: (args) => {
-			return `String(${args.TEXT}).split(${args.INPUT}).length - 1`;
+			javascriptGenerator.provideFunction_("countOccurrences",
+				`function countOccurrences(str, char) {
+  let count = 0;
+  for (let i = 0; i < str.length; i++) {
+    if (str[i] === char) {
+      count++;
+    }
+  }
+  return count;
+}
+`
+			)
+			return `countOccurrences(${args.TEXT}, ${args.INPUT})`;
 		}
 	},
 	{
@@ -74,6 +88,7 @@ const blocks: BlockDefinition[] = [
 
 		],
 	},
+	
 	{
 		id: "text_find_occurrence",
 		text: "in text {TEXT} find {FIRST_LAST} occurrence of item {ITEM}",
@@ -102,6 +117,32 @@ const blocks: BlockDefinition[] = [
 		}
 	},
 	{
+		id: "text_replace",
+		text: "in text {INPUT} replace {REPLACE} with {TEXT}",
+		args: [
+			new ValueInput("INPUT", BlockType.String),
+			new ValueInput("REPLACE", BlockType.String),
+			new ValueInput("TEXT", BlockType.String)
+		],
+		placeholders: [
+			new Placeholder(PlaceholderType.Block, "INPUT", "variable_get_discodes", { VAR: { name: "text" } }),
+			new Placeholder(PlaceholderType.Block, "INPUT", "variable_get_discodes", { VAR: { name: "text" } }),
+
+			new Placeholder(PlaceholderType.Block, "REPLACE", "text", { TEXT: "Bye" }),
+			new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "Hello World" })
+		],
+		shape: BlockShape.Floating,
+		output: BlockType.String,
+		inline: true,
+		colour: "%{BKY_TEXTS_HUE}",
+		tooltip: "Replaces occurrences of input with replace in the given text.",
+		helpUrl:
+			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+		code: (args) => {
+			return `String(${args.TEXT}).replace(new RegExp(${args.INPUT}, 'g'), ${args.REPLACE})`;
+		}
+	},
+	{
 		id: "text_reverse",
 		text: "reverse text {TEXT}",
 		args: [new ValueInput("TEXT", BlockType.String)],
@@ -114,7 +155,21 @@ const blocks: BlockDefinition[] = [
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
 		code: (args) => {
-			return `String(${args.TEXT}).split('').reverse().join('')`;
+			javascriptGenerator.provideFunction_("reverseString",
+				`function reverseString(str) {
+  let charArray = Array.from(str);
+  let left = 0;
+  let right = charArray.length - 1;
+  while (left < right) {
+    [charArray[left], charArray[right]] = [charArray[right], charArray[left]];
+    left++;
+    right--;
+  }
+  return charArray.join('');
+}
+`
+			)
+			return `reverseString(${args.TEXT})`;
 		}
 	},
 	{
@@ -133,30 +188,7 @@ const blocks: BlockDefinition[] = [
 			return `String(${args.TEXT}).length === 0`;
 		}
 	},
-	{
-		id: "text_replace",
-		text: "in text {INPUT} replace {REPLACE} with {TEXT}",
-		args: [
-			new ValueInput("INPUT", BlockType.String),
-			new ValueInput("REPLACE", BlockType.String),
-			new ValueInput("TEXT", BlockType.String)
-		],
-		placeholders: [
-			new Placeholder(PlaceholderType.Block, "INPUT", "text", { TEXT: "Hello" }),
-			new Placeholder(PlaceholderType.Block, "REPLACE", "text", { TEXT: "Bye" }),
-			new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "Hello World" })
-		],
-		shape: BlockShape.Floating,
-		output: BlockType.String,
-		inline: true,
-		colour: "%{BKY_TEXTS_HUE}",
-		tooltip: "Replaces occurrences of input with replace in the given text.",
-		helpUrl:
-			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
-		code: (args) => {
-			return `String(${args.TEXT}).replace(new RegExp(${args.INPUT}, 'g'), ${args.REPLACE})`;
-		}
-	},
+	
 	{
 		id: "text_length",
 		text: "length of {TEXT}",
@@ -204,13 +236,18 @@ const blocks: BlockDefinition[] = [
 		id: "text_newline",
 		text: "new line",
 		output: BlockType.String,
+		// warnings: [
+		// 	new Warning(WarningType.Parent, )
+		// ],
 		shape: BlockShape.Floating,
 		inline: true,
 		colour: "%{BKY_TEXTS_HUE}",
 		tooltip: "Represents a new line character.",
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
-		code: () => {
+		code: (args, block) => {
+			//check to prevent error if no 
+			if(!block.hasParent()) return '"\\n"';
 			return "\\n";
 		}
 	},
@@ -232,16 +269,22 @@ const blocks: BlockDefinition[] = [
 	},
 	{
 		id: "text_for_each",
-		text: "for each {SELECT} in {TEXT} \n {INPUT}",
+		text: "for each {SELECT} in {TEXT} assign it to {VARIABLE} \n {INPUT}",
 		args: [
 			new Dropdown("SELECT", DropdownType.Auto, {
 				character: "char",
 				word: "word"
 			}),
 			new ValueInput("TEXT", BlockType.String),
+			
+
+			new VariableInput("VARIABLE", "item"),
+
 			new StatementInput("INPUT")
 		],
-		placeholders: [new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "abc" })],
+		placeholders: [
+			new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "abc" })
+		],
 		shape: BlockShape.Action,
 		inline: true,
 		colour: "%{BKY_TEXTS_HUE}",
@@ -249,43 +292,18 @@ const blocks: BlockDefinition[] = [
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
 		code: (args) => {
+			const variableNameI = `char_word_i_${args.VARIABLE}`
 			switch (args.SELECT) {
 				case "char":
-					return `for (let char_i = 0; char_i < String(${args.TEXT}).length; char_i++){\nlet char_i_char = String(${args.TEXT})[char_i] ${args.INPUT}}`;
+					return `for(let ${variableNameI} = 0; ${variableNameI} < String(${args.TEXT}).length; char_i++) {\n	let ${args.VARIABLE} = String(${args.TEXT})[${variableNameI}] ${args.INPUT}\n}\n`;
 				case "word":
-					return `for (let word_i = 0; word_i < String(${args.TEXT}).split(' ').length; word_i++){\nlet word_i_word = String(${args.TEXT}).split(' ')[word_i] ${args.INPUT}}`;
+					return `for(let ${variableNameI} = 0; ${variableNameI} < String(${args.TEXT}).split(' ').length; word_i++) {\n	let ${args.VARIABLE} = String(${args.TEXT}).split(' ')[${variableNameI}] ${args.INPUT}\n}\n`;
 				default:
 					return "";
 			}
 		}
 	},
-	{
-		id: "text_character",
-		text: "{SELECT}",
-		args: [
-			new Dropdown("SELECT", DropdownType.Auto, {
-				character: "char",
-				word: "word"
-			})
-		],
-		shape: BlockShape.Floating,
-		output: BlockType.String,
-		inline: true,
-		colour: "%{BKY_TEXTS_HUE}",
-		tooltip: "Outputs the selected character or word.",
-		helpUrl:
-			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
-		code: (args) => {
-			switch (args.SELECT) {
-				case "char":
-					return "char_i_char";
-				case "word":
-					return "word_i_word";
-				default:
-					return "";
-			}
-		}
-	}
+
 ];
 
 const category: CategoryDefinition = {
