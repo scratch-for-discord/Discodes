@@ -28,7 +28,7 @@ const blocks: BlockDefinition[] = [
 		args: [new ValueInput("INPUT", BlockType.String), new ValueInput("TEXT", BlockType.String)],
 		placeholders: [
 			new Placeholder(PlaceholderType.Block, "INPUT", "text", { TEXT: "o" }),
-			new Placeholder(PlaceholderType.Block, "TEXT", "text", { INPUT: "Hello World" })
+			new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "Hello World" })
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Number,
@@ -47,10 +47,98 @@ const blocks: BlockDefinition[] = [
     }
   }
   return count;
-}
-`
-			)
-			return `countOccurrences(${args.TEXT}, ${args.INPUT})`;
+}`)
+			return `countOccurrences(${args.TEXT === ""? "''" : args.TEXT}, ${args.INPUT === ""? "''" : args.INPUT})`;
+		}
+	},
+	{
+		id: "text_repeater",
+		text: "repeat {INPUT} for {NUMBER} times",
+		args: [new ValueInput("INPUT", BlockType.String), new ValueInput("NUMBER", BlockType.Number)],
+		placeholders: [
+			new Placeholder(PlaceholderType.Block, "INPUT", "text", { TEXT: "abc" }),
+			new Placeholder(PlaceholderType.Shadow, "NUMBER", "number", { NUMBER: 5 })
+		],
+		shape: BlockShape.Floating,
+		output: BlockType.String,
+		inline: true,
+		colour: "%{BKY_TEXTS_HUE}",
+		tooltip: "Repeats string x amount of times",
+		helpUrl:
+			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+		code: (args) => {
+
+			return `String(${args.INPUT}).repeat(${args.NUMBER === ""? "1" : args.NUMBER})`;
+		}
+	},
+	{
+		id: "text_padding",
+		text: "Pad the text {TEXT} at the {PAD} using {STR} to a max length of {NUMBER}",
+		args: [
+			new ValueInput("TEXT", BlockType.String), 
+
+			new Dropdown("PAD", DropdownType.Auto, {
+				"start": "padStart",
+				"end": "padEnd"
+			}),
+			new ValueInput("STR", BlockType.String), 
+			new ValueInput("NUMBER", BlockType.Number),
+		],
+		placeholders: [
+			new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "5" }),
+			new Placeholder(PlaceholderType.Shadow, "STR", "text", { TEXT: "0" }),
+			new Placeholder(PlaceholderType.Shadow, "NUMBER", "number", { NUMBER: 2 })
+		],
+		shape: BlockShape.Floating,
+		output: BlockType.String,
+		inline: true,
+		colour: "%{BKY_TEXTS_HUE}",
+		tooltip: "Adds padding to text, for example text '5', padding text '0' and length of 2 it will output string '05' and the string will always have the length of 2",
+		helpUrl:
+			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+		code: (args) => {
+
+			return `String(${args.TEXT}).${args.PAD}(${args.NUMBER === ""? "1" : args.NUMBER}${args.STR === ""? "" : ", " + args.STR})`;
+		}
+	},
+	{
+		id: "text_splitter",
+		text: "split text {INPUT} with delimiter {STR}",
+		args: [new ValueInput("INPUT", BlockType.String), new ValueInput("STR", BlockType.String)],
+		placeholders: [
+			new Placeholder(PlaceholderType.Block, "INPUT", "text", { TEXT: "Hello, World!" }),
+			new Placeholder(PlaceholderType.Shadow, "STR", "text", { TEXT: "," })
+		],
+		shape: BlockShape.Floating,
+		output: BlockType.Array,
+		inline: true,
+		colour: "%{BKY_TEXTS_HUE}",
+		tooltip: "Repeats string x amount of times",
+		helpUrl:
+			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+		code: (args) => {
+
+			return `String(${args.INPUT}).split(${args.STR})`;
+		}
+	},
+	{
+		id: "text_combine",
+		text: "combine {TEXT} with list of text {TEXTLIST}",
+		args: [new ValueInput("TEXT", BlockType.String), new ValueInput("TEXTLIST", [BlockType.Array, BlockType.String])],
+		placeholders: [
+			new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "Hello, World!" }),
+		    new Placeholder(PlaceholderType.Block, "TEXTLIST", "create_list_custom", {})
+		],
+		shape: BlockShape.Floating,
+		output: BlockType.Array,
+		inline: true,
+		colour: "%{BKY_TEXTS_HUE}",
+		tooltip: "Combines or more precisely concats list of text with the given string",
+		helpUrl:
+			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+		code: (args) => {
+
+			return `String(${args.TEXT}).concat(...${args.TEXTLIST === ""? "[]" : args.TEXTLIST})`;
 		}
 	},
 	{
@@ -126,7 +214,6 @@ const blocks: BlockDefinition[] = [
 		],
 		placeholders: [
 			new Placeholder(PlaceholderType.Block, "INPUT", "variable_get_discodes", { VAR: { name: "text" } }),
-			new Placeholder(PlaceholderType.Block, "INPUT", "variable_get_discodes", { VAR: { name: "text" } }),
 
 			new Placeholder(PlaceholderType.Block, "REPLACE", "text", { TEXT: "Bye" }),
 			new Placeholder(PlaceholderType.Block, "TEXT", "text", { TEXT: "Hello World" })
@@ -139,7 +226,29 @@ const blocks: BlockDefinition[] = [
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
 		code: (args) => {
-			return `String(${args.TEXT}).replace(new RegExp(${args.INPUT}, 'g'), ${args.REPLACE})`;
+			return `String(${args.TEXT}).replace(new RegExp(${args.INPUT}, 'g'), String(${args.REPLACE}))`;
+		}
+	},
+	{
+		id: "char_code_at",
+		text: "in text {INPUT} find character code by index # {NUM}",
+		args: [
+			new ValueInput("INPUT", BlockType.String),
+			new ValueInput("NUM", BlockType.Number)
+		],
+		placeholders: [
+			new Placeholder(PlaceholderType.Block, "INPUT", "variable_get_discodes", { VAR: { name: "text" } }),
+			new Placeholder(PlaceholderType.Shadow, "NUM", "number", { NUMBER: 0 })
+		],
+		shape: BlockShape.Floating,
+		output: BlockType.Number,
+		inline: true,
+		colour: "%{BKY_TEXTS_HUE}",
+		tooltip: "Gets character code at specified index",
+		helpUrl:
+			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+		code: (args) => {
+			return args.NUM === ""? "0" : `String(${args.INPUT}).charCodeAt(${args.NUM})`;
 		}
 	},
 	{
@@ -169,7 +278,7 @@ const blocks: BlockDefinition[] = [
 }
 `
 			)
-			return `reverseString(${args.TEXT})`;
+			return `reverseString(String(${args.TEXT}))`;
 		}
 	},
 	{
@@ -229,7 +338,7 @@ const blocks: BlockDefinition[] = [
 		helpUrl:
 			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
 		code: (args) => {
-			return `String(${args.TEXT}).${args.OPTION}(${args.OTHERTEXT})`;
+			return `String(${args.TEXT}).${args.OPTION}(String(${args.OTHERTEXT}))`;
 		}
 	},
 	{
@@ -267,6 +376,7 @@ const blocks: BlockDefinition[] = [
 			return `String(${args.TEXT}).match(/\\d+/g) !== null`;
 		}
 	},
+
 	{
 		id: "text_for_each",
 		text: "for each {SELECT} in {TEXT} assign it to {VARIABLE} \n {INPUT}",
