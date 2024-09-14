@@ -345,9 +345,9 @@ const blocks: BlockDefinition[] = [
 		id: "text_newline",
 		text: "new line",
 		output: BlockType.String,
-		// warnings: [
-		// 	new Warning(WarningType.Parent, )
-		// ],
+		warnings: [
+			new Warning(WarningType.Parent)
+		],
 		shape: BlockShape.Floating,
 		inline: true,
 		colour: "%{BKY_TEXTS_HUE}",

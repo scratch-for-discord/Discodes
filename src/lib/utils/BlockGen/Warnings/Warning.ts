@@ -19,7 +19,8 @@ export default class Warning {
 				this._message = `The ${this._fieldName} input is required.`;
 				break;
 			case WarningType.Parent:
-				this._message = `This block belongs inside the ${this._fieldName} block.`;
+				if(!this._fieldName || this._fieldName === "") this._message = `This block requires a parent.`;
+				else this._message = `This block belongs inside the ${this._fieldName} block.`;
 				break;
 			case WarningType.Permanent:
 				if (this._message === "") {

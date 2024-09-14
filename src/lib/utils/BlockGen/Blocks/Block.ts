@@ -89,7 +89,7 @@ export default class Block {
 			(warning) => warning.data.fieldName !== fieldName
 		);
 	}
-	public handleWarning(data: { message: string; warningType: WarningType; fieldName: string }, resultMessage: string, topParent: Blockly.Block): string {
+	private handleWarning(data: { message: string; warningType: WarningType; fieldName: string }, resultMessage: string, topParent: Blockly.Block, block: Blockly.Block): string {
 		const {message, warningType, fieldName} = data
 		
 		switch (warningType) {
@@ -103,7 +103,8 @@ export default class Block {
 			// 		removeWarning(this._block.id, noParentFieldName);
 					
 			// 	}
-				if (topParent.type != fieldName) {
+			console.log(block.type, topParent.type, fieldName === "", block.type === topParent.type)
+				if ((topParent.type != fieldName && fieldName !== "") || (fieldName === "" && block.type === topParent.type)) {
 					resultMessage += `${message}\n`;
 					addWarning(this._block.id, fieldName, message);
 					break;
@@ -371,30 +372,32 @@ export default class Block {
 						check if input + "1" exists if exists go to mutator detecting
 						where it goes in a loop unitl input + "n" doesn't exist	
 						*/
+
+						// Iterate through each warning
 						for (const warning of warnings) {
 							const { warningType, message, fieldName } = warning.data;
-							if(this.getInput(fieldName)) {
-								resultMessage = BlockClass.handleWarning(warning.data, resultMessage, topParent)
+					
+							// Check if the base input exists or if the warning type is Parent and base input doesn't exist
+							const baseInputExists = this.getInput(fieldName);
+							if (baseInputExists || (!baseInputExists && warningType !== WarningType.Input)) {
+								resultMessage = BlockClass.handleWarning(warning.data, resultMessage, topParent, this);
 							}
-							let input = this.getInput(fieldName + "1")
-							//handles mutator input warnings
-							if(input) {
-							const warningObject = {
-								message: message,
-								fieldName: fieldName,
-								warningType: warningType
+					
+							// Handle mutator inputs
+							let i = 1;
+							let input = this.getInput(`${fieldName}${i}`);
+					
+							while (input) {
+								const warningObject = {
+									message: message,
+									fieldName: `${fieldName}${i}`,
+									warningType: warningType
+								};
+					
+								resultMessage = BlockClass.handleWarning(warningObject, resultMessage, topParent);
+								i++;
+								input = this.getInput(`${fieldName}${i}`);
 							}
-								let i = 1;
-								while(input) {
-									warningObject.fieldName = warning.data.fieldName+ i
-									resultMessage = BlockClass.handleWarning(warningObject, resultMessage, topParent)
-									i++
-									input = this.getInput(`${fieldName}${i}`)
-								}
-							}
-
-							
-				
 						}
 						if (warningsObj[this.id] && Object.keys(warningsObj[this.id]).length === 0) {
 							delete warningsObj[this.id];

@@ -1,5 +1,5 @@
 import { BlockShape, BlockType, DropdownType, PlaceholderType, WarningType } from "$lib/enums/BlockTypes";
-import Blockly from "blockly"
+import Blockly, { Block } from "blockly"
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
@@ -9,6 +9,7 @@ import Placeholder from "$lib/utils/ToolboxGen/Placeholder";
 import Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
 import { list } from "postcss";
+import AssemblerMutator from "$lib/utils/BlockGen/Mutators/AssemblerMutator";
 /*
 Logic category is finished.
 */
@@ -28,118 +29,6 @@ const blocks: BlockDefinition[] = [
 			itemCount: 3
 		}
 	},
-
-// 	{
-// 		id: "create_list_repeated",
-// 		text: "create list with item {ITEM} repeated {TIMES} times",
-// 		args: [new ValueInput("ITEM", BlockType.Any), new ValueInput("TIMES", BlockType.Number)],
-// 		placeholders: [
-// 			new Placeholder(PlaceholderType.Shadow, "TIMES", "number", { NUMBER: 5 })
-// 		],
-// 		warnings: [
-// 			new Warning(WarningType.Input, { fieldName: "ITEM" })
-// 		],
-// 		shape: BlockShape.Floating,
-// 		output: BlockType.Array,
-// 		inline: true,
-// 		colour: "#745BA5",
-// 		tooltip: "",
-// 		helpUrl: "",
-// 		code: (args) => {
-// 			javascriptGenerator.provideFunction_(
-// 				'create_list_repeated',
-// 				[
-// 					`
-// function listsRepeat(value, n) {
-//   var array = [];
-//   for (var i = 0; i < n; i++) {
-//     array[i] = value;
-//   }
-//   return array;
-// }
-
-// 					`
-// 				]
-// 			)
-// 			return `listsRepeat(${args.ITEM === "" ? null : args.ITEM}, ${args.TIMES === "" ? "5" : args.TIMES})`;
-// 		}
-// 	},
-// 	{
-// 		id: "list_length_get",
-// 		text: "length of {LIST}",
-// 		args: [new ValueInput("LIST", BlockType.Array)],
-
-// 		warnings: [
-// 			new Warning(WarningType.Input, { fieldName: "LIST" })
-// 		],
-// 		shape: BlockShape.Floating,
-// 		output: BlockType.Number,
-// 		inline: true,
-// 		colour: "#745BA5",
-// 		tooltip: "",
-// 		helpUrl: "",
-// 		code: (args) => {
-
-// 			return `${args.LIST === "" ? "[]" : args.LIST}`;
-// 		}
-// 	},
-
-// 	{
-// 		id: "sort_list",
-// 		text: "sort {TYPE} {DIRECTION} {LIST}",
-// 		args: [
-// 			new Dropdown("TYPE", DropdownType.Auto, {
-// 				"numeric": "NUMERIC",
-// 				"alphabetic": "TEXT",
-// 				"alphabetic, ignore upper/lower case on text": "IGNORE_CASE",
-
-
-// 			}),
-// 			new Dropdown("DIRECTION", DropdownType.Auto, {
-// 				ascending: "1",
-// 				descending: "-1",
-
-// 			}),
-// 			new ValueInput("LIST", BlockType.Array)
-// 		],
-
-// 		warnings: [
-// 			new Warning(WarningType.Input, { fieldName: "LIST" })
-// 		],
-// 		shape: BlockShape.Floating,
-// 		output: BlockType.Array,
-// 		inline: true,
-// 		colour: "#745BA5",
-// 		tooltip: "",
-// 		helpUrl: "",
-// 		code: (args) => {
-// 			javascriptGenerator.provideFunction_(
-// 				'sort_list',
-// 				[
-// 					`
-//     function listsGetSortCompare(type, direction) {
-//         var compareFuncs = {
-//             'NUMERIC': function(a, b) {
-//                 return Number(a) - Number(b);
-//             },
-//             'TEXT': function(a, b) {
-//                 return a.toString() > b.toString() ? 1 : -1;
-//             },
-//             'IGNORE_CASE': function(a, b) {
-//                 return a.toString().toLowerCase() > b.toString().toLowerCase() ? 1 : -1;
-//             },
-//         };
-//         var compare = compareFuncs[type];
-//         return function(a, b) {
-//             return compare(a, b) * direction;
-//         };
-//     }
-// 					`
-// 				]
-// 			)
-// 			return `${args.LIST === "" ? "[]" : args.LIST}.slice().sort(listsGetSortCompare(${args.TYPE}, ${args.DIRECTION}))`;
-// 		}
-// 	},
 
 	{
 		kind: "custom_block",
@@ -173,7 +62,27 @@ const blocks: BlockDefinition[] = [
 		}
 	},
 	{
-		id: "list contains",
+		id: "is_list",
+		text: "is {LIST} a list?",
+		args: [new ValueInput("LIST", BlockType.Any)],
+		shape: BlockShape.Floating,
+		output: BlockType.Array,
+		inline: true,
+		colour: "#745BA5",
+		tooltip: "",
+		helpUrl: "",
+		code: (args) => {
+
+			return `Array.isArray(${args.LIST})`;
+		}
+	},
+
+	{
+		label: true,
+		text: "list searching"
+	},
+	{
+		id: "list_contains",
 		text: "list {LIST} contains {VALUE}",
 		placeholders: [
 			new Placeholder(PlaceholderType.Block, "LIST", "variable_get_discodes", { VAR: {name: "list"}})
@@ -191,7 +100,47 @@ const blocks: BlockDefinition[] = [
 			return `${args.LIST === "" ? "[]" : args.LIST}.includes(${args.VALUE})`;
 		}
 	},
-	
+	{
+		id: "list_find",
+		text: "in list {LIST} find {DROPDOWN} by {VALUE}",
+		placeholders: [
+			new Placeholder(PlaceholderType.Block, "LIST", "variable_get_discodes", { VAR: {name: "list"}})
+
+		],
+		args: [new ValueInput("LIST", BlockType.Array),
+			new Dropdown("DROPDOWN", DropdownType.Auto, {
+				"item": "find",
+				"index": "findIndex"
+			}),
+			new ValueInput("VALUE", BlockType.Boolean)],
+		shape: BlockShape.Floating,
+		output: BlockType.Any,
+		inline: true,
+		colour: "#745BA5",
+		tooltip: "",
+		helpUrl: "",
+		code: (args) => {
+
+			return `${args.LIST === "" ? "[]" : args.LIST}.${args.DROPDOWN}((list_find_element_variable) => ${args.VALUE === ""? "null" : args.VALUE})`;
+		}
+	},
+	{
+		id: "list_find_element",
+		text: "list find element",
+		warnings: [
+			new Warning(WarningType.Parent, {fieldName: "list_find"})
+		],
+		shape: BlockShape.Floating,
+		output: BlockType.Any,
+		inline: true,
+		colour: "#745BA5",
+		tooltip: "",
+		helpUrl: "",
+		code: (args) => {
+
+			return `list_find_element_variable`;
+		}
+	},
 	{
 		kind: "custom_block",
 		id: "lists_indexOf",
@@ -244,6 +193,107 @@ const blocks: BlockDefinition[] = [
 
 			return `${args.LIST === ""? "[]" : args.LIST}.push(${args.VALUE})`;
 		}
+	},
+	{
+		id: "list_copy_within",
+		text: "in list {LIST} copy within from {START} to {END} at {TARGET}",
+		args: [new ValueInput("LIST", BlockType.Array),
+			new ValueInput("START", BlockType.Number),
+			new ValueInput("END", BlockType.Number),
+
+			new ValueInput("TARGET", BlockType.Number),
+
+		],
+		placeholders: [
+			new Placeholder(PlaceholderType.Block, "LIST", "variable_get_discodes", { VAR: {name: "list"}}),
+			new Placeholder(PlaceholderType.Shadow, "START", "number", { NUMBER: 1}),
+			new Placeholder(PlaceholderType.Block, "END", "number", { NUMBER: 2}),
+			new Placeholder(PlaceholderType.Shadow, "TARGET", "number", { NUMBER: 0}),
+
+
+		],
+
+		shape: BlockShape.Action,
+		inline: true,
+		colour: "#745BA5",
+		tooltip: "",
+		helpUrl: "",
+		code: (args) => {
+
+			return `${args.LIST === ""? "[]" : args.LIST}.copyWithin(Number(${args.TARGET}), Number(${args.START})${args.END === ""? "": `, Number(${args.END})`})`;
+		}
+	},
+	{
+		id: "list_fill",
+		text: "fill list {LIST} with value {VALUE} from {START} to {END}",
+		args: [new ValueInput("LIST", BlockType.Array),
+			new ValueInput("VALUE", BlockType.Any),
+			new ValueInput("START", BlockType.Number),
+
+			new ValueInput("END", BlockType.Number),
+
+		],
+		placeholders: [
+			new Placeholder(PlaceholderType.Block, "LIST", "variable_get_discodes", { VAR: {name: "list"}}),
+			new Placeholder(PlaceholderType.Shadow, "START", "number", { NUMBER: 0}),
+
+			new Placeholder(PlaceholderType.Shadow, "END", "number", { NUMBER: 1}),
+
+
+		],
+
+		shape: BlockShape.Action,
+		inline: true,
+		colour: "#745BA5",
+		tooltip: "",
+		helpUrl: "",
+		code: (args) => {
+
+			return `${args.LIST === ""? "[]" : args.LIST}.fill(${args.VALUE === ""? "null" : args.VALUE}, Number(${args.START}), Number(${args.END}))`;
+		}
+	},
+	{
+		label: true,
+		text: "list transforming blocks"
+	},
+	
+	{
+		id: "concat_list",
+		text: "combine lists {LIST}",
+		extraState: {
+			order: ["new_item", "new_item"]
+		},
+		args: [
+			new ValueInput("LIST", BlockType.Array)
+		],
+
+		mutator: new AssemblerMutator("list", [
+			{
+				block: "new_item",
+				once: false,
+				adds: [
+					new ValueInput("LIST", BlockType.Array)
+				]
+			}
+		], {
+			alignInputs: Blockly.inputs.Align.RIGHT,
+			color: "#745BA5",
+		}),
+		shape: BlockShape.Value,
+		output: BlockType.Array,
+		inline: false,
+		colour: "#745BA5",
+		tooltip: "combines lists",
+		helpUrl: "",
+		code: (args) => {
+			console.log(args)
+			let concat = [];
+			for(const list of args.LIST_list) {
+				concat.push(list === ""? "null" : `...${list}`)
+			}
+			console.log(concat)
+			return `${args.LIST === ""? "[]" : args.LIST}.concat(${concat.join(", ")})`;
+		} 
 	},
 	{
 		kind: "custom_block",
@@ -349,7 +399,6 @@ const LISTS_CREATE_WITH = {
 					if (acceptedTypes.length == 0) return; // Accepts any type, so no need to change
 					if (acceptedTypes[0] !== BlockType.Array) return; // Not an array, do nothing
 					if (acceptedTypes[0] === BlockType.Array && acceptedTypes.length === 1) return; // Only array, do nothing
-
 					// Change the input types to match the accepted types of the parent
 					acceptedTypes = acceptedTypes[1];
 					this.updateShape_((acceptedTypes as string[]).slice(1, acceptedTypes.length));

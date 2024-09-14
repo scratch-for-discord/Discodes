@@ -23,6 +23,7 @@ const blocks: BlockDefinition[] = [
 			return `${args.NUMBER}`;
 		}
 	},
+	
 	{
 		id: "operations",
 		text: "{OPERAND1} {OPERATOR} {OPERAND2}",
@@ -52,6 +53,21 @@ const blocks: BlockDefinition[] = [
 		code: (args) => {
 			if (args.OPERATOR === "pow") return `Math.pow(${args.OPERAND1}, ${args.OPERAND2})`;
 			return `${args.OPERAND1} ${args.OPERATOR} ${args.OPERAND2}`;
+		}
+	},
+	{
+		id: "to_number",
+		text: "to number {INPUT}",
+		args: [new ValueInput("INPUT", BlockType.Any)],
+		shape: BlockShape.Floating,
+		output: BlockType.Number,
+		inline: true,
+		colour: "#5b67a5",
+		tooltip: "Convert input to number",
+		helpUrl:
+			"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+		code: (args) => {
+			return `Number(${args.NUMBER})`;
 		}
 	},
 	{
