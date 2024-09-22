@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { cn } from "$lib/utils";
+	import * as Dropdown from "$lib/components/ui/dropdown-menu"
 	import ChevronLeft from "lucide-svelte/icons/chevron-left";
 
 	export let toolBoxWidth;
@@ -12,6 +13,8 @@
 	import { Button } from "$lib/components/ui/button";
 	// import { showNavbar } from "$lib/stores/navbarStore";
 	// import Page from "../../routes/editor/+page.svelte";
+
+	import { generateJavascriptCode } from "$lib/utils/BlockGen/Blockly/Generators/GenerateCode";
 
 	let isShowing = true;
 	let isFilesShowing = false;
@@ -37,18 +40,33 @@
 		{#if isShowing}
 			{#await wait(50) then}
 				<Button variant="link" class="h-8 mx-1" href="/">Home</Button>
-				<div>
-					<Button class="h-8 mx-1" on:click={() => {
-						isFilesShowing = !isFilesShowing
-					}}>
-						Files
-					</Button>
-					<div class={`${isFilesShowing ? "flex" : "hidden"} transition-all absolute w-40 pt-2`}>
-						<div class="w-full mt-auto bg-white text-gray-800 rounded-md py-2">
-							<button class="w-full py-1 text-xs hover:bg-gray-200 transition-all">Export to code</button>
-							<button class="w-full py-1 text-xs hover:bg-gray-200 transition-all" on:click={() => dispatch("save")}>Save</button>
-						</div>
-					</div>
+				<div on:blur={() => {
+					isFilesShowing = false
+				}}>
+					<Dropdown.Root>
+						<Dropdown.Trigger><Button class="h-8 mx-1" variant="default">File</Button></Dropdown.Trigger>
+						<Dropdown.Content class="outline-none border-none px-3">
+							<Dropdown.Label>File Menu</Dropdown.Label>
+							<Dropdown.Separator />
+							<Dropdown.Item class="cursor-pointer" on:click={() => {
+								const code = generateJavascriptCode()
+								console.log(code)
+							}}>Export to JavaScript</Dropdown.Item>
+							<Dropdown.Item class="cursor-pointer" on:click={() => {
+								const code = generateJavascriptCode()
+								if(code) {
+									navigator.clipboard.writeText(code)
+								}
+							}}>Copy to clipboard</Dropdown.Item>
+							<Dropdown.Separator />
+							<Dropdown.Item class="cursor-pointer" on:click={() => {
+								dispatch("save")
+							}}>Save file</Dropdown.Item>
+							<Dropdown.Item class="cursor-pointer" on:click={() => {
+								dispatch("load")
+							}}>Load File</Dropdown.Item>
+						</Dropdown.Content>
+					</Dropdown.Root>
 				</div>
 				<Warnings bind:workspace />
 			{/await}
