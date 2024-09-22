@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { cn } from "$lib/utils";
-	import * as Dropdown from "$lib/components/ui/dropdown-menu"
+	import * as Dropdown from "$lib/components/ui/dropdown-menu";
 	import ChevronLeft from "lucide-svelte/icons/chevron-left";
+
+	export let isToolBoxHidden: boolean
 
 	export let toolBoxWidth;
 	/* eslint-disable-next-line */
@@ -17,7 +19,6 @@
 	import { generateJavascriptCode } from "$lib/utils/BlockGen/Blockly/Generators/GenerateCode";
 
 	let isShowing = true;
-	let isFilesShowing = false;
 
 	const dispatch = createEventDispatcher();
 
@@ -27,7 +28,10 @@
 </script>
 
 <div
-	class="absolute top-4 w-full z-20 pr-5 flex justify-end"
+	class={cn(
+		"absolute top-4 w-full z-20 pr-5 flex justify-end",
+		isToolBoxHidden && "-left-28"
+	)}
 	style={`padding-left: ${toolBoxWidth + 20}px`}
 >
 	<div
@@ -40,34 +44,57 @@
 		{#if isShowing}
 			{#await wait(50) then}
 				<Button variant="link" class="h-8 mx-1" href="/">Home</Button>
-				<div on:blur={() => {
-					isFilesShowing = false
-				}}>
-					<Dropdown.Root>
-						<Dropdown.Trigger><Button class="h-8 mx-1" variant="default">File</Button></Dropdown.Trigger>
-						<Dropdown.Content class="outline-none border-none px-3">
-							<Dropdown.Label>File Menu</Dropdown.Label>
-							<Dropdown.Separator />
-							<Dropdown.Item class="cursor-pointer" on:click={() => {
-								const code = generateJavascriptCode()
-								console.log(code)
-							}}>Export to JavaScript</Dropdown.Item>
-							<Dropdown.Item class="cursor-pointer" on:click={() => {
-								const code = generateJavascriptCode()
-								if(code) {
-									navigator.clipboard.writeText(code)
+				<Dropdown.Root>
+					<Dropdown.Trigger
+						><Button class="h-8 mx-1" variant="default">File</Button></Dropdown.Trigger
+					>
+					<Dropdown.Content class="outline-none border-none px-3">
+						<Dropdown.Label>File Menu</Dropdown.Label>
+						<Dropdown.Separator />
+						<Dropdown.Item
+							class="cursor-pointer"
+							on:click={() => {
+								const code = generateJavascriptCode();
+								console.log(code);
+							}}>Export to JavaScript</Dropdown.Item
+						>
+						<Dropdown.Item
+							class="cursor-pointer"
+							on:click={() => {
+								const code = generateJavascriptCode();
+								if (code) {
+									navigator.clipboard.writeText(code);
 								}
-							}}>Copy to clipboard</Dropdown.Item>
-							<Dropdown.Separator />
-							<Dropdown.Item class="cursor-pointer" on:click={() => {
-								dispatch("save")
-							}}>Save file</Dropdown.Item>
-							<Dropdown.Item class="cursor-pointer" on:click={() => {
-								dispatch("load")
-							}}>Load File</Dropdown.Item>
-						</Dropdown.Content>
-					</Dropdown.Root>
-				</div>
+							}}>Copy to clipboard</Dropdown.Item
+						>
+						<Dropdown.Separator />
+						<Dropdown.Item
+							class="cursor-pointer"
+							on:click={() => {
+								dispatch("save");
+							}}>Save file</Dropdown.Item
+						>
+						<Dropdown.Item
+							class="cursor-pointer"
+							on:click={() => {
+								dispatch("load");
+							}}>Load File</Dropdown.Item
+						>
+					</Dropdown.Content>
+				</Dropdown.Root>
+				<Dropdown.Root>
+					<Dropdown.Trigger
+						><Button class="h-8 mx-1" variant="default">Workspace</Button></Dropdown.Trigger
+					>
+					<Dropdown.Content class="outline-none border-none px-3">
+						<Dropdown.Item
+							class="cursor-pointer"
+							on:click={() => {
+								dispatch("toggle_toolbox")
+							}}>Hide Toolbox</Dropdown.Item
+						>
+					</Dropdown.Content>
+				</Dropdown.Root>
 				<Warnings bind:workspace />
 			{/await}
 		{/if}

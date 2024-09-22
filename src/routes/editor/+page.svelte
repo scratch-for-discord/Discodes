@@ -15,6 +15,7 @@
 	let workspace: Blockly.WorkspaceSvg;
 	let toolboxJson: Blockly.utils.toolbox.ToolboxDefinition;
 	let toolbox: Toolbox;
+	let isToolBoxHidden = false;
 	let currentFile: string;
 	let discodesWorkspaceID: string;
 
@@ -51,8 +52,16 @@
 <EditorNavbar
 	{toolBoxWidth}
 	{workspace}
+	{isToolBoxHidden}
 	on:save={() => saveWorkspace(currentFile)}
 	on:load={() => loadWorkspace(currentFile)}
+	on:toggle_toolbox={() => {
+		if(workspace) {
+			const toolbox = workspace.getToolbox();
+			toolbox?.setVisible(isToolBoxHidden)
+			isToolBoxHidden = !isToolBoxHidden
+		}
+	}}
 />
 <Workspace
 	bind:workspace
