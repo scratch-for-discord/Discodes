@@ -56,10 +56,10 @@
 	on:save={() => saveWorkspace(currentFile)}
 	on:load={() => loadWorkspace(currentFile)}
 	on:toggle_toolbox={() => {
-		if(workspace) {
+		if (workspace) {
 			const toolbox = workspace.getToolbox();
-			toolbox?.setVisible(isToolBoxHidden)
-			isToolBoxHidden = !isToolBoxHidden
+			toolbox?.setVisible(isToolBoxHidden);
+			isToolBoxHidden = !isToolBoxHidden;
 		}
 	}}
 />

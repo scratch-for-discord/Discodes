@@ -3,7 +3,7 @@
 	import * as Dropdown from "$lib/components/ui/dropdown-menu";
 	import ChevronLeft from "lucide-svelte/icons/chevron-left";
 
-	export let isToolBoxHidden: boolean
+	export let isToolBoxHidden: boolean;
 
 	export let toolBoxWidth;
 	/* eslint-disable-next-line */
@@ -28,10 +28,7 @@
 </script>
 
 <div
-	class={cn(
-		"absolute top-4 w-full z-20 pr-5 flex justify-end",
-		isToolBoxHidden && "-left-28"
-	)}
+	class={cn("absolute top-4 w-full z-20 pr-5 flex justify-end", isToolBoxHidden && "-left-28")}
 	style={`padding-left: ${toolBoxWidth + 20}px`}
 >
 	<div
@@ -90,7 +87,7 @@
 						<Dropdown.Item
 							class="cursor-pointer"
 							on:click={() => {
-								dispatch("toggle_toolbox")
+								dispatch("toggle_toolbox");
 							}}>Hide Toolbox</Dropdown.Item
 						>
 					</Dropdown.Content>
