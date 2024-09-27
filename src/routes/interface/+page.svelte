@@ -2,7 +2,6 @@
 	import Home from "$lib/components/Interface/SideBar/SidebarComponents/Home.svelte";
 	import Sidebar from "$lib/components/Interface/SideBar/Sidebar.svelte";
 	import Workspaces from "$lib/components/Interface/SideBar/SidebarComponents/Workspaces.svelte";
-	import getLocalDB from "../../lib/utils/localDB/manager";
 	import "./interface.css";
 	import { Button } from "$lib/components/ui/button";
 	import ChevronLeft from "lucide-svelte/icons/chevron-left";
@@ -10,12 +9,6 @@
 
 	let currentPage: "home" | "workspace" | "account" = "home";
 	let isShowing = false;
-
-	const db = getLocalDB();
-
-	if (!db.userID) {
-		window.location.replace("/");
-	}
 </script>
 
 <main class="w-screen h-screen bg-slate-800">
