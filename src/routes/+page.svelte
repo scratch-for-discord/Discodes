@@ -1,6 +1,6 @@
 <script lang="ts">
 	export let data;
-	const {user} = data
+	const { user } = data;
 </script>
 
 <main class="overflow-x-hidden">
@@ -33,26 +33,26 @@
 				</div>
 				<div class="flex items-center justify-center mt-10">
 					{#if user}
-					<a
-					href="/interface"
-					class="mr-2 w-40 flex items-center justify-center h-12 rounded-lg bg-blue-600 text-lg hover:bg-blue-500 transition-all text-white font-bold"
-					>Home</a
-				>
-				<a
-					href="/editor?id=0"
-					class="mr-2 w-40 flex items-center justify-center h-12 rounded-lg bg-blue-600 text-lg hover:bg-blue-500 transition-all text-white font-bold"
-					>Workspace</a
-				>
+						<a
+							href="/interface"
+							class="mr-2 w-40 flex items-center justify-center h-12 rounded-lg bg-blue-600 text-lg hover:bg-blue-500 transition-all text-white font-bold"
+							>Home</a
+						>
+						<a
+							href="/editor?id=0"
+							class="mr-2 w-40 flex items-center justify-center h-12 rounded-lg bg-blue-600 text-lg hover:bg-blue-500 transition-all text-white font-bold"
+							>Workspace</a
+						>
 					{:else}
-					<a
-						href="/interface"
-						class="mr-2 w-40 flex items-center justify-center h-12 rounded-lg bg-blue-600 text-lg hover:bg-blue-500 transition-all text-white font-bold"
-						>Getting Started</a
-					>
+						<a
+							href="/interface"
+							class="mr-2 w-40 flex items-center justify-center h-12 rounded-lg bg-blue-600 text-lg hover:bg-blue-500 transition-all text-white font-bold"
+							>Getting Started</a
+						>
 					{/if}
 					<a
 						href="/docs/getting-started"
-						class="ml-2 w-40 flex items-center justify-center h-12 rounded-lg bg-slate-600 text-lg hover:bg-slate-500 transition-all text-white font-bold"
+						class="w-40 flex items-center justify-center h-12 rounded-lg bg-slate-600 text-lg hover:bg-slate-500 transition-all text-white font-bold"
 						>Read the Docs</a
 					>
 				</div>
