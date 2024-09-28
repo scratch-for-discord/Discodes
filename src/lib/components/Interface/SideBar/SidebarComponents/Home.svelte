@@ -1,6 +1,8 @@
 <div class="w-full h-full pl-10 pt-10">
 	<h1 class="text-4xl font-varela font-extrabold text-white">Home</h1>
-	<div class="w-[90%] h-56 bg-white opacity-10 mx-auto flex items-center justify-center rounded-md mt-3">
+	<div
+		class="w-[90%] h-56 bg-white opacity-10 mx-auto flex items-center justify-center rounded-md mt-3"
+	>
 		<h1 class="text-2xl text-black">Placeholder</h1>
 	</div>
 	<h1 class="text-3xl font-bold mt-4">Recently opened</h1>
