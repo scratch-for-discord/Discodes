@@ -34,7 +34,7 @@ export default class Warning {
 		return {
 			message: this._message,
 			warningType: this._warningType,
-			fieldName: this._fieldName
+			fieldName: this._fieldName,
 		};
 	}
 }

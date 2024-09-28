@@ -3,20 +3,20 @@ export enum BlockType {
 	String = "String",
 	Boolean = "Boolean",
 	Number = "Number",
-	Array = "Array"
+	Array = "Array",
 }
 
 export enum DropdownType {
 	Grid = "field_grid_dropdown",
 	List = "field_dropdown",
-	Auto = "auto"
+	Auto = "auto",
 }
 
 export enum WarningType {
 	Parent,
 	Input,
 	Deprec,
-	Permanent
+	Permanent,
 }
 
 export enum BlockShape {
@@ -25,14 +25,14 @@ export enum BlockShape {
 	Floating, //Block shape for a block that cannot have any parent blocks.
 	Bottom, //Block shape for a block with no blocks allowed to attach after.
 	Top, //Block shape for a block that cannot have any blocks attached before it.
-	Value // Block shape for a block that is a value and is placed inside inputs 
+	Value,
 }
 
 // This is used for the toolbox generation, it translates to kind:"block" in the blockly shadows.
 export enum PlaceholderType {
-	Block = "block"
+	Block = "block",
 }
 export enum MutatorType {
 	Assembler = "assembler",
-	Checkbox = "checkbox"
+	Checkbox = "checkbox",
 }

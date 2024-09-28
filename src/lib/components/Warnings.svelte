@@ -2,7 +2,13 @@
 	import Blockly from "blockly/core";
 	import { warnings } from "$lib/utils/BlockGen/Warnings/WarningsList";
 
+	import * as Dialog from "$lib/components/ui/dialog";
+	import Button from "./ui/button/button.svelte";
+	import * as Accordion from "$lib/components/ui/accordion";
+
 	export let workspace: Blockly.WorkspaceSvg;
+
+	let dialogOpen = false;
 
 	interface WarningMessage {
 		message: string;
@@ -18,15 +24,13 @@
 		if (getBlock(id)) {
 			workspace.centerOnBlock(id);
 			workspace.highlightBlock(id, true);
+			dialogOpen = false;
 			await new Promise((res) => setTimeout(res, 2000));
 			workspace.highlightBlock(id, false);
 		}
 	}
 
-	function openModal() {
-		//@ts-expect-error Modal always has error cuz why not.
-		// eslint-disable-next-line
-		warningsModal.showModal();
+	function modalOpen() {
 		for (const id in warnings) {
 			if (!Blockly.getMainWorkspace().getBlockById(id)) delete warnings[id];
 		}
@@ -41,7 +45,51 @@
 	}
 </script>
 
-<button
+<Dialog.Root bind:open={dialogOpen} onOpenChange={() => modalOpen()}>
+	<Dialog.Trigger>
+		<Button class="h-8">Check warnings</Button>
+	</Dialog.Trigger>
+	<Dialog.Content>
+		<Dialog.Header>
+			<Dialog.Title class="font-bold text-lg">
+				{#if Object.keys(displayWarnings).length === 0}
+					No worries! You are freely able to export your code
+				{:else}
+					Cannot export, your code has <span class="text-orange-400">warnings!</span>
+				{/if}
+			</Dialog.Title>
+			<Dialog.Description
+				>You can click on the block name to reveal it in the workspace</Dialog.Description
+			>
+			<Accordion.Root>
+				<div class="overflow-y-auto overflow-x-hidden max-h-[82vh]">
+					{#each Object.keys(displayWarnings) as id, index}
+						<Accordion.Item value={String(index)}>
+							<Accordion.Trigger
+								>Block: {displayWarnings[id][0].blockName?.toUpperCase()}</Accordion.Trigger
+							>
+							<Accordion.Content>
+								{#each displayWarnings[id] as warning}
+									<p><span class="font-bold text-orange-400">Warning:</span> {warning.message}</p>
+								{/each}<Button
+									class="mt-3"
+									on:click={async () => {
+										await gotoBlock(id);
+									}}>Go to block</Button
+								></Accordion.Content
+							>
+						</Accordion.Item>
+					{/each}
+				</div>
+			</Accordion.Root>
+			<div class="flex justify-end w-full">
+				<Dialog.Close><Button class="btn">Close</Button></Dialog.Close>
+			</div>
+		</Dialog.Header>
+	</Dialog.Content>
+</Dialog.Root>
+
+<!-- <button
 	class="btn"
 	on:click={() => {
 		openModal();
@@ -57,7 +105,6 @@
 		</header>
 
 		{#each Object.keys(displayWarnings) as id}
-			<!-- This divider divides each block errors -->
 			<div class="divider"></div>
 
 			<div class="flex mb-3">
@@ -65,7 +112,7 @@
 				<form method="dialog">
 					<button
 						class="link link-info ml-2"
-						on:click={async() => {
+						on:click={async () => {
 							await gotoBlock(id);
 						}}>{displayWarnings[id][0].blockName?.toUpperCase()}</button
 					>
@@ -90,4 +137,4 @@
 			</form>
 		</div>
 	</div>
-</dialog>
+</dialog> -->

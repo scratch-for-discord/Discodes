@@ -1,17 +1,7 @@
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
-import type { FlyoutDefinition, ToolboxDefinition, ToolboxItemInfo } from "blockly/core/utils/toolbox";
-import Blockly from "blockly/core";
+import type { ToolboxDefinition, ToolboxItemInfo } from "blockly/core/utils/toolbox";
 
 export default class Toolbox {
-	// eslint-disable-next-line no-use-before-define
-	private callbackCategory: Record<string, (workspace: Blockly.WorkspaceSvg) => FlyoutDefinition>;
-	private callbackOther: Record<string, (p1: Blockly.FlyoutButton) => void>;
-
-	constructor() {	
-		this.callbackCategory = {};
-		this.callbackOther = {};
-
-	}
 	public async generate(): Promise<ToolboxDefinition> {
 		const structure = await this.fetchFiles();
 		const contents = [];
@@ -22,18 +12,10 @@ export default class Toolbox {
 
 		return {
 			kind: "categoryToolbox",
-			contents: contents as ToolboxItemInfo[]
+			contents: contents as ToolboxItemInfo[],
 		};
 	}
-	public registerCallbacks(workspace: Blockly.WorkspaceSvg) {
-		for (const catKey of Object.keys(this.callbackCategory)) {
-			workspace.registerToolboxCategoryCallback(catKey, this.callbackCategory[catKey])
-		}
-		for (const otherKey of Object.keys(this.callbackOther)) {
-			console.log(otherKey)
-			workspace.registerButtonCallback(otherKey, this.callbackOther[otherKey])
-		}
-	}
+
 	private async fetchFiles() {
 		const files = import.meta.glob("../../blocks/**/**/*.ts");
 		const directories: string[] = Object.keys(files).map((key) => key);
@@ -51,7 +33,7 @@ export default class Toolbox {
 					contents: [],
 					kind: "category",
 					name: mainParent,
-					colour: "#2facf5"
+					colour: "#2facf5",
 				};
 			}
 
@@ -79,36 +61,12 @@ export default class Toolbox {
 				//! FIX THE TYPE OR ELSE ITS GONNA BREAK LMFAO (Memory leak also?)
 
 				const definitions = await import(/* @vite-ignore */ `${topPath}/${directory}`);
-				if(definitions.default.category.custom) {
-					// if(!definitions.default.category.customFunction && definitions.default.category.custom !== "VARIABLE_DYNAMIC") throw new Error("'customFunction' is required for a custom category!")
-					contents.push({
-						kind: "category",
-						name: definitions.default.category.name,
-						colour: definitions.default.category.colour,
-						contents: [],
-						custom: definitions.default.category.custom
-					});
-					if(!definitions.default.category.customFunction) return
-					this.callbackCategory[definitions.default.category.custom] = definitions.default.category.customFunction
-					for (const blockDef of definitions.default.blocks as BlockDefinition[]) {
-						if(blockDef.kind === "button") {
-							this.callbackOther[blockDef.callbackKey] = blockDef.callback;
-							continue;
-						}
-					}
-				}
 				const blockContents = [];
 
 				for (const blockDef of definitions.default.blocks as BlockDefinition[]) {
 					if (!blockDef.label && blockDef.hidden === true) continue;
 					const inputs: Record<string, unknown> = {};
-					if(blockDef.kind === "button") {
-						this.callbackOther[blockDef.callbackKey] = blockDef.callback;
 
-						// this.workspace.registerButtonCallback(blockDef.callbackKey, blockDef.callback);
-						blockContents.push(blockDef);
-						continue;
-					}
 					if (!blockDef.label && blockDef.placeholders) {
 						for (const placeholder of blockDef.placeholders) {
 							const data = placeholder.values;
@@ -118,8 +76,8 @@ export default class Toolbox {
 							inputs[data.argName] = {
 								block: {
 									type: data.type,
-									fields: {}
-								}
+									fields: {},
+								},
 							};
 							// @ts-expect-error Accessing unknown type
 							inputs[data.argName]["block"]["fields"][key] = value;
@@ -132,19 +90,17 @@ export default class Toolbox {
 							: {
 									kind: "block",
 									type: blockDef.id,
-									inputs: inputs
+									inputs: inputs,
 								}
 					);
 				}
-				if(!definitions.default.category.custom) {
-					contents.push({
-						kind: "category",
-						name: definitions.default.category.name,
-						contents: blockContents,
-						colour: definitions.default.category.colour
-					});
-				}
 
+				contents.push({
+					kind: "category",
+					name: definitions.default.category.name,
+					contents: blockContents,
+					colour: definitions.default.category.colour,
+				});
 			}
 			return;
 		}
@@ -155,7 +111,7 @@ export default class Toolbox {
 			kind: "category",
 			name: element,
 			contents: [],
-			colour: "#2facf5"
+			colour: "#2facf5",
 		});
 
 		await this.setStruct(

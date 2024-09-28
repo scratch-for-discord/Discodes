@@ -36,7 +36,7 @@ export default class Image extends BaseInput<ImageIDef> {
 			name: this._settings.alt,
 			type: "field_image",
 			src: this._src,
-			...this._settings
+			...this._settings,
 		};
 	}
 }

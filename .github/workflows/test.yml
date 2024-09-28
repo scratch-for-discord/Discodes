@@ -8,15 +8,28 @@ on:
 
 jobs:
   lint:
-    name: Run eslint
+    name: Run ESLint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
         with:
           node-version: 20
-      - run: yarn
-      - run: yarn lint --fix
+
+      - name: Install PNPM
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Check Prettier format
+        run: pnpm format:check
+
+      - name: Run ESLint
+        run: pnpm lint:noformat
   # tests are not testing 😭
   # test:
   #   name: Run test

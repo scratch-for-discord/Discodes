@@ -36,7 +36,7 @@ export default class ValueInput extends BaseInput<ValueIDef> {
 	getDefinition(): ValueIDef {
 		const result: ValueIDef = {
 			type: "input_value",
-			name: super.name
+			name: super.name,
 		};
 
 		const filtered = argFilter(this._type);

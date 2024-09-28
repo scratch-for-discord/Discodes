@@ -10,14 +10,14 @@ import type {
 	BlockBlockDefinition,
 	BlockDefinition,
 	CheckBoxMutatorBlock,
-	MutatorBlock
+	MutatorBlock,
 } from "$lib/types/BlockDefinition";
 import {
 	BlockShape,
 	BlockType,
 	DropdownType,
 	MutatorType,
-	WarningType
+	WarningType,
 } from "$lib/enums/BlockTypes";
 import type { Abstract } from "blockly/core/events/events_abstract";
 import type { DiscodesInput } from "$lib/types/DiscodesInput";
@@ -89,11 +89,15 @@ export default class Block {
 			(warning) => warning.data.fieldName !== fieldName
 		);
 	}
-	public handleWarning(data: { message: string; warningType: WarningType; fieldName: string }, resultMessage: string, topParent: Blockly.Block): string {
-		const {message, warningType, fieldName} = data
-		
+	public handleWarning(
+		data: { message: string; warningType: WarningType; fieldName: string },
+		resultMessage: string,
+		topParent: Blockly.Block
+	): string {
+		const { message, warningType, fieldName } = data;
+
 		switch (warningType) {
-			case WarningType.Parent:  
+			case WarningType.Parent:
 				if (topParent.type != fieldName) {
 					resultMessage += `${message}\n`;
 					addWarning(this._block.id, fieldName, message);
@@ -101,30 +105,30 @@ export default class Block {
 				}
 				removeWarning(this._block.id, fieldName);
 				break;
-	
+
 			case WarningType.Input:
 				if (this._block.getInput(fieldName)?.connection?.targetConnection === null) {
 					resultMessage += `${message}\n`;
 					addWarning(this._block.id, fieldName, message);
 					break;
 				}
-				
+
 				removeWarning(this._block.id, fieldName);
 				break;
-	
+
 			case WarningType.Deprec:
 				resultMessage += `${message}\n`;
 				addWarning(this._block.id, fieldName, message);
 				break;
-	
+
 			case WarningType.Permanent:
 				resultMessage += `${message}\n`;
 				addWarning(this._block.id, fieldName, message);
 				break;
 		}
-		return resultMessage
+		return resultMessage;
 	}
-	
+
 	public addText(text: string, fieldName: string): void {
 		this._block.appendDummyInput(fieldName).appendField(text);
 	}
@@ -199,7 +203,7 @@ export default class Block {
 			case "field_input":
 				this._block.appendDummyInput(generated.name).appendField(
 					new Blockly.FieldTextInput(generated.text, undefined, {
-						spellcheck: generated.spellcheck
+						spellcheck: generated.spellcheck,
 					})
 				);
 				break;
@@ -219,15 +223,12 @@ export default class Block {
 
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const blockClass = this; // Used because `this` is overwritten in the blockly functions.
-		
 
 		const code = blockDefinition.code;
 		const shape = blockDefinition.shape;
 		const output = blockDefinition.output;
 		const importName = blockDefinition.imports;
-		const mutatorName: string = blockDefinition.mutator
-			? blockDefinition.id + salt(5)
-			: "";
+		const mutatorName: string = blockDefinition.mutator ? blockDefinition.id + salt(5) : "";
 
 		const blockDef: BlocklyBlockDefinition = {
 			type: blockDefinition.id,
@@ -237,7 +238,7 @@ export default class Block {
 			inputsInline: blockDefinition.inline,
 			args0: [],
 			message0: "",
-			mutator: mutatorName == "" ? undefined : mutatorName
+			mutator: mutatorName == "" ? undefined : mutatorName,
 		};
 
 		blockClass._blocklyDefinition = blockDef;
@@ -259,13 +260,15 @@ export default class Block {
 			throw Error(`Block "${blockDef.type}" is defined twice.`);
 		}
 		//const blockDefinition = blockDefinition;
+		/* eslint-disable-next-line */
 		const BlockClass = this;
 		// Add The block to the blocks list
 		Blockly.Blocks[blockDef.type] = {
-			init: function(this: Blockly.Block) {
+			init: function (this: Blockly.Block) {
 				this.jsonInit(blockDef);
 
 				// We will pass the block in different functions of the class so we need it stored.
+				/* eslint-disable-next-line */
 				blockClass._block = this;
 
 				// Here we define the block's shape
@@ -284,7 +287,7 @@ export default class Block {
 					case BlockShape.Value:
 						this.setPreviousStatement(false);
 						this.setNextStatement(false);
-					break;
+						break;
 				}
 
 				// Here we add an output if needed
@@ -298,7 +301,7 @@ export default class Block {
 				// eslint-disable-next-line @typescript-eslint/no-this-alias
 				const block = this;
 				// Warnings Code
-				this.setOnChange(function(this: Blockly.Block, changeEvent: Abstract) {
+				this.setOnChange(function (this: Blockly.Block, changeEvent: Abstract) {
 					if (
 						importName &&
 						!this.isInFlyout &&
@@ -315,9 +318,7 @@ export default class Block {
 						!this.isInFlyout &&
 						block.id == this.id
 					) {
-						const warnings = blockDefinition.label
-							? undefined
-							: blockDefinition.warnings;
+						const warnings = blockDefinition.label ? undefined : blockDefinition.warnings;
 						if (!warnings) return;
 
 						const topParent = this.getRootBlock();
@@ -330,29 +331,26 @@ export default class Block {
 						*/
 						for (const warning of warnings) {
 							const { warningType, message, fieldName } = warning.data;
-							if(this.getInput(fieldName)) {
-							console.log(BlockClass.handleWarning(warning.data, resultMessage, topParent))
-								resultMessage = BlockClass.handleWarning(warning.data, resultMessage, topParent)
+							if (this.getInput(fieldName)) {
+								console.log(BlockClass.handleWarning(warning.data, resultMessage, topParent));
+								resultMessage = BlockClass.handleWarning(warning.data, resultMessage, topParent);
 							}
-							let input = this.getInput(fieldName + "1")
+							let input = this.getInput(`${fieldName}1`);
 							//handles mutator input warnings
-							if(input) {
-							const warningObject = {
-								message: message,
-								fieldName: fieldName,
-								warningType: warningType
-							}
+							if (input) {
+								const warningObject = {
+									message: message,
+									fieldName: fieldName,
+									warningType: warningType,
+								};
 								let i = 1;
-								while(input) {
-									warningObject.fieldName = warning.data.fieldName+ i
-									resultMessage = BlockClass.handleWarning(warningObject, resultMessage, topParent)
-									i++
-									input = this.getInput(`${fieldName}${i}`)
+								while (input) {
+									warningObject.fieldName = warning.data.fieldName + i;
+									resultMessage = BlockClass.handleWarning(warningObject, resultMessage, topParent);
+									i++;
+									input = this.getInput(`${fieldName}${i}`);
 								}
 							}
-
-							
-				
 						}
 						if (warningsObj[this.id] && Object.keys(warningsObj[this.id]).length === 0) {
 							delete warningsObj[this.id];
@@ -360,7 +358,7 @@ export default class Block {
 						this.setWarningText(resultMessage);
 					}
 				});
-			}
+			},
 		};
 		const properties = blockDefinition.mutator?.properties;
 		const propertyMap: Record<string, MutatorBlock> = {};
@@ -375,7 +373,7 @@ export default class Block {
 		}
 
 		// Generating the export code
-		javascriptGenerator.forBlock[blockDef.type] = function(block: Blockly.Block) {
+		javascriptGenerator.forBlock[blockDef.type] = function (block: Blockly.Block) {
 			const args: Record<string, string | string[]> = {}; //? Object we will pass as argument for the custom code to run properly
 
 			for (const arg of blockDef.args0) {
@@ -407,9 +405,7 @@ export default class Block {
 					/*
 					_list is added that so basic inputs and mutator inputs can have the same names and it creates better block warnings
 					*/
-						args[add.name + "_list"] = valueList;
-
-
+					args[`${add.name}_list`] = valueList;
 				}
 			}
 			return output ? [code(args, blockClass), Order.NONE] : code(args, blockClass);

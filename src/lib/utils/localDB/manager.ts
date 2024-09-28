@@ -168,7 +168,6 @@ class LocalDB {
 	 * @param {string} fileName
 	 * @param {string} workspaceID
 	 * @param {object} blocklySave
-	 * @return {*}  {void}
 	 * @memberof LocalDB
 	 */
 	saveBlocklyInFile(fileName: string, workspaceID: string, blocklySave: object): void {

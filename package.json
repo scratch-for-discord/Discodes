@@ -9,11 +9,14 @@
 		"test": "npm run test:integration && npm run test:unit",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"lint": "npm run format && prettier --check . && eslint .",
+		"lint": "npm run format && npm run check && eslint .",
+		"lint:noformat": "eslint .",
 		"format": "prettier --write .",
+		"format:check": "prettier --check .",
 		"test:integration": "playwright test",
 		"test:unit": "vitest",
-		"test:gh": "vitest run"
+		"test:gh": "vitest run",
+		"dev:blocks": "vite build --watch"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
@@ -27,6 +30,7 @@
 		"daisyui": "^4.9.0",
 		"eslint": "^8.56.0",
 		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-prettier": "^5.2.1",
 		"eslint-plugin-svelte": "^2.35.1",
 		"postcss": "^8.4.37",
 		"prettier": "^3.1.1",
@@ -42,7 +46,16 @@
 	"type": "module",
 	"dependencies": {
 		"@blockly/field-grid-dropdown": "^4.0.11",
+		"bits-ui": "^0.21.13",
 		"blockly": "^10.4.3",
-		"dexie": "^4.0.1"
-	}
+		"clsx": "^2.1.1",
+		"dexie": "^4.0.1",
+		"lucide-svelte": "^0.428.0",
+		"mode-watcher": "^0.4.1",
+		"svelte-compare-image": "^3.0.0",
+		"svelte-icons": "^2.1.0",
+		"tailwind-merge": "^2.5.2",
+		"tailwind-variants": "^0.2.1"
+	},
+	"packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e"
 }

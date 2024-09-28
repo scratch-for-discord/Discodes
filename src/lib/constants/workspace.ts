@@ -10,9 +10,9 @@ const toolbox = {
 			contents: [
 				{
 					kind: "block",
-					type: "mutator_test_1"
-				}
-			]
+					type: "mutator_test_1",
+				},
+			],
 		},
 		{
 			kind: "category",
@@ -21,31 +21,31 @@ const toolbox = {
 			contents: [
 				{
 					kind: "block",
-					type: "controls_if"
+					type: "controls_if",
 				},
 				{
 					kind: "block",
-					type: "controls_repeat_ext"
+					type: "controls_repeat_ext",
 				},
 				{
 					kind: "block",
-					type: "logic_compare"
+					type: "logic_compare",
 				},
 				{
 					kind: "block",
-					type: "math_number"
+					type: "math_number",
 				},
 				{
 					kind: "block",
-					type: "math_arithmetic"
+					type: "math_arithmetic",
 				},
 				{
 					kind: "block",
-					type: "text"
-				}
-			]
-		}
-	]
+					type: "text",
+				},
+			],
+		},
+	],
 };
 
 export const DARKTHEME = Blockly.Theme.defineTheme("a", {
@@ -62,8 +62,8 @@ export const DARKTHEME = Blockly.Theme.defineTheme("a", {
 		insertionMarkerColour: "#ffffff",
 		insertionMarkerOpacity: 0.3,
 		scrollbarOpacity: 0.01,
-		cursorColour: "#d0d0d0"
-	}
+		cursorColour: "#d0d0d0",
+	},
 });
 
 export const OPTIONS = {
@@ -80,22 +80,22 @@ export const OPTIONS = {
 		spacing: 25,
 		length: 3,
 		colour: "#5c5a5a",
-		snap: true
+		snap: true,
 	},
 	zoom: {
 		controls: true,
 		startScale: 0.9,
 		maxScale: 5,
 		minScale: 0.1,
-		scaleSpeed: 1.2
+		scaleSpeed: 1.2,
 	},
 	toolbox: toolbox,
 	move: {
 		scrollbars: {
 			horizontal: true,
-			vertical: true
+			vertical: true,
 		},
 		drag: true,
-		wheel: true
-	}
+		wheel: true,
+	},
 };

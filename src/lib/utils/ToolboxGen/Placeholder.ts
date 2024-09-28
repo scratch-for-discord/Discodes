@@ -30,7 +30,7 @@ export default class Placeholder<ArgType> {
 			argValue: this._argValue,
 			argName: this._argName,
 			kind: this._kind,
-			type: this._type
+			type: this._type,
 		};
 	}
 }

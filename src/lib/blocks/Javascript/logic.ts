@@ -2,8 +2,6 @@ import { BlockShape, BlockType, DropdownType, WarningType } from "$lib/enums/Blo
 import type { BlockDefinition } from "$lib/types/BlockDefinition";
 import type { CategoryDefinition } from "$lib/types/CategoryDefinition";
 import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
-import NumberInput from "$lib/utils/BlockGen/Inputs/NumberInput";
-import TextInput from "$lib/utils/BlockGen/Inputs/TextInput";
 import ValueInput from "$lib/utils/BlockGen/Inputs/ValueInput";
 import Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import rgbToHex from "$lib/utils/helpers/rgbToHex";
@@ -18,11 +16,9 @@ const blocks: BlockDefinition[] = [
 		text: "if {if_input} {if}",
 		args: [new ValueInput("if_input", BlockType.Boolean), new StatementInput("if")],
 		warnings: [
-
 			new Warning(WarningType.Input, {
-
-				fieldName: "if_input"
-			})
+				fieldName: "if_input",
+			}),
 		],
 		shape: BlockShape.Action,
 		inline: true,
@@ -34,12 +30,12 @@ const blocks: BlockDefinition[] = [
 			let code = `if(${args.if_input === "" ? "false" : args.if_input}) {\n${args.if}\n}`;
 			const ifInputs = args.if_input_list as string[];
 			const ifStatementInputs = args.if_statement_list as string[];
-			const else_input = args.else_input_list as string[]
+			const else_input = args.else_input_list as string[];
 			for (let i = 0; i < ifInputs.length; i++) {
 				const ifInp = ifInputs[i];
 				code += ` else if(${ifInp === "" ? "false" : ifInp}) {\n${ifStatementInputs[i]}\n}`;
 			}
-			if(else_input.length !== 0) code += ` else {\n${else_input}\n}`
+			if (else_input.length !== 0) code += ` else {\n${else_input}\n}`;
 			return code;
 		},
 		mutator: new AssemblerMutatorV2(
@@ -49,20 +45,20 @@ const blocks: BlockDefinition[] = [
 					block: "if_test",
 					adds: [
 						new ValueInput("if_input", BlockType.Boolean).setField("else if"),
-						new StatementInput("if_statement").setField("do")
+						new StatementInput("if_statement").setField("do"),
 					],
-					once: true
+					once: true,
 				},
 				{
 					block: "else_test",
 					adds: [new StatementInput("else_input").setField("else")],
-					once: true
-				}
+					once: true,
+				},
 			],
 			{
-				color: rgbToHex(91, 128, 165)
+				color: rgbToHex(91, 128, 165),
 			}
-		)
+		),
 	},
 	{
 		id: "is_equal",
@@ -70,19 +66,19 @@ const blocks: BlockDefinition[] = [
 		args: [
 			new ValueInput("A", BlockType.Any),
 			new Dropdown("CONDITION", DropdownType.Auto, {
-				"=": "===",//Based on research better to use "===", but it can always be changed
+				"=": "===", //Based on research better to use "===", but it can always be changed
 				"≠": "!=",
 				"<": "<",
 				"≤": "<=",
 				">": ">",
-				"≥": ">="
+				"≥": ">=",
 				//"==": "==="
 			}),
-			new ValueInput("B", BlockType.Any)
+			new ValueInput("B", BlockType.Any),
 		],
 		warnings: [
 			new Warning(WarningType.Input, { fieldName: "A" }),
-			new Warning(WarningType.Input, { fieldName: "B" })
+			new Warning(WarningType.Input, { fieldName: "B" }),
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Boolean,
@@ -94,10 +90,11 @@ const blocks: BlockDefinition[] = [
 		//  if(args.A === "" || args.B === "") return "false";
 		//  return `${args.A} ${args.CONDITION} ${args.B}`;
 
-		code: (args, block) => {
-
-			return (args.A == '' || args.B == '')? `false ${args.CONDITION} false` : `${args.A} ${args.CONDITION} ${args.B}`;
-		}
+		code: (args) => {
+			return args.A == "" || args.B == ""
+				? `false ${args.CONDITION} false`
+				: `${args.A} ${args.CONDITION} ${args.B}`;
+		},
 	},
 	{
 		id: "and_or",
@@ -105,11 +102,11 @@ const blocks: BlockDefinition[] = [
 		args: [
 			new ValueInput("A", BlockType.Boolean),
 			new Dropdown("CONDITION", DropdownType.Auto, { and: "&&", or: "||" }),
-			new ValueInput("B", BlockType.Boolean)
+			new ValueInput("B", BlockType.Boolean),
 		],
 		warnings: [
 			new Warning(WarningType.Input, { fieldName: "A" }),
-			new Warning(WarningType.Input, { fieldName: "B" })
+			new Warning(WarningType.Input, { fieldName: "B" }),
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Boolean,
@@ -121,7 +118,7 @@ const blocks: BlockDefinition[] = [
 			if (args.A === "" || args.B === "") return "false";
 
 			return `${args.A} ${args.CONDITION} ${args.B}`;
-		}
+		},
 	},
 	{
 		id: "not",
@@ -139,7 +136,7 @@ const blocks: BlockDefinition[] = [
 			if (args.OPERAND === "") return "false";
 
 			return `!${args.OPERAND}`;
-		}
+		},
 	},
 	{
 		id: "booleans",
@@ -149,7 +146,7 @@ const blocks: BlockDefinition[] = [
 				true: "true",
 				false: "false",
 				//undefined: "undefined"
-			})
+			}),
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Boolean,
@@ -159,7 +156,7 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "",
 		code: (args) => {
 			return `${args.INPUT !== "" ? args.INPUT : "null"}`;
-		}
+		},
 	},
 	{
 		id: "null",
@@ -171,9 +168,9 @@ const blocks: BlockDefinition[] = [
 		colour: rgbToHex(91, 128, 165),
 		tooltip: "Null values used to check null conditions.",
 		helpUrl: "",
-		code: (args) => {
-			return `null`;
-		}
+		code: () => {
+			return "null";
+		},
 	},
 	{
 		id: "ternary",
@@ -181,12 +178,12 @@ const blocks: BlockDefinition[] = [
 		args: [
 			new ValueInput("CONDITION", BlockType.Boolean),
 			new ValueInput("ONTRUE", BlockType.Any),
-			new ValueInput("ONFALSE", BlockType.Any)
+			new ValueInput("ONFALSE", BlockType.Any),
 		],
 		warnings: [
 			new Warning(WarningType.Input, { fieldName: "CONDITION" }),
 			new Warning(WarningType.Input, { fieldName: "ONTRUE" }),
-			new Warning(WarningType.Input, { fieldName: "ONFALSE" })
+			new Warning(WarningType.Input, { fieldName: "ONFALSE" }),
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Any,
@@ -196,7 +193,7 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "",
 		code: (args) => {
 			return `${args.CONDITION} ? ${args.ONTRUE} : ${args.ONFALSE}`;
-		}
+		},
 	},
 	{
 		id: "typeof",
@@ -212,7 +209,7 @@ const blocks: BlockDefinition[] = [
 		code: (args) => {
 			if (args.OPERAND === "") return "null";
 			return `typeof ${args.OPERAND}`;
-		}
+		},
 	},
 	{
 		id: "types",
@@ -227,12 +224,12 @@ const blocks: BlockDefinition[] = [
 				object: "object",
 				function: "function",
 				null: "null",
-				undefined: "undefined"
-			})
+				undefined: "undefined",
+			}),
 		],
 		warnings: [
 			// new Warning(WarningType.Input, { fieldName: "OPERAND" }),
-			new Warning(WarningType.Input, { fieldName: "TYPE" })
+			new Warning(WarningType.Input, { fieldName: "TYPE" }),
 		],
 		shape: BlockShape.Bottom,
 		output: BlockType.Boolean,
@@ -242,7 +239,7 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "",
 		code: (args) => {
 			return `"${args.TYPE}"`;
-		}
+		},
 	},
 	{
 		id: "stop_script",
@@ -254,13 +251,13 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "",
 		code: () => {
 			return "return;";
-		}
-	}
+		},
+	},
 ];
 
 const category: CategoryDefinition = {
 	name: "Logic",
-	colour: rgbToHex(91, 128, 165)
+	colour: rgbToHex(91, 128, 165),
 };
 
 export default { blocks, category };

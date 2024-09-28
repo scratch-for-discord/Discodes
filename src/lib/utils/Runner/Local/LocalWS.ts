@@ -3,7 +3,7 @@ import { WebSocketManager, type WebSocketInitOptions } from "../Common/WebSocket
 // TODO: IMPLEMENT MORE FUNCTIONS FOR LOCAL WS
 
 export class LocalWSManager extends WebSocketManager {
-    constructor(wsAddress: string, options: WebSocketInitOptions = {}) {
-        super(wsAddress, options)
-    }
+	constructor(wsAddress: string, options: WebSocketInitOptions = {}) {
+		super(wsAddress, options);
+	}
 }
