@@ -10,6 +10,7 @@ import Warning from "$lib/utils/BlockGen/Warnings/Warning";
 import Dropdown from "$lib/utils/BlockGen/Inputs/Dropdown";
 import { list } from "postcss";
 import AssemblerMutator from "$lib/utils/BlockGen/Mutators/AssemblerMutator";
+import { InputWarning, ParentWarning } from "$lib/utils/BlockGen/Warnings/SeperatedWarnings";
 /*
 Logic category is finished.
 */
@@ -121,14 +122,92 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "",
 		code: (args) => {
 
-			return `${args.LIST === "" ? "[]" : args.LIST}.${args.DROPDOWN}((list_find_element_variable) => ${args.VALUE === ""? "null" : args.VALUE})`;
+			return `${args.LIST === "" ? "[]" : args.LIST}.${args.DROPDOWN}((list_modify_element_variable) => ${args.VALUE === ""? "null" : args.VALUE})`;
+		}
+	},
+
+	{
+		id: "list_map",
+		text: "in list {LIST} modify each item {VALUE}",
+		placeholders: [
+			new Placeholder(PlaceholderType.Block, "LIST", "variable_get_discodes", { VAR: {name: "list"}})
+
+		],
+		args: [new ValueInput("LIST", BlockType.Array),
+
+			new ValueInput("VALUE", BlockType.Any)],
+		shape: BlockShape.Floating,
+		output: BlockType.Array,
+		inline: true,
+		colour: "#745BA5",
+		tooltip: "",
+		helpUrl: "",
+		code: (args) => {
+
+			return `${args.LIST === "" ? "[]" : args.LIST}${args.VALUE === ""? "" : `.map((list_modify_element_variable) => ${args.VALUE})`}`;
+		}
+	},
+
+	{
+		id: "list_filter",
+		text: "in list {LIST} filter each item {VALUE}",
+		placeholders: [
+			new Placeholder(PlaceholderType.Block, "LIST", "variable_get_discodes", { VAR: {name: "list"}})
+
+		],
+		args: [new ValueInput("LIST", BlockType.Array),
+
+			new ValueInput("VALUE", BlockType.Boolean)],
+		shape: BlockShape.Floating,
+		output: BlockType.Array,
+		inline: true,
+		colour: "#745BA5",
+		tooltip: "",
+		helpUrl: "",
+		code: (args) => {
+
+			return `${args.LIST === "" ? "[]" : args.LIST}${args.VALUE === ""? "" : `.filter((list_modify_element_variable) => ${args.VALUE})`}`;
+		}
+	},
+
+	{
+		id: "list_reduce",
+		text: "in list {LIST} reduce from {DROPDOWN} by {VALUE}",
+		placeholders: [
+			new Placeholder(PlaceholderType.Block, "LIST", "variable_get_discodes", { VAR: {name: "list"}})
+
+		],
+		args: [new ValueInput("LIST", BlockType.Array),
+			new Dropdown("DROPDOWN", DropdownType.Auto, {
+				"start": "reduce",
+				"end": "reduceRight"
+			}),
+			new ValueInput("VALUE", BlockType.Any)],
+		shape: BlockShape.Floating,
+		output: BlockType.Any,
+		inline: true,
+		colour: "#745BA5",
+		tooltip: "",
+		helpUrl: "",
+		code: (args) => {
+
+			return `${args.LIST === "" ? "[]" : args.LIST}.${args.DROPDOWN}((list_reduce_accumulator_variable, list_modify_element_variable) => ${args.VALUE === ""? "null" : args.VALUE})`;
 		}
 	},
 	{
-		id: "list_find_element",
-		text: "list find element",
+		id: "list_modify_element",
+		text: "list {DROPDOWN} element",
+		args: [
+			new Dropdown("DROPDOWN", DropdownType.Auto, {
+				"find" : "find",
+				"modify" : "modify",
+				"reduce" : "reduce",
+				"filter" : "filter",
+
+			})
+		],
 		warnings: [
-			new Warning(WarningType.Parent, {fieldName: "list_find"})
+			new ParentWarning(["list_find", "list_reduce", "list_map", "list_filter"])
 		],
 		shape: BlockShape.Floating,
 		output: BlockType.Any,
@@ -138,7 +217,24 @@ const blocks: BlockDefinition[] = [
 		helpUrl: "",
 		code: (args) => {
 
-			return `list_find_element_variable`;
+			return `list_modify_element_variable`;
+		}
+	},
+	{
+		id: "list_reduce_accumulator",
+		text: "list reduce accumulator",
+		warnings: [
+			new ParentWarning("list_reduce")
+		],
+		shape: BlockShape.Floating,
+		output: BlockType.Any,
+		inline: true,
+		colour: "#745BA5",
+		tooltip: "",
+		helpUrl: "",
+		code: (args) => {
+
+			return `list_reduce_accumulator_variable`;
 		}
 	},
 	{
@@ -181,9 +277,9 @@ const blocks: BlockDefinition[] = [
 			new Placeholder(PlaceholderType.Block, "LIST", "variable_get_discodes", { VAR: {name: "list"}})
 
 		],
-		// warnings: [
-		// 	new Warning(WarningType.Input, { fieldName: "LIST" })
-		// ],
+		warnings: [
+			new InputWarning("LIST")
+		],
 		shape: BlockShape.Action,
 		inline: true,
 		colour: "#745BA5",
@@ -196,7 +292,7 @@ const blocks: BlockDefinition[] = [
 	},
 	{
 		id: "list_copy_within",
-		text: "in list {LIST} copy within from {START} to {END} at {TARGET}",
+		text: "in list {LIST} copy within from # {START} to # {END} at # 	{TARGET}",
 		args: [new ValueInput("LIST", BlockType.Array),
 			new ValueInput("START", BlockType.Number),
 			new ValueInput("END", BlockType.Number),
@@ -225,23 +321,18 @@ const blocks: BlockDefinition[] = [
 	},
 	{
 		id: "list_fill",
-		text: "fill list {LIST} with value {VALUE} from {START} to {END}",
+		text: "fill list {LIST} with value {VALUE} from # {START} to # {END}",
 		args: [new ValueInput("LIST", BlockType.Array),
 			new ValueInput("VALUE", BlockType.Any),
 			new ValueInput("START", BlockType.Number),
-
 			new ValueInput("END", BlockType.Number),
 
 		],
 		placeholders: [
 			new Placeholder(PlaceholderType.Block, "LIST", "variable_get_discodes", { VAR: {name: "list"}}),
 			new Placeholder(PlaceholderType.Shadow, "START", "number", { NUMBER: 0}),
-
 			new Placeholder(PlaceholderType.Shadow, "END", "number", { NUMBER: 1}),
-
-
 		],
-
 		shape: BlockShape.Action,
 		inline: true,
 		colour: "#745BA5",

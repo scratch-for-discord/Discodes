@@ -34,6 +34,7 @@ import salt from "$lib/utils/helpers/salt";
 import { getInputValue } from "$lib/utils/helpers/getInputValue";
 
 import { addImport } from "$lib/utils/BlockGen/Blocks/importsList";
+import type { ParentWarningData, WarningData } from "$lib/types/Warnings";
 
 interface BlocklyBlockDefinition {
 	type: string;
@@ -89,48 +90,72 @@ export default class Block {
 			(warning) => warning.data.fieldName !== fieldName
 		);
 	}
-	private handleWarning(data: { message: string; warningType: WarningType; fieldName: string }, resultMessage: string, topParent: Blockly.Block, block: Blockly.Block): string {
-		const {message, warningType, fieldName} = data
-		
+	private handleWarning(data: WarningData, resultMessage: string, topParent: Blockly.Block, block: Blockly.Block): string {
+		const { message, warningType, fieldName } = data
+		let fieldN: string;
+		if (fieldName.length === 0) return ""
+		if (Array.isArray(fieldName)) fieldN = fieldName[0]
+		else fieldN = fieldName
 		switch (warningType) {
-			case WarningType.Parent: 
-			// const noParentFieldName =  "no/#_defind@!_field%_name^*!(./1"
-			// 	if(fieldName === "" && topParent.getChildren(false).length !== 0) {
-			// 		resultMessage += `${message}\n`;
-			// 		addWarning(this._block.id, noParentFieldName, message);
-			// 		break;
-			// 	} else if(fieldName === "" && topParent.getChildren(false).length === 0) {
-			// 		removeWarning(this._block.id, noParentFieldName);
-					
-			// 	}
-			console.log(block.type, topParent.type, fieldName === "", block.type === topParent.type)
-				if ((topParent.type != fieldName && fieldName !== "") || (fieldName === "" && block.type === topParent.type)) {
-					resultMessage += `${message}\n`;
-					addWarning(this._block.id, fieldName, message);
-					break;
-				}
-				removeWarning(this._block.id, fieldName);
-				break;
-	
-			case WarningType.Input:
+			case WarningType.Parent:
+				// const noParentFieldName =  "no/#_defind@!_field%_name^*!(./1"
+				// 	if(fieldName === "" && topParent.getChildren(false).length !== 0) {
+				// 		resultMessage += `${message}\n`;
+				// 		addWarning(this._block.id, noParentFieldName, message);
+				// 		break;
+				// 	} else if(fieldName === "" && topParent.getChildren(false).length === 0) {
+				// 		removeWarning(this._block.id, noParentFieldName);
 
-				if (this._block.getInput(fieldName)?.connection?.targetConnection === null) {
-					resultMessage += `${message}\n`;
-					addWarning(this._block.id, fieldName, message);
-					break;
+				// 	}
+				let field: string[]
+				if (!Array.isArray(fieldName)) field = [fieldName?? ""]
+				else field = fieldName;
+				let warning = false;
+				for (const f of field) {
+					if(f === "" && topParent.type !== block.type) {
+						warning = false;
+						break;
+					}
+					if ((topParent.type == f ) ) {
+						warning = false
+						break;
+					} else {
+						warning = true
+					}
+
 				}
 				
-				removeWarning(this._block.id, fieldName);
+				if (warning) {
+					resultMessage += `${message}\n`;
+					addWarning(this._block.id, field.length === 0 ? "" : field[0], message ?? "");
+				} else removeWarning(this._block.id, field.length === 0 ? "" : field[0]);
+				// if ((topParent.type != fieldName && fieldName !== "") || (fieldName === "" && block.type === topParent.type)) {
+				// 	resultMessage += `${message}\n`;
+				// 	addWarning(this._block.id, fieldName, message);
+				// 	break;
+				// }
+				// removeWarning(this._block.id, fieldName);
 				break;
-	
+
+			case WarningType.Input:
+
+				if (this._block.getInput(fieldN)?.connection?.targetConnection === null) {
+					resultMessage += `${message}\n`;
+					addWarning(this._block.id, fieldN, message ?? "");
+					break;
+				}
+
+				removeWarning(this._block.id, fieldN);
+				break;
+
 			case WarningType.Deprec:
 				resultMessage += `${message}\n`;
-				addWarning(this._block.id, fieldName, message);
+				addWarning(this._block.id, fieldN, message ?? "");
 				break;
-	
+
 			case WarningType.Permanent:
 				resultMessage += `${message}\n`;
-				addWarning(this._block.id, fieldName, message);
+				addWarning(this._block.id, fieldN, message ?? "");
 				break;
 		}
 		return resultMessage
@@ -145,7 +170,7 @@ export default class Block {
 	public removeText(fieldName: string): void {
 		this._block.removeInput(fieldName);
 	}
-	public setOutputType(type: BlockType | BlockType[] ) {
+	public setOutputType(type: BlockType | BlockType[]) {
 		this._block.setOutput(true, type)
 	}
 	public setShape(shape: BlockShape) {
@@ -167,7 +192,7 @@ export default class Block {
 				this.setOutputType((this._blockDefinition as BlockBlockDefinition).output!)
 				this._block.setPreviousStatement(false);
 				this._block.setNextStatement(false);
-			break;
+				break;
 		}
 	}
 	public addInput(input: DiscodesInput): void {
@@ -257,7 +282,7 @@ export default class Block {
 
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const blockClass = this; // Used because `this` is overwritten in the blockly functions.
-		
+
 
 		const code = blockDefinition.code;
 		const shape = blockDefinition.shape;
@@ -292,7 +317,7 @@ export default class Block {
 
 		// Converts the raw text into a blockly valid "message0" with this format: "text %1 other text %2"
 		let counter: number = 1;
-		if(blockDefinition.text !== "") blockDef.message0 = blockDefinition.text.replace(/\{.*?\}/g, () => `%${counter++}`);
+		if (blockDefinition.text !== "") blockDef.message0 = blockDefinition.text.replace(/\{.*?\}/g, () => `%${counter++}`);
 
 		if (Blockly.Blocks[blockDef.type] !== undefined && !dev) {
 			throw Error(`Block "${blockDef.type}" is defined twice.`);
@@ -301,7 +326,7 @@ export default class Block {
 		const BlockClass = this;
 		// Add The block to the blocks list
 		Blockly.Blocks[blockDef.type] = {
-			init: function(this: Blockly.Block) {
+			init: function (this: Blockly.Block) {
 				this.jsonInit(blockDef);
 
 				// We will pass the block in different functions of the class so we need it stored.
@@ -323,26 +348,26 @@ export default class Block {
 					case BlockShape.Value:
 						this.setPreviousStatement(false);
 						this.setNextStatement(false);
-					break;
+						break;
 				}
 
 				// Here we add an output if needed
 				if (output) {
 					if (output == BlockType.Any) {
-						
+
 						this.setOutput(true);
 					} else {
 						this.setOutput(true, output);
 					}
 				}
-				if(mixin) {
+				if (mixin) {
 					//fix this later once placeholders for mutators will be added or planned to be
 					//mixin.updateShape_()
 				}
 				// eslint-disable-next-line @typescript-eslint/no-this-alias
 				const block = this;
 				// Warnings Code
-				this.setOnChange(function(this: Blockly.Block, changeEvent: Abstract) {
+				this.setOnChange(function (this: Blockly.Block, changeEvent: Abstract) {
 					if (
 						importName &&
 						!this.isInFlyout &&
@@ -376,24 +401,24 @@ export default class Block {
 						// Iterate through each warning
 						for (const warning of warnings) {
 							const { warningType, message, fieldName } = warning.data;
-					
+
 							// Check if the base input exists or if the warning type is Parent and base input doesn't exist
 							const baseInputExists = this.getInput(fieldName);
 							if (baseInputExists || (!baseInputExists && warningType !== WarningType.Input)) {
 								resultMessage = BlockClass.handleWarning(warning.data, resultMessage, topParent, this);
 							}
-					
+
 							// Handle mutator inputs
 							let i = 1;
 							let input = this.getInput(`${fieldName}${i}`);
-					
+
 							while (input) {
 								const warningObject = {
 									message: message,
 									fieldName: `${fieldName}${i}`,
 									warningType: warningType
 								};
-					
+
 								resultMessage = BlockClass.handleWarning(warningObject, resultMessage, topParent);
 								i++;
 								input = this.getInput(`${fieldName}${i}`);
@@ -420,7 +445,7 @@ export default class Block {
 		}
 
 		// Generating the export code
-		javascriptGenerator.forBlock[blockDef.type] = function(block: Blockly.Block) {
+		javascriptGenerator.forBlock[blockDef.type] = function (block: Blockly.Block) {
 			const args: Record<string, string | string[]> = {}; //? Object we will pass as argument for the custom code to run properly
 
 			for (const arg of blockDef.args0) {
@@ -452,7 +477,7 @@ export default class Block {
 					/*
 					_list is added that so basic inputs and mutator inputs can have the same names and it creates better block warnings
 					*/
-						args[add.name + "_list"] = valueList;
+					args[add.name + "_list"] = valueList;
 
 
 				}

@@ -28,7 +28,7 @@ const blocks: BlockDefinition[] = [
 		id: "operations",
 		text: "{OPERAND1} {OPERATOR} {OPERAND2}",
 		args: [
-			new ValueInput("OPERAND1", BlockType.Number),
+			new ValueInput("OPERAND1", [BlockType.Number, BlockType.String]),
 			new Dropdown("OPERATOR", DropdownType.Auto, {
 				"+": "+",
 				"-": "-",
@@ -37,7 +37,7 @@ const blocks: BlockDefinition[] = [
 				"%": "%",
 				"^": "pow"
 			}),
-			new ValueInput("OPERAND2", BlockType.Number)
+			new ValueInput("OPERAND2", [BlockType.Number, BlockType.String])
 		],
 		placeholders: [
 			new Placeholder(PlaceholderType.Shadow, "OPERAND1", "number", { NUMBER: 1 }),
